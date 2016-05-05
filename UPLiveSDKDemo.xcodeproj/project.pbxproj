@@ -1,0 +1,411 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		1EA224201CD9CC46007BF4B4 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 1EA2241F1CD9CC46007BF4B4 /* main.m */; };
+		1EA224231CD9CC46007BF4B4 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 1EA224221CD9CC46007BF4B4 /* AppDelegate.m */; };
+		1EA224261CD9CC46007BF4B4 /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1EA224251CD9CC46007BF4B4 /* ViewController.m */; };
+		1EA224291CD9CC46007BF4B4 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 1EA224271CD9CC46007BF4B4 /* Main.storyboard */; };
+		1EA2242B1CD9CC46007BF4B4 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 1EA2242A1CD9CC46007BF4B4 /* Assets.xcassets */; };
+		1EA2242E1CD9CC46007BF4B4 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 1EA2242C1CD9CC46007BF4B4 /* LaunchScreen.storyboard */; };
+		1EA226241CD9D26F007BF4B4 /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1EA226231CD9D26F007BF4B4 /* AVFoundation.framework */; };
+		1EA226261CD9D287007BF4B4 /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1EA226251CD9D287007BF4B4 /* QuartzCore.framework */; };
+		1EA226281CD9D28C007BF4B4 /* OpenGLES.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1EA226271CD9D28C007BF4B4 /* OpenGLES.framework */; };
+		1EA2262A1CD9D293007BF4B4 /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1EA226291CD9D293007BF4B4 /* AudioToolbox.framework */; };
+		1EA2262C1CD9D29A007BF4B4 /* VideoToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1EA2262B1CD9D29A007BF4B4 /* VideoToolbox.framework */; };
+		1EA2262E1CD9D29F007BF4B4 /* Accelerate.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1EA2262D1CD9D29F007BF4B4 /* Accelerate.framework */; };
+		1EA226301CD9D2AF007BF4B4 /* libbz2.1.0.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 1EA2262F1CD9D2AF007BF4B4 /* libbz2.1.0.tbd */; };
+		1EA226321CD9D2BC007BF4B4 /* libiconv.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 1EA226311CD9D2BC007BF4B4 /* libiconv.tbd */; };
+		1EA226341CD9D2C7007BF4B4 /* libz.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 1EA226331CD9D2C7007BF4B4 /* libz.tbd */; };
+		1EA226361CD9D2D4007BF4B4 /* UPLiveSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1EA226351CD9D2D4007BF4B4 /* UPLiveSDK.framework */; };
+		1EA2263D1CD9D363007BF4B4 /* DemoViewControllerPlayer1.m in Sources */ = {isa = PBXBuildFile; fileRef = 1EA226381CD9D363007BF4B4 /* DemoViewControllerPlayer1.m */; };
+		1EA2263E1CD9D363007BF4B4 /* DemoViewControllerPlayer2.m in Sources */ = {isa = PBXBuildFile; fileRef = 1EA2263A1CD9D363007BF4B4 /* DemoViewControllerPlayer2.m */; };
+		1EA2263F1CD9D363007BF4B4 /* DemoViewControllerFullscreen.m in Sources */ = {isa = PBXBuildFile; fileRef = 1EA2263C1CD9D363007BF4B4 /* DemoViewControllerFullscreen.m */; };
+		1EA226481CD9D4F8007BF4B4 /* UPQRCodeViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1EA226451CD9D4F8007BF4B4 /* UPQRCodeViewController.m */; };
+		1EA226491CD9D4F8007BF4B4 /* QRScanView.m in Sources */ = {isa = PBXBuildFile; fileRef = 1EA226471CD9D4F8007BF4B4 /* QRScanView.m */; };
+		1EA226531CD9D555007BF4B4 /* DemoViewControllerStreamer1.m in Sources */ = {isa = PBXBuildFile; fileRef = 1EA2264E1CD9D555007BF4B4 /* DemoViewControllerStreamer1.m */; };
+		1EA226541CD9D555007BF4B4 /* DemoViewControllerStreamer2.m in Sources */ = {isa = PBXBuildFile; fileRef = 1EA226501CD9D555007BF4B4 /* DemoViewControllerStreamer2.m */; };
+		1EA226551CD9D555007BF4B4 /* DemoViewControllerStreamer3.m in Sources */ = {isa = PBXBuildFile; fileRef = 1EA226521CD9D555007BF4B4 /* DemoViewControllerStreamer3.m */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		1EA2241B1CD9CC46007BF4B4 /* UPLiveSDKDemo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = UPLiveSDKDemo.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		1EA2241F1CD9CC46007BF4B4 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
+		1EA224211CD9CC46007BF4B4 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
+		1EA224221CD9CC46007BF4B4 /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
+		1EA224241CD9CC46007BF4B4 /* ViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ViewController.h; sourceTree = "<group>"; };
+		1EA224251CD9CC46007BF4B4 /* ViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ViewController.m; sourceTree = "<group>"; };
+		1EA224281CD9CC46007BF4B4 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
+		1EA2242A1CD9CC46007BF4B4 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		1EA2242D1CD9CC46007BF4B4 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
+		1EA2242F1CD9CC46007BF4B4 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		1EA226231CD9D26F007BF4B4 /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = System/Library/Frameworks/AVFoundation.framework; sourceTree = SDKROOT; };
+		1EA226251CD9D287007BF4B4 /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
+		1EA226271CD9D28C007BF4B4 /* OpenGLES.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenGLES.framework; path = System/Library/Frameworks/OpenGLES.framework; sourceTree = SDKROOT; };
+		1EA226291CD9D293007BF4B4 /* AudioToolbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AudioToolbox.framework; path = System/Library/Frameworks/AudioToolbox.framework; sourceTree = SDKROOT; };
+		1EA2262B1CD9D29A007BF4B4 /* VideoToolbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = VideoToolbox.framework; path = System/Library/Frameworks/VideoToolbox.framework; sourceTree = SDKROOT; };
+		1EA2262D1CD9D29F007BF4B4 /* Accelerate.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Accelerate.framework; path = System/Library/Frameworks/Accelerate.framework; sourceTree = SDKROOT; };
+		1EA2262F1CD9D2AF007BF4B4 /* libbz2.1.0.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libbz2.1.0.tbd; path = usr/lib/libbz2.1.0.tbd; sourceTree = SDKROOT; };
+		1EA226311CD9D2BC007BF4B4 /* libiconv.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libiconv.tbd; path = usr/lib/libiconv.tbd; sourceTree = SDKROOT; };
+		1EA226331CD9D2C7007BF4B4 /* libz.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libz.tbd; path = usr/lib/libz.tbd; sourceTree = SDKROOT; };
+		1EA226351CD9D2D4007BF4B4 /* UPLiveSDK.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = UPLiveSDK.framework; sourceTree = "<group>"; };
+		1EA226371CD9D363007BF4B4 /* DemoViewControllerPlayer1.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DemoViewControllerPlayer1.h; sourceTree = "<group>"; };
+		1EA226381CD9D363007BF4B4 /* DemoViewControllerPlayer1.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DemoViewControllerPlayer1.m; sourceTree = "<group>"; };
+		1EA226391CD9D363007BF4B4 /* DemoViewControllerPlayer2.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DemoViewControllerPlayer2.h; sourceTree = "<group>"; };
+		1EA2263A1CD9D363007BF4B4 /* DemoViewControllerPlayer2.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DemoViewControllerPlayer2.m; sourceTree = "<group>"; };
+		1EA2263B1CD9D363007BF4B4 /* DemoViewControllerFullscreen.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DemoViewControllerFullscreen.h; sourceTree = "<group>"; };
+		1EA2263C1CD9D363007BF4B4 /* DemoViewControllerFullscreen.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DemoViewControllerFullscreen.m; sourceTree = "<group>"; };
+		1EA226441CD9D4F8007BF4B4 /* UPQRCodeViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UPQRCodeViewController.h; sourceTree = "<group>"; };
+		1EA226451CD9D4F8007BF4B4 /* UPQRCodeViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UPQRCodeViewController.m; sourceTree = "<group>"; };
+		1EA226461CD9D4F8007BF4B4 /* QRScanView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QRScanView.h; sourceTree = "<group>"; };
+		1EA226471CD9D4F8007BF4B4 /* QRScanView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = QRScanView.m; sourceTree = "<group>"; };
+		1EA2264D1CD9D555007BF4B4 /* DemoViewControllerStreamer1.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DemoViewControllerStreamer1.h; sourceTree = "<group>"; };
+		1EA2264E1CD9D555007BF4B4 /* DemoViewControllerStreamer1.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DemoViewControllerStreamer1.m; sourceTree = "<group>"; };
+		1EA2264F1CD9D555007BF4B4 /* DemoViewControllerStreamer2.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DemoViewControllerStreamer2.h; sourceTree = "<group>"; };
+		1EA226501CD9D555007BF4B4 /* DemoViewControllerStreamer2.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DemoViewControllerStreamer2.m; sourceTree = "<group>"; };
+		1EA226511CD9D555007BF4B4 /* DemoViewControllerStreamer3.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DemoViewControllerStreamer3.h; sourceTree = "<group>"; };
+		1EA226521CD9D555007BF4B4 /* DemoViewControllerStreamer3.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DemoViewControllerStreamer3.m; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		1EA224181CD9CC46007BF4B4 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				1EA226361CD9D2D4007BF4B4 /* UPLiveSDK.framework in Frameworks */,
+				1EA226341CD9D2C7007BF4B4 /* libz.tbd in Frameworks */,
+				1EA226321CD9D2BC007BF4B4 /* libiconv.tbd in Frameworks */,
+				1EA226301CD9D2AF007BF4B4 /* libbz2.1.0.tbd in Frameworks */,
+				1EA2262E1CD9D29F007BF4B4 /* Accelerate.framework in Frameworks */,
+				1EA2262C1CD9D29A007BF4B4 /* VideoToolbox.framework in Frameworks */,
+				1EA2262A1CD9D293007BF4B4 /* AudioToolbox.framework in Frameworks */,
+				1EA226281CD9D28C007BF4B4 /* OpenGLES.framework in Frameworks */,
+				1EA226261CD9D287007BF4B4 /* QuartzCore.framework in Frameworks */,
+				1EA226241CD9D26F007BF4B4 /* AVFoundation.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		1EA224121CD9CC46007BF4B4 = {
+			isa = PBXGroup;
+			children = (
+				1EA226351CD9D2D4007BF4B4 /* UPLiveSDK.framework */,
+				1EA226331CD9D2C7007BF4B4 /* libz.tbd */,
+				1EA226311CD9D2BC007BF4B4 /* libiconv.tbd */,
+				1EA2262F1CD9D2AF007BF4B4 /* libbz2.1.0.tbd */,
+				1EA2262D1CD9D29F007BF4B4 /* Accelerate.framework */,
+				1EA2262B1CD9D29A007BF4B4 /* VideoToolbox.framework */,
+				1EA226291CD9D293007BF4B4 /* AudioToolbox.framework */,
+				1EA226271CD9D28C007BF4B4 /* OpenGLES.framework */,
+				1EA226251CD9D287007BF4B4 /* QuartzCore.framework */,
+				1EA226231CD9D26F007BF4B4 /* AVFoundation.framework */,
+				1EA2241D1CD9CC46007BF4B4 /* UPLiveSDKDemo */,
+				1EA2241C1CD9CC46007BF4B4 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		1EA2241C1CD9CC46007BF4B4 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				1EA2241B1CD9CC46007BF4B4 /* UPLiveSDKDemo.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		1EA2241D1CD9CC46007BF4B4 /* UPLiveSDKDemo */ = {
+			isa = PBXGroup;
+			children = (
+				1EA224211CD9CC46007BF4B4 /* AppDelegate.h */,
+				1EA224221CD9CC46007BF4B4 /* AppDelegate.m */,
+				1EA224241CD9CC46007BF4B4 /* ViewController.h */,
+				1EA224251CD9CC46007BF4B4 /* ViewController.m */,
+				1EA226371CD9D363007BF4B4 /* DemoViewControllerPlayer1.h */,
+				1EA226381CD9D363007BF4B4 /* DemoViewControllerPlayer1.m */,
+				1EA226391CD9D363007BF4B4 /* DemoViewControllerPlayer2.h */,
+				1EA2263A1CD9D363007BF4B4 /* DemoViewControllerPlayer2.m */,
+				1EA2263B1CD9D363007BF4B4 /* DemoViewControllerFullscreen.h */,
+				1EA2263C1CD9D363007BF4B4 /* DemoViewControllerFullscreen.m */,
+				1EA2264D1CD9D555007BF4B4 /* DemoViewControllerStreamer1.h */,
+				1EA2264E1CD9D555007BF4B4 /* DemoViewControllerStreamer1.m */,
+				1EA2264F1CD9D555007BF4B4 /* DemoViewControllerStreamer2.h */,
+				1EA226501CD9D555007BF4B4 /* DemoViewControllerStreamer2.m */,
+				1EA226511CD9D555007BF4B4 /* DemoViewControllerStreamer3.h */,
+				1EA226521CD9D555007BF4B4 /* DemoViewControllerStreamer3.m */,
+				1EA226441CD9D4F8007BF4B4 /* UPQRCodeViewController.h */,
+				1EA226451CD9D4F8007BF4B4 /* UPQRCodeViewController.m */,
+				1EA226461CD9D4F8007BF4B4 /* QRScanView.h */,
+				1EA226471CD9D4F8007BF4B4 /* QRScanView.m */,
+				1EA224271CD9CC46007BF4B4 /* Main.storyboard */,
+				1EA2242A1CD9CC46007BF4B4 /* Assets.xcassets */,
+				1EA2242C1CD9CC46007BF4B4 /* LaunchScreen.storyboard */,
+				1EA2242F1CD9CC46007BF4B4 /* Info.plist */,
+				1EA2241E1CD9CC46007BF4B4 /* Supporting Files */,
+			);
+			path = UPLiveSDKDemo;
+			sourceTree = "<group>";
+		};
+		1EA2241E1CD9CC46007BF4B4 /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				1EA2241F1CD9CC46007BF4B4 /* main.m */,
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		1EA2241A1CD9CC46007BF4B4 /* UPLiveSDKDemo */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 1EA224321CD9CC46007BF4B4 /* Build configuration list for PBXNativeTarget "UPLiveSDKDemo" */;
+			buildPhases = (
+				1EA224171CD9CC46007BF4B4 /* Sources */,
+				1EA224181CD9CC46007BF4B4 /* Frameworks */,
+				1EA224191CD9CC46007BF4B4 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = UPLiveSDKDemo;
+			productName = UPLiveSDKDemo;
+			productReference = 1EA2241B1CD9CC46007BF4B4 /* UPLiveSDKDemo.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		1EA224131CD9CC46007BF4B4 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastUpgradeCheck = 0720;
+				ORGANIZATIONNAME = upyun.com;
+				TargetAttributes = {
+					1EA2241A1CD9CC46007BF4B4 = {
+						CreatedOnToolsVersion = 7.2.1;
+						DevelopmentTeam = FX6QTNRB57;
+					};
+				};
+			};
+			buildConfigurationList = 1EA224161CD9CC46007BF4B4 /* Build configuration list for PBXProject "UPLiveSDKDemo" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = English;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = 1EA224121CD9CC46007BF4B4;
+			productRefGroup = 1EA2241C1CD9CC46007BF4B4 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				1EA2241A1CD9CC46007BF4B4 /* UPLiveSDKDemo */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		1EA224191CD9CC46007BF4B4 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				1EA2242E1CD9CC46007BF4B4 /* LaunchScreen.storyboard in Resources */,
+				1EA2242B1CD9CC46007BF4B4 /* Assets.xcassets in Resources */,
+				1EA224291CD9CC46007BF4B4 /* Main.storyboard in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		1EA224171CD9CC46007BF4B4 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				1EA226541CD9D555007BF4B4 /* DemoViewControllerStreamer2.m in Sources */,
+				1EA224261CD9CC46007BF4B4 /* ViewController.m in Sources */,
+				1EA2263E1CD9D363007BF4B4 /* DemoViewControllerPlayer2.m in Sources */,
+				1EA226491CD9D4F8007BF4B4 /* QRScanView.m in Sources */,
+				1EA2263D1CD9D363007BF4B4 /* DemoViewControllerPlayer1.m in Sources */,
+				1EA226551CD9D555007BF4B4 /* DemoViewControllerStreamer3.m in Sources */,
+				1EA224231CD9CC46007BF4B4 /* AppDelegate.m in Sources */,
+				1EA2263F1CD9D363007BF4B4 /* DemoViewControllerFullscreen.m in Sources */,
+				1EA224201CD9CC46007BF4B4 /* main.m in Sources */,
+				1EA226531CD9D555007BF4B4 /* DemoViewControllerStreamer1.m in Sources */,
+				1EA226481CD9D4F8007BF4B4 /* UPQRCodeViewController.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXVariantGroup section */
+		1EA224271CD9CC46007BF4B4 /* Main.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				1EA224281CD9CC46007BF4B4 /* Base */,
+			);
+			name = Main.storyboard;
+			sourceTree = "<group>";
+		};
+		1EA2242C1CD9CC46007BF4B4 /* LaunchScreen.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				1EA2242D1CD9CC46007BF4B4 /* Base */,
+			);
+			name = LaunchScreen.storyboard;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
+
+/* Begin XCBuildConfiguration section */
+		1EA224301CD9CC46007BF4B4 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.2;
+				MTL_ENABLE_DEBUG_INFO = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = iphoneos;
+			};
+			name = Debug;
+		};
+		1EA224311CD9CC46007BF4B4 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.2;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				SDKROOT = iphoneos;
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		1EA224331CD9CC46007BF4B4 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				ENABLE_BITCODE = NO;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)",
+				);
+				INFOPLIST_FILE = UPLiveSDKDemo/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = upyun.com.UPLiveSDKDemo;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE = "";
+			};
+			name = Debug;
+		};
+		1EA224341CD9CC46007BF4B4 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				ENABLE_BITCODE = NO;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)",
+				);
+				INFOPLIST_FILE = UPLiveSDKDemo/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = upyun.com.UPLiveSDKDemo;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE = "";
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		1EA224161CD9CC46007BF4B4 /* Build configuration list for PBXProject "UPLiveSDKDemo" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				1EA224301CD9CC46007BF4B4 /* Debug */,
+				1EA224311CD9CC46007BF4B4 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		1EA224321CD9CC46007BF4B4 /* Build configuration list for PBXNativeTarget "UPLiveSDKDemo" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				1EA224331CD9CC46007BF4B4 /* Debug */,
+				1EA224341CD9CC46007BF4B4 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 1EA224131CD9CC46007BF4B4 /* Project object */;
+}
