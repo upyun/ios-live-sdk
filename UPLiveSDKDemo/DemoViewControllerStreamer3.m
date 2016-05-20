@@ -25,6 +25,10 @@
     [UPAVCapturer setLogLevel:UPAVCapturerLogger_level_debug];
     [super viewDidLoad];
     self.view.backgroundColor = [UIColor whiteColor];
+
+    [[UPAVCapturer sharedInstance] setShowViewSuperView:self.view];
+
+    
     
     _startBtn = [[UIButton alloc] initWithFrame:CGRectMake(50, self.view.frame.size.height - 80, 100, 80)];
     [_startBtn setTitle:@"start" forState:UIControlStateNormal];
@@ -32,6 +36,14 @@
     [_startBtn addTarget:self action:@selector(startBtn:) forControlEvents:UIControlEventTouchUpInside];
     
     [self.view addSubview:_startBtn];
+    
+    
+    
+    UIButton *button = [[UIButton alloc] initWithFrame:CGRectMake(200, self.view.frame.size.height - 80, 100, 80)];
+    [button setTitle:@"change" forState:UIControlStateNormal];
+    [button setTitleColor:[UIColor blueColor] forState:UIControlStateNormal];
+    [button addTarget:self action:@selector(changeBtn:) forControlEvents:UIControlEventTouchUpInside];
+    [self.view addSubview:button];
     
     //rtmp 推流地址
     NSString *rtmpPushUrl = @"rtmp://testlivesdk.v0.upaiyun.com/live/upyun+后缀";
@@ -56,6 +68,8 @@
     UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(endEd)];
     [self.view addGestureRecognizer:tap];
     
+    
+
     __weak DemoViewControllerStreamer3 *weakself = self;
     [UPAVCapturer sharedInstance].uPAVCapturerStatusBlock = ^(UPAVCapturerStatus status, NSError *error) {
         if (error) {
@@ -100,8 +114,13 @@
 
 - (void)startBtn:(UIButton *)sender {
     if (sender.tag == 0) {
-        NSString *text = urlTextField.text;
         
+        NSString *text = urlTextField.text;
+//        [UPAVCapturer sharedInstance].sessionPreset  =AVCaptureSessionPreset1280x720;
+//        [UPAVCapturer sharedInstance].level = UPAVCapturerPreset_480x360;
+        [UPAVCapturer sharedInstance].level = UPAVCapturerPreset_640x480;
+//        [UPAVCapturer sharedInstance].level = UPAVCapturerPreset_1280x720;
+        [UPAVCapturer sharedInstance].videoOrientation = AVCaptureVideoOrientationPortrait;
         
         //推流地址
         NSString *rtmpPushUrl = [NSString stringWithFormat:@"%@%@",@"rtmp://testlivesdk.v0.upaiyun.com/live/upyun",text];
@@ -118,8 +137,10 @@
 
         [UPAVCapturer sharedInstance].outStreamPath = rtmpPushUrl;
         
-        [self setPreview];
+//        [self setPreview];
+        
         [[UPAVCapturer sharedInstance] start];
+        
         [sender setTitle:@"stop" forState:UIControlStateNormal];
         sender.tag = 1;
     } else {
@@ -127,6 +148,16 @@
         [sender setTitle:@"start" forState:UIControlStateNormal];
         sender.tag = 0;
     }
+}
+
+
+- (void)changeBtn:(UIButton *)sender {
+    [[UPAVCapturer sharedInstance] changeCamera];
+    
+    [UPAVCapturer sharedInstance].filter = ![UPAVCapturer sharedInstance].filter;
+//    [[UPAVCapturer sharedInstance] changeCamera];
+//    [UPAVCapturer sharedInstance].fps = 15;
+//    NSLog(@"fps %d", [UPAVCapturer sharedInstance].fps);
 }
 
 - (void)setPreview {

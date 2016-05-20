@@ -31,7 +31,7 @@
     [self.view addSubview:_startBtn];
     
     //rtmp 推流地址
-    NSString *rtmpPushUrl = @"rtmp://testlivesdk.v0.upaiyun.com/live/streamhz";
+    NSString *rtmpPushUrl = @"rtmp://10.0.2.172:1935/live1/room123";
     //计算 upToken
     NSString *upToken = [UPAVCapturer tokenWithKey:@"password"
                                             bucket:@"testlivesdk"

@@ -16,6 +16,9 @@
     UIButton *_camaraBtn;
     UIButton *_flashBtn;
     UIButton *_dismissBtn;
+    UIButton *_streamingBtn;
+    UIButton *_beautifyBtn;
+
 }
 
 @end
@@ -27,31 +30,7 @@
     [super viewDidLoad];
     self.view.backgroundColor = [UIColor whiteColor];
     
-    _startBtn = [[UIButton alloc] initWithFrame:CGRectMake(0, self.view.frame.size.height - 100, 100, 100)];
-    [_startBtn setTitle:@"start" forState:UIControlStateNormal];
-    [_startBtn setTitleColor:[UIColor blueColor] forState:UIControlStateNormal];
-    [_startBtn addTarget:self action:@selector(startBtn:) forControlEvents:UIControlEventTouchUpInside];
     
-    _bitrateBtn = [[UIButton alloc] initWithFrame:CGRectMake(100, self.view.frame.size.height - 100, 100, 100)];
-    [_bitrateBtn setTitle:@"bitrate" forState:UIControlStateNormal];
-    [_bitrateBtn setTitleColor:[UIColor blueColor] forState:UIControlStateNormal];
-    [_bitrateBtn addTarget:self action:@selector(bitrate:) forControlEvents:UIControlEventTouchUpInside];
-    
-    _camaraBtn = [[UIButton alloc] initWithFrame:CGRectMake(200, self.view.frame.size.height - 100, 100, 100)];
-    [_camaraBtn setTitle:@"camera" forState:UIControlStateNormal];
-    [_camaraBtn setTitleColor:[UIColor blueColor] forState:UIControlStateNormal];
-    [_camaraBtn addTarget:self action:@selector(camera:) forControlEvents:UIControlEventTouchUpInside];
-
-    _flashBtn = [[UIButton alloc] initWithFrame:CGRectMake(300, self.view.frame.size.height - 100, 100, 100)];
-    [_flashBtn setTitle:@"flash" forState:UIControlStateNormal];
-    [_flashBtn setTitleColor:[UIColor blueColor] forState:UIControlStateNormal];
-    [_flashBtn addTarget:self action:@selector(flash:) forControlEvents:UIControlEventTouchUpInside];
-
-    [self.view addSubview:_startBtn];
-    [self.view addSubview:_bitrateBtn];
-    [self.view addSubview:_camaraBtn];
-    [self.view addSubview:_flashBtn];
-
     //rtmp 推流地址
     NSString *rtmpPushUrl = @"rtmp://testlivesdk.v0.upaiyun.com/live/streamhz1";
     
@@ -64,7 +43,7 @@
     
     rtmpPushUrl = [NSString stringWithFormat:@"%@?_upt=%@", rtmpPushUrl, upToken];
     NSLog(@"rtmpPushUrl: %@", rtmpPushUrl);
-
+    
     //rtmp 播放地址
     NSString *rtmpPlayUrl = @"rtmp://testlivesdk.b0.upaiyun.com/live/streamhz1";
     //浏览器测试播放地址
@@ -73,7 +52,7 @@
     //设置推流地址
     [UPAVCapturer sharedInstance].outStreamPath = rtmpPushUrl;
     
-    UITextView *label = [[UITextView alloc] initWithFrame:CGRectMake(40, 20, 1500, 200)];
+    UITextView *label = [[UITextView alloc] initWithFrame:CGRectMake(40, 20, 1500, 130)];
     label.text = [NSString stringWithFormat:@"rtmpPushUrl:\n%@\n\nrtmpPlayUrl:\n%@\n\nwebPlayUrl:\n%@\n", rtmpPushUrl,rtmpPlayUrl,webPlayUrl];
     label.editable = NO;
     [self.view addSubview:label];
@@ -87,6 +66,62 @@
             [weakself errorAlert:s];
         }
     };
+    
+    
+    
+    
+    
+    
+    CGFloat width = [UIScreen mainScreen].bounds.size.width / 4.;
+    _startBtn = [[UIButton alloc] initWithFrame:CGRectMake(0, self.view.frame.size.height - 180, width, width)];
+    [_startBtn setTitle:@"start" forState:UIControlStateNormal];
+    [_startBtn setTitleColor:[UIColor blueColor] forState:UIControlStateNormal];
+    [_startBtn addTarget:self action:@selector(startBtn:) forControlEvents:UIControlEventTouchUpInside];
+    
+    _bitrateBtn = [[UIButton alloc] initWithFrame:CGRectMake(width, self.view.frame.size.height - 180, width, width)];
+    [_bitrateBtn setTitle:@"bitrate - 100000" forState:UIControlStateNormal];
+    [_bitrateBtn setTitleColor:[UIColor blueColor] forState:UIControlStateNormal];
+    [_bitrateBtn addTarget:self action:@selector(bitrate:) forControlEvents:UIControlEventTouchUpInside];
+    
+    _camaraBtn = [[UIButton alloc] initWithFrame:CGRectMake(width * 2, self.view.frame.size.height - 180, width, width)];
+    [_camaraBtn setTitle:@"   camera switch" forState:UIControlStateNormal];
+    [_camaraBtn setTitleColor:[UIColor blueColor] forState:UIControlStateNormal];
+    [_camaraBtn addTarget:self action:@selector(camera:) forControlEvents:UIControlEventTouchUpInside];
+    
+    _flashBtn = [[UIButton alloc] initWithFrame:CGRectMake(width * 3, self.view.frame.size.height - 180, width, width)];
+    [_flashBtn setTitle:@"    flash on/off" forState:UIControlStateNormal];
+    [_flashBtn setTitleColor:[UIColor blueColor] forState:UIControlStateNormal];
+    [_flashBtn addTarget:self action:@selector(flash:) forControlEvents:UIControlEventTouchUpInside];
+    
+    
+    
+    _streamingBtn = [[UIButton alloc] initWithFrame:CGRectMake(0, self.view.frame.size.height - 100, width, width)];
+    [_streamingBtn setTitle:@"streaming on/off" forState:UIControlStateNormal];
+    [_streamingBtn setTitleColor:[UIColor blueColor] forState:UIControlStateNormal];
+    [_streamingBtn addTarget:self action:@selector(streamingBtn:) forControlEvents:UIControlEventTouchUpInside];
+    
+    _beautifyBtn = [[UIButton alloc] initWithFrame:CGRectMake(width, self.view.frame.size.height - 100, width, width)];
+    [_beautifyBtn setTitle:@" beautify on/off" forState:UIControlStateNormal];
+    [_beautifyBtn setTitleColor:[UIColor blueColor] forState:UIControlStateNormal];
+    [_beautifyBtn addTarget:self action:@selector(beautifyBtn:) forControlEvents:UIControlEventTouchUpInside];
+
+    
+    _startBtn.titleLabel.adjustsFontSizeToFitWidth = TRUE;
+    _bitrateBtn.titleLabel.adjustsFontSizeToFitWidth = TRUE;
+    _camaraBtn.titleLabel.adjustsFontSizeToFitWidth = TRUE;
+    _flashBtn.titleLabel.adjustsFontSizeToFitWidth = TRUE;
+    _streamingBtn.titleLabel.adjustsFontSizeToFitWidth = TRUE;
+    _beautifyBtn.titleLabel.adjustsFontSizeToFitWidth = TRUE;
+
+    
+    [self.view addSubview:_startBtn];
+    [self.view addSubview:_bitrateBtn];
+    [self.view addSubview:_camaraBtn];
+    [self.view addSubview:_flashBtn];
+    [self.view addSubview:_streamingBtn];
+    [self.view addSubview:_beautifyBtn];
+
+
 }
 
 - (void)errorAlert:(NSString *)message {
@@ -106,6 +141,7 @@
 }
 
 - (void)startBtn:(UIButton *)sender {
+    
     if (sender.tag == 0) {
         [self setPreview];
         [[UPAVCapturer sharedInstance] start];
@@ -123,7 +159,7 @@
 int64_t bitrate = 600000;
 - (void)bitrate:(UIButton *)sender {
     bitrate = bitrate - 100000;
-    [UPAVCapturer sharedInstance].bitrate = bitrate;
+    [UPAVCapturer sharedInstance].level = UPAVCapturerPreset_480x360;
 }
 
 //前后镜头切换
@@ -136,14 +172,27 @@ int64_t bitrate = 600000;
     [UPAVCapturer sharedInstance].camaraTorchOn = ![UPAVCapturer sharedInstance].camaraTorchOn;
 }
 
+//推流开关
+- (void)streamingBtn:(UIButton *)sender {
+    [UPAVCapturer sharedInstance].streamingOnOff = ![UPAVCapturer sharedInstance].streamingOnOff;
+}
+
+//美颜开关
+- (void)beautifyBtn:(UIButton *)sender {
+    [UPAVCapturer sharedInstance].filter = ![UPAVCapturer sharedInstance].filter;
+}
+
+
+
 //设置视频预览画面
 - (void)setPreview {
     [_previewLayer removeFromSuperlayer];
     _previewLayer = [AVCaptureVideoPreviewLayer layerWithSession:[UPAVCapturer sharedInstance].captureSession];
-    _previewLayer.frame = CGRectMake(0, 200, self.view.frame.size.width, self.view.frame.size.width);
+    _previewLayer.frame = CGRectMake(0, 140, self.view.frame.size.width, self.view.frame.size.width);
     _previewLayer.videoGravity = AVLayerVideoGravityResizeAspectFill;
     [self.view.layer addSublayer:_previewLayer];
 }
+
 
 - (void)dealloc {
     NSLog(@"dealloc %@", self);

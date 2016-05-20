@@ -52,7 +52,7 @@
     _urlInput.layer.cornerRadius = 4;
     _urlInput.delegate = self;
     _urlInput.placeholder = @"请输入要播放的URL 或着 扫一扫";
-    _urlInput.text = @"rtmp://uplive.b0.upaiyun.com:1935/live/upyun";
+    _urlInput.text = @"rtmp://testlivesdk.b0.upaiyun.com/live/upyun";
     UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc]
                                    initWithTarget:self
                                    action:@selector(dismissKeyboard)];

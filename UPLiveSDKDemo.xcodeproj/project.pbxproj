@@ -7,6 +7,13 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		1E8887851CEDC4B500F8F8B0 /* UPLiveStreamerLivingVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 1E8887841CEDC4B500F8F8B0 /* UPLiveStreamerLivingVC.m */; };
+		1E8887891CEEAA1400F8F8B0 /* UPLiveStreamerSettingVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 1E8887871CEEAA1400F8F8B0 /* UPLiveStreamerSettingVC.m */; };
+		1E88878A1CEEAA1400F8F8B0 /* UPLiveStreamerSettingVC.xib in Resources */ = {isa = PBXBuildFile; fileRef = 1E8887881CEEAA1400F8F8B0 /* UPLiveStreamerSettingVC.xib */; };
+		1E88878C1CEED87F00F8F8B0 /* UPLiveStreamerLivingVC.xib in Resources */ = {isa = PBXBuildFile; fileRef = 1E88878B1CEED87F00F8F8B0 /* UPLiveStreamerLivingVC.xib */; };
+		1E99B71B1CEDA7C80021DC35 /* UPLivePlayerDemoViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1E99B7161CEDA7C80021DC35 /* UPLivePlayerDemoViewController.m */; };
+		1E99B71C1CEDA7C80021DC35 /* UPLiveStreamerDemoViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1E99B7181CEDA7C80021DC35 /* UPLiveStreamerDemoViewController.m */; };
+		1E99B71D1CEDA7C80021DC35 /* UPLiveViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1E99B71A1CEDA7C80021DC35 /* UPLiveViewController.m */; };
 		1EA224201CD9CC46007BF4B4 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 1EA2241F1CD9CC46007BF4B4 /* main.m */; };
 		1EA224231CD9CC46007BF4B4 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 1EA224221CD9CC46007BF4B4 /* AppDelegate.m */; };
 		1EA224261CD9CC46007BF4B4 /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1EA224251CD9CC46007BF4B4 /* ViewController.m */; };
@@ -31,9 +38,25 @@
 		1EA226531CD9D555007BF4B4 /* DemoViewControllerStreamer1.m in Sources */ = {isa = PBXBuildFile; fileRef = 1EA2264E1CD9D555007BF4B4 /* DemoViewControllerStreamer1.m */; };
 		1EA226541CD9D555007BF4B4 /* DemoViewControllerStreamer2.m in Sources */ = {isa = PBXBuildFile; fileRef = 1EA226501CD9D555007BF4B4 /* DemoViewControllerStreamer2.m */; };
 		1EA226551CD9D555007BF4B4 /* DemoViewControllerStreamer3.m in Sources */ = {isa = PBXBuildFile; fileRef = 1EA226521CD9D555007BF4B4 /* DemoViewControllerStreamer3.m */; };
+		1EF6AD401CEEEFFE004A7DCA /* UPLivePlayerVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 1EF6AD3E1CEEEFFE004A7DCA /* UPLivePlayerVC.m */; };
+		1EF6AD411CEEEFFE004A7DCA /* UPLivePlayerVC.xib in Resources */ = {isa = PBXBuildFile; fileRef = 1EF6AD3F1CEEEFFE004A7DCA /* UPLivePlayerVC.xib */; };
+		AE721F851CE9655C000B170A /* CoreMedia.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AE721F841CE9655C000B170A /* CoreMedia.framework */; };
+		AE721F871CE96567000B170A /* CoreVideo.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AE721F861CE96567000B170A /* CoreVideo.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		1E8887831CEDC4B500F8F8B0 /* UPLiveStreamerLivingVC.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UPLiveStreamerLivingVC.h; sourceTree = "<group>"; };
+		1E8887841CEDC4B500F8F8B0 /* UPLiveStreamerLivingVC.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UPLiveStreamerLivingVC.m; sourceTree = "<group>"; };
+		1E8887861CEEAA1400F8F8B0 /* UPLiveStreamerSettingVC.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UPLiveStreamerSettingVC.h; sourceTree = "<group>"; };
+		1E8887871CEEAA1400F8F8B0 /* UPLiveStreamerSettingVC.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UPLiveStreamerSettingVC.m; sourceTree = "<group>"; };
+		1E8887881CEEAA1400F8F8B0 /* UPLiveStreamerSettingVC.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = UPLiveStreamerSettingVC.xib; sourceTree = "<group>"; };
+		1E88878B1CEED87F00F8F8B0 /* UPLiveStreamerLivingVC.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = UPLiveStreamerLivingVC.xib; sourceTree = "<group>"; };
+		1E99B7151CEDA7C80021DC35 /* UPLivePlayerDemoViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UPLivePlayerDemoViewController.h; sourceTree = "<group>"; };
+		1E99B7161CEDA7C80021DC35 /* UPLivePlayerDemoViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UPLivePlayerDemoViewController.m; sourceTree = "<group>"; };
+		1E99B7171CEDA7C80021DC35 /* UPLiveStreamerDemoViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UPLiveStreamerDemoViewController.h; sourceTree = "<group>"; };
+		1E99B7181CEDA7C80021DC35 /* UPLiveStreamerDemoViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UPLiveStreamerDemoViewController.m; sourceTree = "<group>"; };
+		1E99B7191CEDA7C80021DC35 /* UPLiveViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UPLiveViewController.h; sourceTree = "<group>"; };
+		1E99B71A1CEDA7C80021DC35 /* UPLiveViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UPLiveViewController.m; sourceTree = "<group>"; };
 		1EA2241B1CD9CC46007BF4B4 /* UPLiveSDKDemo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = UPLiveSDKDemo.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		1EA2241F1CD9CC46007BF4B4 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		1EA224211CD9CC46007BF4B4 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
@@ -70,6 +93,11 @@
 		1EA226501CD9D555007BF4B4 /* DemoViewControllerStreamer2.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DemoViewControllerStreamer2.m; sourceTree = "<group>"; };
 		1EA226511CD9D555007BF4B4 /* DemoViewControllerStreamer3.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DemoViewControllerStreamer3.h; sourceTree = "<group>"; };
 		1EA226521CD9D555007BF4B4 /* DemoViewControllerStreamer3.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DemoViewControllerStreamer3.m; sourceTree = "<group>"; };
+		1EF6AD3D1CEEEFFE004A7DCA /* UPLivePlayerVC.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UPLivePlayerVC.h; sourceTree = "<group>"; };
+		1EF6AD3E1CEEEFFE004A7DCA /* UPLivePlayerVC.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UPLivePlayerVC.m; sourceTree = "<group>"; };
+		1EF6AD3F1CEEEFFE004A7DCA /* UPLivePlayerVC.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = UPLivePlayerVC.xib; sourceTree = "<group>"; };
+		AE721F841CE9655C000B170A /* CoreMedia.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreMedia.framework; path = System/Library/Frameworks/CoreMedia.framework; sourceTree = SDKROOT; };
+		AE721F861CE96567000B170A /* CoreVideo.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreVideo.framework; path = System/Library/Frameworks/CoreVideo.framework; sourceTree = SDKROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -77,6 +105,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				AE721F871CE96567000B170A /* CoreVideo.framework in Frameworks */,
+				AE721F851CE9655C000B170A /* CoreMedia.framework in Frameworks */,
 				1EA226361CD9D2D4007BF4B4 /* UPLiveSDK.framework in Frameworks */,
 				1EA226341CD9D2C7007BF4B4 /* libz.tbd in Frameworks */,
 				1EA226321CD9D2BC007BF4B4 /* libiconv.tbd in Frameworks */,
@@ -96,6 +126,8 @@
 		1EA224121CD9CC46007BF4B4 = {
 			isa = PBXGroup;
 			children = (
+				AE721F861CE96567000B170A /* CoreVideo.framework */,
+				AE721F841CE9655C000B170A /* CoreMedia.framework */,
 				1EA226351CD9D2D4007BF4B4 /* UPLiveSDK.framework */,
 				1EA226331CD9D2C7007BF4B4 /* libz.tbd */,
 				1EA226311CD9D2BC007BF4B4 /* libiconv.tbd */,
@@ -124,6 +156,21 @@
 			children = (
 				1EA224211CD9CC46007BF4B4 /* AppDelegate.h */,
 				1EA224221CD9CC46007BF4B4 /* AppDelegate.m */,
+				1E99B7151CEDA7C80021DC35 /* UPLivePlayerDemoViewController.h */,
+				1E99B7161CEDA7C80021DC35 /* UPLivePlayerDemoViewController.m */,
+				1EF6AD3D1CEEEFFE004A7DCA /* UPLivePlayerVC.h */,
+				1EF6AD3E1CEEEFFE004A7DCA /* UPLivePlayerVC.m */,
+				1EF6AD3F1CEEEFFE004A7DCA /* UPLivePlayerVC.xib */,
+				1E99B7171CEDA7C80021DC35 /* UPLiveStreamerDemoViewController.h */,
+				1E99B7181CEDA7C80021DC35 /* UPLiveStreamerDemoViewController.m */,
+				1E8887861CEEAA1400F8F8B0 /* UPLiveStreamerSettingVC.h */,
+				1E8887871CEEAA1400F8F8B0 /* UPLiveStreamerSettingVC.m */,
+				1E8887881CEEAA1400F8F8B0 /* UPLiveStreamerSettingVC.xib */,
+				1E8887831CEDC4B500F8F8B0 /* UPLiveStreamerLivingVC.h */,
+				1E8887841CEDC4B500F8F8B0 /* UPLiveStreamerLivingVC.m */,
+				1E88878B1CEED87F00F8F8B0 /* UPLiveStreamerLivingVC.xib */,
+				1E99B7191CEDA7C80021DC35 /* UPLiveViewController.h */,
+				1E99B71A1CEDA7C80021DC35 /* UPLiveViewController.m */,
 				1EA224241CD9CC46007BF4B4 /* ViewController.h */,
 				1EA224251CD9CC46007BF4B4 /* ViewController.m */,
 				1EA226371CD9D363007BF4B4 /* DemoViewControllerPlayer1.h */,
@@ -217,9 +264,12 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				1EF6AD411CEEEFFE004A7DCA /* UPLivePlayerVC.xib in Resources */,
 				1EA2242E1CD9CC46007BF4B4 /* LaunchScreen.storyboard in Resources */,
+				1E88878C1CEED87F00F8F8B0 /* UPLiveStreamerLivingVC.xib in Resources */,
 				1EA2242B1CD9CC46007BF4B4 /* Assets.xcassets in Resources */,
 				1EA224291CD9CC46007BF4B4 /* Main.storyboard in Resources */,
+				1E88878A1CEEAA1400F8F8B0 /* UPLiveStreamerSettingVC.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -230,17 +280,23 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				1E99B71C1CEDA7C80021DC35 /* UPLiveStreamerDemoViewController.m in Sources */,
+				1E99B71D1CEDA7C80021DC35 /* UPLiveViewController.m in Sources */,
 				1EA226541CD9D555007BF4B4 /* DemoViewControllerStreamer2.m in Sources */,
 				1EA224261CD9CC46007BF4B4 /* ViewController.m in Sources */,
 				1EA2263E1CD9D363007BF4B4 /* DemoViewControllerPlayer2.m in Sources */,
 				1EA226491CD9D4F8007BF4B4 /* QRScanView.m in Sources */,
+				1EF6AD401CEEEFFE004A7DCA /* UPLivePlayerVC.m in Sources */,
 				1EA2263D1CD9D363007BF4B4 /* DemoViewControllerPlayer1.m in Sources */,
 				1EA226551CD9D555007BF4B4 /* DemoViewControllerStreamer3.m in Sources */,
 				1EA224231CD9CC46007BF4B4 /* AppDelegate.m in Sources */,
 				1EA2263F1CD9D363007BF4B4 /* DemoViewControllerFullscreen.m in Sources */,
 				1EA224201CD9CC46007BF4B4 /* main.m in Sources */,
 				1EA226531CD9D555007BF4B4 /* DemoViewControllerStreamer1.m in Sources */,
+				1E8887851CEDC4B500F8F8B0 /* UPLiveStreamerLivingVC.m in Sources */,
+				1E99B71B1CEDA7C80021DC35 /* UPLivePlayerDemoViewController.m in Sources */,
 				1EA226481CD9D4F8007BF4B4 /* UPQRCodeViewController.m in Sources */,
+				1E8887891CEEAA1400F8F8B0 /* UPLiveStreamerSettingVC.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -302,7 +358,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 9.2;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				MTL_ENABLE_DEBUG_INFO = YES;
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = iphoneos;
@@ -339,7 +395,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 9.2;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				SDKROOT = iphoneos;
 				VALIDATE_PRODUCT = YES;

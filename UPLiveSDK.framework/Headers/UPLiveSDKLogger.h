@@ -10,25 +10,27 @@
 
 
 
-#define  logActiveTags           (Tag_stream + Tag_video + Tag_audio + Tag_default)
+#define  logActiveTags           (UP_Tag_video + UP_Tag_audio + UP_Tag_default)
 
 
 typedef NS_ENUM(NSInteger, UPLiveSDKLogger_level) {
-    Level_debug,
-    Level_warn,
-    Level_error
+    UP_Level_debug,
+    UP_Level_warn,
+    UP_Level_error
 };
 
-UPLiveSDKLogger_level log_level_limit  = Level_warn;
-
 typedef NS_ENUM(NSInteger, UPLiveSDKLogger_tag) {
-    Tag_stream = 1 << 0,
-    Tag_video  = 1 << 1,
-    Tag_audio  = 1 << 2,
-    Tag_default  = 1 << 3,
+    UP_Tag_stream = 1 << 0,
+    UP_Tag_video  = 1 << 1,
+    UP_Tag_audio  = 1 << 2,
+    UP_Tag_default  = 1 << 3,
 };
 
 @interface UPLiveSDKLogger : NSObject
+
+@property (nonatomic)UPLiveSDKLogger_level UP_LOG_LEVEL_LIMIT;
+
++ (UPLiveSDKLogger *)sharedInstance;
 
 + (void)log:(NSString *)message level:(UPLiveSDKLogger_level)level tag:(UPLiveSDKLogger_tag)tag;
 + (void)setLogLevel:(UPLiveSDKLogger_level)level;

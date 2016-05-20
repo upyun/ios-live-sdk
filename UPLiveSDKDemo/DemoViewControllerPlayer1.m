@@ -28,7 +28,7 @@
 @implementation DemoViewControllerPlayer1
 
 - (void)viewDidLoad {
-    [UPAVPlayer setLogLevel:UPAVPlayerLogger_level_debug];
+    [UPLiveSDKLogger setLogLevel:UP_Level_debug];
     self.view.backgroundColor = [UIColor whiteColor];
     
     _activityIndicatorView = [[UIActivityIndicatorView alloc] init];
@@ -60,9 +60,16 @@
     [self.view addSubview:_bufferingProgressLabel];
     
     //rtmp://live.hkstv.hk.lxdns.com/live/hks
+    //rtmp://istream.a8.com/live/1458706301191881
+    //1463363770891194
     //http://vevoplaylist-live.hls.adaptive.level3.net/vevo/ch1/appleman.m3u8      多码率m3u8 嵌套
     //http://vevoplaylist-live.hls.adaptive.level3.net/vevo/ch1/02/prog_index.m3u8 单m3u8
-    _player = [[UPAVPlayer alloc] initWithURL:@"rtmp://live.hkstv.hk.lxdns.com/live/hks"];
+    
+    NSString *resourcePath = [[NSBundle mainBundle] resourcePath];
+    NSString *filePath = [resourcePath stringByAppendingPathComponent:@"war3end.mp4"];
+    
+    
+    _player = [[UPAVPlayer alloc] initWithURL:filePath];
     _player.bufferingTime = 2;
     [_player setFrame:CGRectMake(0, 64, self.view.frame.size.width, self.view.frame.size.width)];
     [_player setImageURL:[NSString stringWithFormat:@"https://www.upyun.com/assets/chunyu/featureIcon_01.png"]];

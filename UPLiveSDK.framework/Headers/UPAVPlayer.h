@@ -9,6 +9,7 @@
 #import <Foundation/Foundation.h>
 #import <MediaPlayer/MediaPlayer.h>
 #import "UPEAGLView.h"
+#import "UPLiveSDKLogger.h"
 
 #define Version @"1.0.0"
 
@@ -18,7 +19,7 @@ typedef NS_ENUM(NSInteger, UPAVPlayerLogger_level) {
     UPAVPlayerLogger_level_error
 };
 
-typedef NS_ENUM(NSInteger, UPAVPlayerStatus) {
+typedef NS_ENUM(int, UPAVPlayerStatus) {
     UPAVPlayerStatusIdle,
     UPAVPlayerStatusPlaying_buffering,
     UPAVPlayerStatusPlaying,
@@ -53,6 +54,6 @@ typedef void(^BufferingProgressBlock)(float progress);
 - (void)stop;
 - (void)configChoppyRetryMaxCount:(NSInteger)maxCount inTimeScope:(NSTimeInterval)timeScope;
 
-+ (void)setLogLevel:(UPAVPlayerLogger_level)level;
++ (void)setLogLevel:(UPLiveSDKLogger_level)level;
 
 @end

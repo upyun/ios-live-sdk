@@ -55,7 +55,7 @@
                     if (error) {
                         msg = error.description;
                     }
-                    NSLog(@"msg");
+                    NSLog(@"msg:%@",msg);
                 }
                     break;
                 default:
@@ -130,6 +130,7 @@
 }
 
 - (void)viewDidLoad {
+    [super viewDidLoad];
     [UPAVPlayer setLogLevel:UPAVPlayerLogger_level_debug];
 
     _dataArray = @[@"rtmp://live.hkstv.hk.lxdns.com/live/hks",

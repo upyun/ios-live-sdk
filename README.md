@@ -56,7 +56,9 @@ Demo 下载: `https://github.com/upyun/ios-live-sdk`
 
 * 安装使用说明
 
- 安装方法：直接将 ``UPLiveSDK.framework`` 拖拽到目标工程目录；
+ 安装方法：直接将 ``UPLiveSDK.framework`` 拖拽到目标工程目录;
+ 
+ 使用: 详见 DEMO 
 
  
 
@@ -475,6 +477,25 @@ md5 之后： `cd07624363efbcc102e772c2e270e811`
                 streamName:(NSString *)streamName; //流名， 比如示例推流地址中的 abc
                 
 ```
+
+##版本历史
+
+ __1.1 基本的直播推流器和播放器；__  
+ 
+ * 播放器支持 rtmp, hls, flv;
+ * 推流器支持 rtmp 推流。
+  
+  
+  
+ __1.2 性能优化，添加美颜滤镜__
+ 	
+ * 推流添加美颜滤镜； 
+ * 缩小 framework 打包体积；	
+ * 修复播放器清晰度 bug；		
+ * 修复播放器开始播放花屏 bug；	
+ * 修改播放器卡顿重新连接逻辑；	
+ * 播放器秒开优化。
+
 
 ##反馈与建议
 
