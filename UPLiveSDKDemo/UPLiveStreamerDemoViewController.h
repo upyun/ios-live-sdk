@@ -33,6 +33,8 @@
 @property (nonatomic) AVCaptureVideoOrientation videoOrientation;//设置拍摄横屏竖屏幕
 @property (nonatomic) UPAVCapturerPresetLevel level;
 @property (nonatomic, assign) UPBeautifyFilterLevel filterLevel;
+@property (nonatomic) BOOL fullScreenPreviewOn;
+
 
 @end
 

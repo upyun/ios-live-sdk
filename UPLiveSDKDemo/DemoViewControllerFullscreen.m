@@ -27,7 +27,7 @@
 
 @implementation DemoViewControllerFullscreen
 - (void)viewDidLoad {
-    [UPAVPlayer setLogLevel:UPAVPlayerLogger_level_debug];
+    [UPAVPlayer setLogLevel:UP_Level_debug];
     self.view.backgroundColor = [UIColor whiteColor];
     
     _activityIndicatorView = [[UIActivityIndicatorView alloc] init];

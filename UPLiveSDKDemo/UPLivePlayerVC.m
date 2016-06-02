@@ -9,19 +9,23 @@
 #import "UPLivePlayerVC.h"
 #import <UPLiveSDK/UPAVPlayer.h>
 
-@interface UPLivePlayerVC ()
+@interface UPLivePlayerVC () <UPAVPlayerDelegate>
 {
     UPAVPlayer *_player;
-    UIButton *_infoBtn;
     UIActivityIndicatorView *_activityIndicatorView;
     UILabel *_bufferingProgressLabel;
+    BOOL _sliding;
 }
 
-@property (nonatomic, strong) UIButton *playBtn;
-@property (nonatomic, strong) UIButton *stopBtn;
+@property (weak, nonatomic) IBOutlet UIButton *playBtn;
+@property (weak, nonatomic) IBOutlet UIButton *pauseBtn;
+@property (weak, nonatomic) IBOutlet UIButton *stopBtn;
+@property (weak, nonatomic) IBOutlet UIButton *infoBtn;
+@property (weak, nonatomic) IBOutlet UILabel *timelabel;
+@property (weak, nonatomic) IBOutlet UISlider *playProgressSlider;
+
 @property (nonatomic, strong) UIActivityIndicatorView *activityIndicatorView;
 @property (nonatomic, strong) UILabel *bufferingProgressLabel;
-
 
 @end
 
@@ -36,15 +40,15 @@
     _activityIndicatorView.activityIndicatorViewStyle= UIActivityIndicatorViewStyleWhite;
     _activityIndicatorView.hidesWhenStopped = YES;
     
-    _playBtn = [[UIButton alloc] initWithFrame:CGRectMake(40, 500, 100, 100)];
     [_playBtn addTarget:self action:@selector(play:) forControlEvents:UIControlEventTouchUpInside];
     [_playBtn setTitleColor:[UIColor blueColor] forState:UIControlStateNormal];
     [_playBtn setTitle:@"play" forState:UIControlStateNormal];
-    _stopBtn = [[UIButton alloc] initWithFrame:CGRectMake(140, 500, 100, 100)];
     [_stopBtn addTarget:self action:@selector(stop:) forControlEvents:UIControlEventTouchUpInside];
     [_stopBtn setTitleColor:[UIColor blueColor] forState:UIControlStateNormal];
+    [_pauseBtn addTarget:self action:@selector(pause:) forControlEvents:UIControlEventTouchUpInside];
+    [_pauseBtn setTitleColor:[UIColor blueColor] forState:UIControlStateNormal];
+    [_pauseBtn setTitle:@"pause" forState:UIControlStateNormal];
     [_stopBtn setTitle:@"stop" forState:UIControlStateNormal];
-    _infoBtn = [[UIButton alloc] initWithFrame:CGRectMake(240, 500, 100, 100)];
     [_infoBtn addTarget:self action:@selector(info:) forControlEvents:UIControlEventTouchUpInside];
     [_infoBtn setTitleColor:[UIColor blueColor] forState:UIControlStateNormal];
     [_infoBtn setTitle:@"info" forState:UIControlStateNormal];
@@ -53,69 +57,23 @@
     _bufferingProgressLabel.backgroundColor = [UIColor clearColor];
     _bufferingProgressLabel.textColor = [UIColor lightTextColor];
     
+    _playProgressSlider.minimumValue = 0;
+    _playProgressSlider.maximumValue = 0;
+    _playProgressSlider.value = 0;
+    _playProgressSlider.continuous = NO;
+    [_playProgressSlider addTarget:self action:@selector(valueChange:) forControlEvents:(UIControlEventTouchUpInside)];
+    [_playProgressSlider addTarget:self action:@selector(valueChange:) forControlEvents:(UIControlEventTouchUpOutside)];
+    [_playProgressSlider addTarget:self action:@selector(touchDown:) forControlEvents:(UIControlEventTouchDown)];
+
     [self.view addSubview:_activityIndicatorView];
     [self.view addSubview:_playBtn];
     [self.view addSubview:_stopBtn];
     [self.view addSubview:_infoBtn];
     [self.view addSubview:_bufferingProgressLabel];
     
-
     _player = [[UPAVPlayer alloc] initWithURL:self.url];
     _player.bufferingTime = self.bufferingTime;
-    __weak UPLivePlayerVC *weakself = self;
-    _player.playerStadusBlock = ^(UPAVPlayerStatus playerStatus, NSError *error){
-        switch (playerStatus) {
-            case UPAVPlayerStatusIdle:{
-                [weakself.activityIndicatorView stopAnimating];
-                weakself.bufferingProgressLabel.hidden = YES;
-                weakself.playBtn.enabled = YES;
-                [weakself.playBtn setTitleColor:[UIColor blueColor] forState:UIControlStateNormal];
-                weakself.stopBtn.enabled = NO;
-                [weakself.stopBtn setTitleColor:[UIColor lightGrayColor] forState:UIControlStateNormal];
-            }
-                break;
-            case UPAVPlayerStatusPlaying_buffering:{
-                [weakself.activityIndicatorView startAnimating];
-                weakself.bufferingProgressLabel.hidden = NO;
-                
-                weakself.playBtn.enabled = NO;
-                [weakself.playBtn setTitleColor:[UIColor lightGrayColor] forState:UIControlStateNormal];
-                weakself.stopBtn.enabled = YES;
-                [weakself.stopBtn setTitleColor:[UIColor blueColor] forState:UIControlStateNormal];
-            }
-                break;
-            case UPAVPlayerStatusPlaying:{
-                [weakself.activityIndicatorView stopAnimating];
-                weakself.bufferingProgressLabel.hidden = YES;
-                
-            }
-                break;
-            case UPAVPlayerStatusFailed:{
-                [weakself.activityIndicatorView stopAnimating];
-                weakself.bufferingProgressLabel.hidden = YES;
-                NSString *msg = @"请重新尝试播放.";
-                if (error) {
-                    msg = error.description;
-                }
-                UIAlertController* alert = [UIAlertController alertControllerWithTitle:@"播放失败!"
-                                                                               message:msg
-                                                                        preferredStyle:UIAlertControllerStyleAlert];
-                UIAlertAction* defaultAction = [UIAlertAction actionWithTitle:@"OK"
-                                                                        style:UIAlertActionStyleDefault
-                                                                      handler:^(UIAlertAction * action) {
-                                                                      }];
-                [alert addAction:defaultAction];
-                [weakself presentViewController:alert animated:YES completion:nil];
-            }
-                break;
-            default:
-                break;
-        }
-    };
-    
-    _player.bufferingProgressBlock = ^(float progress) {
-        weakself.bufferingProgressLabel.text = [NSString stringWithFormat:@"%.0f %%", (progress * 100)];
-    };
+    _player.delegate = self;
 }
 
 - (void)viewWillAppear:(BOOL)animated {
@@ -142,9 +100,12 @@
 - (void)stop:(id)sender {
     [_player stop];
 }
+- (void)pause:(id)sender {
+    [_player pause];
+}
 
 - (void)info:(id)sender {
-    NSString *message = [NSString stringWithFormat:@"Stream Info:\n %@ \n\n\n\n", _player.videoInfo];
+    NSString *message = [NSString stringWithFormat:@"Stream Info:\n %@ \n\n\n\n", _player.streamInfo.descriptionInfo];
     UIAlertController* alert = [UIAlertController alertControllerWithTitle:@"info"
                                                                    message:message
                                                             preferredStyle:UIAlertControllerStyleAlert];
@@ -164,5 +125,131 @@
     [self dismissViewControllerAnimated:YES completion:nil];
 }
 
+-(void)touchDown:(UISlider *)slider{
+    _sliding = YES;
+}
+
+-(void)valueChange:(UISlider *)slider_{
+    NSLog(@"slider value : %.2f", slider_.value);
+    if (_player) {
+        [_player seekToTime:slider_.value];
+        _sliding = NO;
+    }
+}
+
+#pragma mark UPAVPlayerDelegate
+
+- (void)UPAVPlayer:(UPAVPlayer *)player streamStatusDidChange:(UPAVStreamStatus)streamStatus {
+    switch (streamStatus) {
+        case UPAVStreamStatusIdle:
+            break;
+        case UPAVStreamStatusConnecting:{
+            NSLog(@"正在建立连接－－－－－");
+//            _player.interrupted = YES;
+        }
+            break;
+        case UPAVStreamStatusReady:{
+            NSLog(@"连接建立成功－－－－－");
+        }
+            break;
+        default:
+            break;
+    }
+}
+
+- (void)UPAVPlayer:(id)player playerStatusDidChange:(UPAVPlayerStatus)playerStatus {
+    
+    switch (playerStatus) {
+        case UPAVPlayerStatusIdle:{
+            [self.activityIndicatorView stopAnimating];
+            self.bufferingProgressLabel.hidden = YES;
+            self.playBtn.enabled = YES;
+            [self.playBtn setTitleColor:[UIColor blueColor] forState:UIControlStateNormal];
+            self.stopBtn.enabled = NO;
+            [self.stopBtn setTitleColor:[UIColor lightGrayColor] forState:UIControlStateNormal];
+            self.pauseBtn.enabled = NO;
+            [self.pauseBtn setTitleColor:[UIColor lightGrayColor] forState:UIControlStateNormal];
+        }
+            break;
+            
+        case UPAVPlayerStatusPause:{
+            [self.activityIndicatorView stopAnimating];
+            self.bufferingProgressLabel.hidden = YES;
+            self.playBtn.enabled = YES;
+            [self.playBtn setTitleColor:[UIColor blueColor] forState:UIControlStateNormal];
+            self.stopBtn.enabled = YES;
+            [self.stopBtn setTitleColor:[UIColor blueColor] forState:UIControlStateNormal];
+            self.pauseBtn.enabled = NO;
+            [self.pauseBtn setTitleColor:[UIColor lightGrayColor] forState:UIControlStateNormal];
+        }
+            break;
+            
+        case UPAVPlayerStatusPlaying_buffering:{
+            [self.activityIndicatorView startAnimating];
+            self.bufferingProgressLabel.hidden = NO;
+            self.playBtn.enabled = NO;
+            [self.playBtn setTitleColor:[UIColor lightGrayColor] forState:UIControlStateNormal];
+            self.stopBtn.enabled = YES;
+            [self.stopBtn setTitleColor:[UIColor blueColor] forState:UIControlStateNormal];
+            self.pauseBtn.enabled = YES;
+            [self.pauseBtn setTitleColor:[UIColor blueColor] forState:UIControlStateNormal];
+            
+        }
+            break;
+        case UPAVPlayerStatusPlaying:{
+            [self.activityIndicatorView stopAnimating];
+            self.bufferingProgressLabel.hidden = YES;
+            self.pauseBtn.enabled = YES;
+            [self.pauseBtn setTitleColor:[UIColor blueColor] forState:UIControlStateNormal];
+        }
+            break;
+        case UPAVPlayerStatusFailed:{
+            
+        }
+            break;
+        default:
+            break;
+    }
+}
+
+- (void)UPAVPlayer:(id)player streamInfoDidReceive:(UPAVPlayerStreamInfo *)streamInfo {
+    NSLog(@"获取视频信息-- %@ ", streamInfo.descriptionInfo);
+    if (streamInfo.canPause && streamInfo.canSeek) {
+        _playProgressSlider.maximumValue = streamInfo.duration;
+        NSLog(@"streamInfo.duration %f", streamInfo.duration);
+    } else {
+        _playProgressSlider.enabled = NO;
+    }
+}
+
+- (void)UPAVPlayer:(id)player displayPositionDidChange:(float)position {
+    if (_sliding) {
+        return;
+    }
+    _playProgressSlider.value = position;
+    self.timelabel.text = [NSString stringWithFormat:@"%.0f / %.0f", position, _player.streamInfo.duration];
+}
+
+- (void)UPAVPlayer:(id)player playerError:(NSError *)error {
+    [self.activityIndicatorView stopAnimating];
+    self.bufferingProgressLabel.hidden = YES;
+    NSString *msg = @"请重新尝试播放.";
+    if (error) {
+        msg = error.description;
+    }
+    UIAlertController* alert = [UIAlertController alertControllerWithTitle:@"播放失败!"
+                                                                   message:msg
+                                                            preferredStyle:UIAlertControllerStyleAlert];
+    UIAlertAction* defaultAction = [UIAlertAction actionWithTitle:@"OK"
+                                                            style:UIAlertActionStyleDefault
+                                                          handler:^(UIAlertAction * action) {
+                                                          }];
+    [alert addAction:defaultAction];
+    [self presentViewController:alert animated:YES completion:nil];
+}
+
+- (void)UPAVPlayer:(id)player bufferingProgressDidChange:(float)progress {
+    self.bufferingProgressLabel.text = [NSString stringWithFormat:@"%.0f %%", (progress * 100)];
+}
 
 @end

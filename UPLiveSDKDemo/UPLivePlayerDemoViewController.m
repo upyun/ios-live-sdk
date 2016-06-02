@@ -27,7 +27,15 @@
     
     textFieldPlayUrl = [[UITextField alloc] initWithFrame:CGRectMake(20, 144, 280, 33)];
     textFieldPlayUrl.delegate = self;
-    textFieldPlayUrl.text = @"rtmp://live.hkstv.hk.lxdns.com/live/hks";
+    
+    /* test urls
+     http://test86400.b0.upaiyun.com/7937144.mp4
+     rtmp://live.hkstv.hk.lxdns.com/live/hks
+     http://live.hkstv.hk.lxdns.com/live/hks/playlist.m3u8
+     http://devimages.apple.com.edgekey.net/streaming/examples/bipbop_4x3/gear1/prog_index.m3u8
+     */
+
+    textFieldPlayUrl.text = @"http://test86400.b0.upaiyun.com/7937144.mp4";
     textFieldPlayUrl.borderStyle = UITextBorderStyleRoundedRect;
     textFieldPlayUrl.font = [UIFont systemFontOfSize:12.0f];
     textFieldPlayUrl.clearButtonMode = UITextFieldViewModeWhileEditing;
@@ -64,6 +72,14 @@
     [beginBtn setTitle:@"开始播放" forState:UIControlStateNormal];
     
     [self.view addSubview:beginBtn];
+    
+    
+    self.view.backgroundColor = [UIColor whiteColor];
+    UITapGestureRecognizer * tapGesture = [[UITapGestureRecognizer alloc]
+                                           initWithTarget:self
+                                           action:@selector(hideKeyBoard)];
+    
+    [self.view addGestureRecognizer:tapGesture];
 }
 
 - (BOOL)textFieldShouldReturn:(UITextField *)textField {
@@ -85,5 +101,8 @@
 
 }
 
+- (void)hideKeyBoard {
+    [textFieldPlayUrl resignFirstResponder];
+}
 
 @end

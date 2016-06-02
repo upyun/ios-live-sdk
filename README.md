@@ -1,4 +1,4 @@
-#又拍云 iOS 推拉流 SDK 使用说明
+# 又拍云 iOS 推拉流 SDK 使用说明
 
 ## 阅读对象
 
@@ -28,13 +28,19 @@
 
 * 支持闪光灯开关
 
-* 支持音视频目标码率设置
+* 支持目标码率设置
+
+* 支持拍摄帧频设置
+
+* 内置美颜滤镜
+
+* 支持横屏拍摄
 
 ## 播放端功能特性
 
-* 支持视频格式：`HLS`, `RTMP`, `HTTP-FLV` 等，支持 `HLS` 多种分辨率切换
+* 支持视频格式：`HLS`, `RTMP`, `FLV`，`mp4` 等直播或点播视频格式，支持 `HLS` 多种分辨率切换
 
-* 低延时直播体验，配合又拍云推流 `SDK`, 可以达到全程直播稳定在 2-3 秒延时；
+* 低延时直播体验，配合又拍云推流 `SDK` 及 `CDN` 分发, 可以达到全程直播稳定在 `2-3` 秒延时
 
 * 支持设置窗口大小和全屏设置
 
@@ -44,11 +50,13 @@
 
 * 支持缓冲大小设置，缓冲进度回调
 
+* 支持自动音画同步调整
 
-##SDK下载
+
+## SDK下载
 Demo 下载: `https://github.com/upyun/ios-live-sdk`
 
-##SDK使用说明
+## SDK使用说明
 
 * 运行环境和兼容性
 
@@ -58,7 +66,7 @@ Demo 下载: `https://github.com/upyun/ios-live-sdk`
 
  安装方法：直接将 ``UPLiveSDK.framework`` 拖拽到目标工程目录;
  
- 使用: 详见 DEMO 
+ 使用: 详见 DEMO 工程 
 
  
 
@@ -101,21 +109,16 @@ Demo 下载: `https://github.com/upyun/ios-live-sdk`
 
 `UPAVCapturer` 为单例模式。
 
-1.简单的使用:  
+1.设置视频预览视图:  
 
 ```
+   UIViewContentMode previewContentMode = UIViewContentModeScaleAspectFit;
+   self.videoPreview = [[UPAVCapturer sharedInstance] previewWithFrame:CGRectMake(0, 0, width, height) 
+   contentMode:previewContentMode];
+   self.videoPreview.backgroundColor = [UIColor blackColor];
+   [self.view insertSubview:self.videoPreview atIndex:0];
 
-	[UPAVCapturer sharedInstance].outStreamPath  = @"pushurl";
 
-	AVCaptureVideoPreviewLayer *_previewLayer = [AVCaptureVideoPreviewLayer layerWithSession:[UPAVCapturer sharedInstance].captureSession];
-
-    _previewLayer.frame = CGRectMake(0, 200, self.view.frame.size.width, self.view.frame.size.width);
-
-    _previewLayer.videoGravity = AVLayerVideoGravityResizeAspectFill;
-
-    [self.view.layer addSublayer:_previewLayer];
-
-    [[UPAVCapturer sharedInstance] start];
 
 ```
 
@@ -123,7 +126,7 @@ Demo 下载: `https://github.com/upyun/ios-live-sdk`
 
 ```
 	
-	NSString *rtmpPushUrl = @"pushurl";
+	NSString *rtmpPushUrl = @"rtmp://host/liveapp/streamid";
 	
 	[UPAVCapturer sharedInstance].outStreamPath = rtmpPushUrl;
 
@@ -143,29 +146,8 @@ Demo 下载: `https://github.com/upyun/ios-live-sdk`
 
 ```
 
-4.设置预览画面   
 
-将 `[UPAVCapturer sharedInstance].captureSession` 赋值给 `AVCaptureVideoPreviewLayer` 对象。完整代码请参考 demo 工程。
-
-```
-
-- (void)setPreview {
-
-    [_previewLayer removeFromSuperlayer];
-
-    _previewLayer = [AVCaptureVideoPreviewLayer layerWithSession:[UPAVCapturer sharedInstance].captureSession];
-
-    _previewLayer.frame = CGRectMake(0, 150, self.view.frame.size.width, self.view.frame.size.width);
-
-    _previewLayer.videoGravity = AVLayerVideoGravityResizeAspectFill;     
-
-    [self.view.layer addSublayer:_previewLayer];
-
-}
-
-```
-
-5.摄像头切换接口, 闪光灯设置接口 
+4.摄像头切换接口, 闪光灯设置接口 
 
 ```
 
@@ -179,7 +161,7 @@ Demo 下载: `https://github.com/upyun/ios-live-sdk`
 
 ``` 
 
-6.码率设置接口
+5.码率设置接口
 
 可以根据网络情况适当调整码率：
 
@@ -189,9 +171,9 @@ Demo 下载: `https://github.com/upyun/ios-live-sdk`
 
 ```
 
-7.推流状态回调
+6.推流状态回调
 
-如果在直播过程发生异常，可以通过 `uPAVCapturerStatusBlock` 捕捉错误信息，并且关闭采集和推流。__注意：__uPAVCapturerStatusBlock 不保证在主线程执行。
+如果在直播过程发生异常，可以通过 `uPAVCapturerStatusBlock` 捕捉错误信息，并且关闭拍摄推流。__注意：__uPAVCapturerStatusBlock 不保证在主线程执行。
 
 ```
 
@@ -211,7 +193,39 @@ Demo 下载: `https://github.com/upyun/ios-live-sdk`
 
 ```
 
-##拉流 SDK 使用示例 UPAVPlayer
+7.其他参数设置
+
+```  
+
+	//选择拍摄分辨率，默认 640 X 480
+	[UPAVCapturer sharedInstance].capturerPresetLevel = _settings.level;
+	
+	//选择前后置摄像头，默认使用后置摄像头
+	[UPAVCapturer sharedInstance].camaraPosition = _settings.camaraPosition;
+	
+	//选择横竖屏拍摄方式，默认竖屏拍摄
+	[UPAVCapturer sharedInstance].videoOrientation = _settings.videoOrientation;
+	
+	//推流是否自动开始，如果设置为 NO 只拍摄不推流。
+	[UPAVCapturer sharedInstance].streamingOnOff = _settings.streamingOnOff;
+	
+	//美颜滤镜是否开启，默认开启
+	[UPAVCapturer sharedInstance].filter = _settings.filter;
+	
+	//设置美颜滤镜等级
+	[UPAVCapturer sharedInstance].filterLevel = _settings.filterLevel;
+	
+	//闪光灯开关
+	[UPAVCapturer sharedInstance].camaraTorchOn = _settings.camaraTorchOn;
+	
+	//设置拍摄帧频，默认值 24 fps
+	[UPAVCapturer sharedInstance].fps = _settings.fps;
+
+```
+
+
+
+## 拉流 SDK 使用示例 UPAVPlayer
 
 使用 ```UPAVPlayer``` 需要引入头文件 ````#import <UPLiveSDK/UPAVPlayer.h>```
 
@@ -221,23 +235,7 @@ Demo 下载: `https://github.com/upyun/ios-live-sdk`
 
      
 
-1.简单的使用:  
-
-```
-
-	UPAVPlayer *player = [[UPAVPlayer alloc] initWithURL:@"playurl"];  
-
-	[player setFrame:CGRectMake(0, 64, self.view.frame.size.width, self.view.frame.size.width)];
-
-	[self.view addSubview:player.playView atIndex:0];
-
-	[player play];
-
-	[player stop];
-
-```     
-
-2.设置播放地址
+1.设置播放地址
 
 ```
 
@@ -245,83 +243,88 @@ Demo 下载: `https://github.com/upyun/ios-live-sdk`
     _player = [[UPAVPlayer alloc] initWithURL:@"rtmp://live.hkstv.hk.lxdns.com/live/hks"];
 
     //设置播放器画面尺寸
-    [_player setFrame:CGRectMake(0, 64, self.view.frame.size.width, self.view.frame.size.width)];
-
+    [_player setFrame:[UIScreen mainScreen].bounds];
     
     //将播放器画面添加到 UIview上展示
     [self.view insertSubview:_player.playView atIndex:0];
 
 ```
 
-3.视频流基本信息 
-
-```
-	//播放流的基本信息
-    NSString *message = [NSString stringWithFormat:@"Stream Info:\n %@", _player.videoInfo];
+2.视频流基本信息 
 
 ```
 
-4.播放状态回调 
+- (void)UPAVPlayer:(id)player streamInfoDidReceive:(UPAVPlayerStreamInfo *)streamInfo {
+    NSLog(@"视频信息-- %@ ", streamInfo.descriptionInfo);
+    if (streamInfo.canPause && streamInfo.canSeek) {
+        _playProgressSlider.maximumValue = streamInfo.duration;
+        NSLog(@"streamInfo.duration %f", streamInfo.duration);
+    } else {
+        _playProgressSlider.enabled = NO;
+    }
+}
 
 ```
 
-    __weak DemoViewController1 *weakself = self;
+3.播放状态回调 
 
-    _player.playerStadusBlock = ^(UPAVPlayerStatus playerStatus, NSError *error){
-
-        switch (playerStatus) {
-
-            case UPAVPlayerStatusIdle:{
-				// 未进行播放
-            }
-
-                break;
-
-            case UPAVPlayerStatusPlaying_buffering:{
-                // 缓存中
-            }
-
-                break;
-
-            case UPAVPlayerStatusPlaying:{
-                // 播放中
-            }
-
-                break;
-
-            case UPAVPlayerStatusFailed:{
-               // 播放失败
-            }
-
-                break;
-
-            default:
-
-                break;
-
+```
+- (void)UPAVPlayer:(id)player playerStatusDidChange:(UPAVPlayerStatus)playerStatus {
+    
+    switch (playerStatus) {
+        case UPAVPlayerStatusIdle:{
+            // 未进行播放
         }
+            break;
+            
+        case UPAVPlayerStatusPause:{
+            //播放暂停
+        }
+            break;
+            
+        case UPAVPlayerStatusPlaying_buffering:{
+            //播放缓冲中
+        }
+            break;
+        case UPAVPlayerStatusPlaying:{
+            //正在播放
+        }
+            break;
+        case UPAVPlayerStatusFailed:{
+            //播放失败
+        }
+            break;
+        default:
+            break;
+    }
+}
 
-    };
 
 ```
 
-5.缓冲进度回调，缓冲时间设置
+4.缓冲进度回调
 
 ```
 
-    //缓冲进度回调
+- (void)UPAVPlayer:(id)player bufferingProgressDidChange:(float)progress {
+    self.bufferingProgressLabel.text = [NSString stringWithFormat:@"%.0f %%", (progress * 100)];
+}
 
-    _player.bufferingProgressBlock = ^(float progress) {
 
-        weakself.bufferingProgressLabel.text = [NSString stringWithFormat:@"%.0f %%", (progress * 100)];
+```	
 
-    };
-
-    //缓冲时间设置
-
-    _player.bufferingTime = 2;
-
+			
+5.播放进度回调    			
+ 				    
 ```
+
+- (void)UPAVPlayer:(id)player displayPositionDidChange:(float)position {
+    _playProgressSlider.value = position;
+    self.timelabel.text = [NSString stringWithFormat:@"%.0f / %.0f", position, _player.streamInfo.duration];
+}
+
+
+```	
 
 6.音量设置
 
@@ -346,29 +349,25 @@ Demo 下载: `https://github.com/upyun/ios-live-sdk`
 
 ```
 
-9.设置播放窗口大小设置  
+9.播放错误捕捉 		 
 
 ```
 
-- (void)setFrame:(CGRect)frame;
+- (void)UPAVPlayer:(id)player playerError:(NSError *)error {
+    NSLog(@"播放错误 %@", error);
+}
 
 ```
 
-10.全屏设置 
+
+10.连接、播放、暂停、停止、seek  
 
 ```
-
-@property (nonatomic) BOOL fullScreen;
-
-``` 
-
-11.开始和停止播放  
-
-```
-
-- (void)play;
-
-- (void)stop;
+- (void)connect;//连接文件或视频流。
+- (void)play;//开始播放。如果流文件未连接会自动连接视频流。
+- (void)pause;//暂停播放。直播流无法暂停。
+- (void)stop;//停止播放且关闭视频流。
+- (void)seekToTime:(CGFloat)position;//seek 到固定播放点。直播流无法 seek。
 
 ```
 
@@ -478,16 +477,16 @@ md5 之后： `cd07624363efbcc102e772c2e270e811`
                 
 ```
 
-##版本历史
+## 版本历史			
 
- __1.1 基本的直播推流器和播放器；__  
+
+ __1.0.1 基本的直播推流器和播放器；__  
  
  * 播放器支持 rtmp, hls, flv;
  * 推流器支持 rtmp 推流。
   
   
-  
- __1.2 性能优化，添加美颜滤镜__
+ __1.0.2 性能优化，添加美颜滤镜__
  	
  * 推流添加美颜滤镜； 
  * 缩小 framework 打包体积；	
@@ -495,9 +494,17 @@ md5 之后： `cd07624363efbcc102e772c2e270e811`
  * 修复播放器开始播放花屏 bug；	
  * 修改播放器卡顿重新连接逻辑；	
  * 播放器秒开优化。
+ 
+ 
+  __1.0.3 点播支持__
+ 	
+ * 播放器点播，支持暂停和 seek 功能；
+ * 播放器播放、连接逻辑分离，支持异步预连接和缓冲；
+ * 播放器状态 delegate 方式回调；
+ * 推流器解决 iPhone 6s 音频采集引起相关的 bug；
+ * 推流器横屏拍摄及屏幕旋转适配 demo。
 
-
-##反馈与建议
+## 反馈与建议
 
  邮箱：<livesdk@upai.com>
  

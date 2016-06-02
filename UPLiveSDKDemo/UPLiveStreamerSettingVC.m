@@ -28,7 +28,8 @@
 @property (weak, nonatomic) IBOutlet UISwitch *filterSwitch;
 @property (weak, nonatomic) IBOutlet UISwitch *streamingSwitch;
 @property (weak, nonatomic) IBOutlet UISwitch *flashSwitch;
-
+@property (weak, nonatomic) IBOutlet UISwitch *videoOrientationSwitch;
+@property (weak, nonatomic) IBOutlet UISwitch *fullScreenSwitch;
 
 @property (weak, nonatomic) IBOutlet UIStepper *fpsStepper;
 
@@ -38,14 +39,20 @@
 @implementation UPLiveStreamerSettingVC
 
 - (void)viewDidLoad {
-    _settings = self.demoVC.settings;
     self.pushPathField.delegate = self;
     self.playPathField.delegate = self;
 
     self.view.backgroundColor = [UIColor whiteColor];
+    UITapGestureRecognizer * tapGesture = [[UITapGestureRecognizer alloc]
+                                           initWithTarget:self
+                                           action:@selector(hideKeyBoard)];
+    
+    [self.view addGestureRecognizer:tapGesture];
+
 }
 
 - (void)viewWillAppear:(BOOL)animated {
+    _settings = self.demoVC.settings;
     self.pushPathField.text = _settings.rtmpServerPushPath;
     self.playPathField.text = _settings.rtmpServerPlayPath;
     
@@ -70,8 +77,11 @@
     self.streamingSwitch.on = _settings.streamingOnOff;
     self.flashSwitch.on = _settings.camaraTorchOn;
     
+    if (_settings.videoOrientation == AVCaptureVideoOrientationPortrait ) {
+        self.videoOrientationSwitch.on = NO;
+    }
     
-    
+    self.fullScreenSwitch.on = _settings.fullScreenPreviewOn;
 }
 
 - (IBAction)closeBtn:(id)sender {
@@ -94,6 +104,16 @@
 - (IBAction)flashSwitch:(UISwitch *)sender {
     _settings.camaraTorchOn = sender.on;
 }
+- (IBAction)videoOrientationSwitch:(UISwitch *)sender {
+    if (sender.on) {
+        _settings.videoOrientation = AVCaptureVideoOrientationLandscapeRight;
+    } else {
+        _settings.videoOrientation = AVCaptureVideoOrientationPortrait;
+    }
+}
+- (IBAction)fullScreenSwitch:(UISwitch *)sender {
+    _settings.fullScreenPreviewOn = sender.on;
+}
 
 - (IBAction)fpsBtn:(UIStepper *)sender {
     _settings.fps = (int)self.fpsStepper.value;
@@ -112,11 +132,14 @@
     }
 }
 
-- (BOOL)textFieldShouldReturn:(UITextField *)textField {
-    [self.view endEditing:YES];
+- (BOOL)textFieldShouldEndEditing:(UITextField *)textField {
     _settings.rtmpServerPushPath = self.pushPathField.text;
     _settings.rtmpServerPlayPath = self.playPathField.text;
+    return YES;
+}
 
+- (BOOL)textFieldShouldReturn:(UITextField *)textField {
+    [self.view endEditing:YES];
     return YES;
 }
 
@@ -124,5 +147,9 @@
     _settings.filterLevel = sender.selectedSegmentIndex + 1;
 }
 
+- (void)hideKeyBoard {
+    [_pushPathField resignFirstResponder];
+    [_playPathField resignFirstResponder];
+}
 
 @end

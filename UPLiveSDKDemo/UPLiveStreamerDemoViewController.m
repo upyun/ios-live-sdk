@@ -83,7 +83,7 @@
     settingsBtn.contentHorizontalAlignment = UIControlContentHorizontalAlignmentLeft;
     [settingsBtn setTitle:@"参数设置" forState:UIControlStateNormal];
     
-    UIButton *beginBtn = [[UIButton alloc] initWithFrame:CGRectMake(20, 450, 100, 44)];
+    UIButton *beginBtn = [[UIButton alloc] initWithFrame:CGRectMake(20, 66, 100, 44)];
     [beginBtn addTarget:self action:@selector(beginBtn:) forControlEvents:UIControlEventTouchUpInside];
     [beginBtn setTitleColor:[UIColor blueColor] forState:UIControlStateNormal];
     [beginBtn setTitleColor:[UIColor lightGrayColor] forState:UIControlStateHighlighted];
@@ -94,6 +94,13 @@
     [self.view addSubview:beginBtn];
 
     [self updateUI];
+    
+    self.view.backgroundColor = [UIColor whiteColor];
+    UITapGestureRecognizer * tapGesture = [[UITapGestureRecognizer alloc]
+                                           initWithTarget:self
+                                           action:@selector(hideKeyBoard)];
+    
+    [self.view addGestureRecognizer:tapGesture];
 }
 
 - (void)updateUI {
@@ -113,10 +120,15 @@
     [self presentViewController:livingVC animated:YES completion:nil];
 }
 
-- (BOOL)textFieldShouldReturn:(UITextField *)textField {
-    [self.view endEditing:YES];
+
+- (BOOL)textFieldShouldEndEditing:(UITextField *)textField {
     self.settings.streamId = textFieldStreamId.text;
     [self updateUI];
+    return YES;
+}
+
+- (BOOL)textFieldShouldReturn:(UITextField *)textField {
+    [self.view endEditing:YES];
     return YES;
 }
 
@@ -124,6 +136,11 @@
     _settings = settings;
     [self updateUI];
 }
+
+- (void)hideKeyBoard {
+    [textFieldStreamId resignFirstResponder];
+}
+
 
 
 @end

@@ -52,9 +52,8 @@ typedef void(^UPAVCapturerStatusBlock)(UPAVCapturerStatus status, NSError *error
 
 //默认为 YES，即 UPAVCapturer start 之后会立即推流直播; 如果想延时推流，可以先将 streamingOnOff 设置为 NO，随后需要推流的时候再置为 YES。
 @property (nonatomic, assign) BOOL streamingOnOff;
-@property (nonatomic) UPAVCapturerPresetLevel level;
+@property (nonatomic) UPAVCapturerPresetLevel capturerPresetLevel;
 
-- (void)setShowViewSuperView:(UIView *)superView;
 
 - (void)start;
 - (void)stop;

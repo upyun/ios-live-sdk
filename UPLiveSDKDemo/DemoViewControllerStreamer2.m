@@ -159,7 +159,7 @@
 int64_t bitrate = 600000;
 - (void)bitrate:(UIButton *)sender {
     bitrate = bitrate - 100000;
-    [UPAVCapturer sharedInstance].level = UPAVCapturerPreset_480x360;
+    [UPAVCapturer sharedInstance].capturerPresetLevel = UPAVCapturerPreset_480x360;
 }
 
 //前后镜头切换

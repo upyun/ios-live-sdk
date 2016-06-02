@@ -26,8 +26,10 @@
     [super viewDidLoad];
     self.view.backgroundColor = [UIColor whiteColor];
 
-    [[UPAVCapturer sharedInstance] setShowViewSuperView:self.view];
-
+    UIView *preview = [[UPAVCapturer sharedInstance] previewWithFrame:[UIScreen mainScreen].bounds contentMode:UIViewContentModeScaleAspectFill];
+    preview.backgroundColor = [UIColor blackColor];
+//    preview.transform
+    [self.view insertSubview:preview atIndex:0];
     
     
     _startBtn = [[UIButton alloc] initWithFrame:CGRectMake(50, self.view.frame.size.height - 80, 100, 80)];
@@ -118,12 +120,12 @@
         NSString *text = urlTextField.text;
 //        [UPAVCapturer sharedInstance].sessionPreset  =AVCaptureSessionPreset1280x720;
 //        [UPAVCapturer sharedInstance].level = UPAVCapturerPreset_480x360;
-        [UPAVCapturer sharedInstance].level = UPAVCapturerPreset_640x480;
-//        [UPAVCapturer sharedInstance].level = UPAVCapturerPreset_1280x720;
-        [UPAVCapturer sharedInstance].videoOrientation = AVCaptureVideoOrientationPortrait;
+//        [UPAVCapturer sharedInstance].level = UPAVCapturerPreset_640x480;
+        [UPAVCapturer sharedInstance].capturerPresetLevel = UPAVCapturerPreset_1280x720;
+        [UPAVCapturer sharedInstance].videoOrientation = AVCaptureVideoOrientationLandscapeRight;
         
         //推流地址
-        NSString *rtmpPushUrl = [NSString stringWithFormat:@"%@%@",@"rtmp://testlivesdk.v0.upaiyun.com/live/upyun",text];
+        NSString *rtmpPushUrl = [NSString stringWithFormat:@"%@%@",@"rtmp://uplive.v0.upaiyun.com/live/upyun",text];
         
         //计算 upToken
         NSString *upToken = [UPAVCapturer tokenWithKey:@"password"
@@ -155,6 +157,7 @@
     [[UPAVCapturer sharedInstance] changeCamera];
     
     [UPAVCapturer sharedInstance].filter = ![UPAVCapturer sharedInstance].filter;
+    [UPAVCapturer sharedInstance].filterLevel = Beautify_Normal;
 //    [[UPAVCapturer sharedInstance] changeCamera];
 //    [UPAVCapturer sharedInstance].fps = 15;
 //    NSLog(@"fps %d", [UPAVCapturer sharedInstance].fps);
@@ -171,5 +174,9 @@
 - (void)dealloc {
     NSLog(@"dealloc %@", self);
 }
+
+
+
+
 
 @end
