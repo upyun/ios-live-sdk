@@ -10,7 +10,6 @@
 #import <UPLiveSDK/UPAVCapturer.h>
 
 @interface DemoViewControllerStreamer2 () {
-    AVCaptureVideoPreviewLayer *_previewLayer;
     UIButton *_startBtn;
     UIButton *_bitrateBtn;
     UIButton *_camaraBtn;
@@ -18,6 +17,9 @@
     UIButton *_dismissBtn;
     UIButton *_streamingBtn;
     UIButton *_beautifyBtn;
+    
+    
+    UIView *_preview;
 
 }
 
@@ -26,7 +28,7 @@
 @implementation DemoViewControllerStreamer2
 
 - (void)viewDidLoad {
-    [UPAVCapturer setLogLevel:UPAVCapturerLogger_level_debug];
+    [UPLiveSDKConfig setLogLevel:UP_Level_debug];
     [super viewDidLoad];
     self.view.backgroundColor = [UIColor whiteColor];
     
@@ -112,6 +114,7 @@
     _flashBtn.titleLabel.adjustsFontSizeToFitWidth = TRUE;
     _streamingBtn.titleLabel.adjustsFontSizeToFitWidth = TRUE;
     _beautifyBtn.titleLabel.adjustsFontSizeToFitWidth = TRUE;
+    [self setPreview];
 
     
     [self.view addSubview:_startBtn];
@@ -143,7 +146,6 @@
 - (void)startBtn:(UIButton *)sender {
     
     if (sender.tag == 0) {
-        [self setPreview];
         [[UPAVCapturer sharedInstance] start];
         [sender setTitle:@"stop" forState:UIControlStateNormal];
         sender.tag = 1;
@@ -159,12 +161,19 @@
 int64_t bitrate = 600000;
 - (void)bitrate:(UIButton *)sender {
     bitrate = bitrate - 100000;
-    [UPAVCapturer sharedInstance].capturerPresetLevel = UPAVCapturerPreset_480x360;
+    
+    NSLog(@"bitrate %lld", bitrate);
+    [UPAVCapturer sharedInstance].bitrate = bitrate;
 }
 
 //前后镜头切换
 - (void)camera:(UIButton *)sender {
-    [[UPAVCapturer sharedInstance] changeCamera];
+    
+    if ([UPAVCapturer sharedInstance].camaraPosition == AVCaptureDevicePositionBack) {
+        [UPAVCapturer sharedInstance].camaraPosition = AVCaptureDevicePositionFront;
+    } else {
+        [UPAVCapturer sharedInstance].camaraPosition = AVCaptureDevicePositionBack;
+    }
 }
 
 //闪光灯开关
@@ -174,23 +183,37 @@ int64_t bitrate = 600000;
 
 //推流开关
 - (void)streamingBtn:(UIButton *)sender {
-    [UPAVCapturer sharedInstance].streamingOnOff = ![UPAVCapturer sharedInstance].streamingOnOff;
+    [UPAVCapturer sharedInstance].streamingOn = ![UPAVCapturer sharedInstance].streamingOn;
 }
 
 //美颜开关
 - (void)beautifyBtn:(UIButton *)sender {
-    [UPAVCapturer sharedInstance].filter = ![UPAVCapturer sharedInstance].filter;
+    [UPAVCapturer sharedInstance].filterOn = ![UPAVCapturer sharedInstance].filterOn;
 }
 
 
 
 //设置视频预览画面
 - (void)setPreview {
-    [_previewLayer removeFromSuperlayer];
-    _previewLayer = [AVCaptureVideoPreviewLayer layerWithSession:[UPAVCapturer sharedInstance].captureSession];
-    _previewLayer.frame = CGRectMake(0, 140, self.view.frame.size.width, self.view.frame.size.width);
-    _previewLayer.videoGravity = AVLayerVideoGravityResizeAspectFill;
-    [self.view.layer addSublayer:_previewLayer];
+    
+    
+    //获取和设置视频预览视图 videoPreview
+    UIViewContentMode previewContentMode = UIViewContentModeScaleAspectFit;
+    CGFloat videoPreviewWidth = MIN([UIScreen mainScreen].bounds.size.height, [UIScreen mainScreen].bounds.size.width);
+    CGFloat videoPreviewHeight = MAX([UIScreen mainScreen].bounds.size.height, [UIScreen mainScreen].bounds.size.width);
+    
+    _preview= [[UPAVCapturer sharedInstance] previewWithFrame:CGRectMake(0, 0, videoPreviewWidth, videoPreviewHeight) contentMode:previewContentMode];
+    _preview.backgroundColor = [UIColor blackColor];
+    [self.view addSubview:_preview];
+
+    
+    
+    
+//    [_previewLayer removeFromSuperlayer];
+//    _previewLayer = [AVCaptureVideoPreviewLayer layerWithSession:[UPAVCapturer sharedInstance].captureSession];
+//    _previewLayer.frame = CGRectMake(0, 140, self.view.frame.size.width, self.view.frame.size.width);
+//    _previewLayer.videoGravity = AVLayerVideoGravityResizeAspectFill;
+//    [self.view.layer addSublayer:_previewLayer];
 }
 
 

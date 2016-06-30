@@ -28,11 +28,11 @@
 
 * 支持闪光灯开关
 
-* 支持目标码率设置
+* 支持目标码率设置		
 
 * 支持拍摄帧频设置
 
-* 内置美颜滤镜
+* 支持美颜滤镜
 
 * 支持横屏拍摄
 
@@ -105,9 +105,12 @@ Demo 下载: `https://github.com/upyun/ios-live-sdk`
 
 ## 推流 SDK 使用示例 UPAVCapturer
 
-使用推流功能 `UPAVCapturer` 需要引入头文件  `#import <UPLiveSDK/UPAVCapturer.h>`   
+使用拍摄和推流功能 `UPAVCapturer` 需要引入头文件  `#import <UPLiveSDK/UPAVCapturer.h>`   
 
-`UPAVCapturer` 为单例模式。
+`UPAVCapturer` 为单例模式。			
+	
+__注:__ 也可以单独使用 `SDK` 的推流器 `UPAVStreamer` , 采集模块自定义, 如视频采集可利用 `GPUImageVideoCamera` 。 
+
 
 1.设置视频预览视图:  
 
@@ -117,7 +120,6 @@ Demo 下载: `https://github.com/upyun/ios-live-sdk`
    contentMode:previewContentMode];
    self.videoPreview.backgroundColor = [UIColor blackColor];
    [self.view insertSubview:self.videoPreview atIndex:0];
-
 
 
 ```
@@ -173,23 +175,66 @@ Demo 下载: `https://github.com/upyun/ios-live-sdk`
 
 6.推流状态回调
 
-如果在直播过程发生异常，可以通过 `uPAVCapturerStatusBlock` 捕捉错误信息，并且关闭拍摄推流。__注意：__uPAVCapturerStatusBlock 不保证在主线程执行。
+如果在直播过程发生异常，可以通过 `UPAVCapturerDelegate` 捕捉错误信息，并且关闭拍摄推流。
 
-```
 
-    [UPAVCapturer sharedInstance].uPAVCapturerStatusBlock = ^(UPAVCapturerStatus status, NSError *error) {
+```				
 
-        if (error) {
-
-        //错误通知
-
-        //关闭推流
-
-        //如果需要操作 UI，需要切换到主线程
-
+//采集状态
+- (void)UPAVCapturer:(UPAVCapturer *)capturer capturerStatusDidChange:(UPAVCapturerStatus)capturerStatus {
+    switch (capturerStatus) {
+        case UPAVCapturerStatusStopped: {
+        // 拍摄停止
         }
+            break;
+        case UPAVCapturerStatusLiving: {
+        // 拍摄中
+        }
+            break;
+        case UPAVCapturerStatusError: {
+         // 拍摄错误
+        }
+            break;
+        default:
+            break;
+    }
+}
 
-    };
+//错误捕捉
+- (void)UPAVCapturer:(UPAVCapturer *)capturer capturerError:(NSError *)error {
+    if (error) {
+        NSString *s = [NSString stringWithFormat:@"%@", error];
+        [self errorAlert:s];
+    }
+    //需要关闭直播
+}
+
+//推流状态
+- (void)UPAVCapturer:(UPAVCapturer *)capturer pushStreamStatusDidChange:(UPPushAVStreamStatus)streamStatus {
+    
+    switch (streamStatus) {
+        case UPPushAVStreamStatusClosed:
+            //连接关闭
+            break;
+        case UPPushAVStreamStatusConnecting:
+            //连接中
+            break;
+        case UPPushAVStreamStatusReady:
+            //连接成功
+            break;
+        case UPPushAVStreamStatusPushing:
+            //推流中
+            break;
+        case UPPushAVStreamStatusError: {
+            //推流错误
+        }
+            break;
+        default:
+            break;
+    }
+}
+
+
 
 ```
 
@@ -212,9 +257,10 @@ Demo 下载: `https://github.com/upyun/ios-live-sdk`
 	//美颜滤镜是否开启，默认开启
 	[UPAVCapturer sharedInstance].filter = _settings.filter;
 	
-	//设置美颜滤镜等级
-	[UPAVCapturer sharedInstance].filterLevel = _settings.filterLevel;
-	
+	//设置美颜滤镜，详见 demo 中代码示例
+    _fliter = [BeautifyFilter new];
+    [UPAVCapturer sharedInstance].videoFiler = _fliter;
+
 	//闪光灯开关
 	[UPAVCapturer sharedInstance].camaraTorchOn = _settings.camaraTorchOn;
 	
@@ -227,9 +273,9 @@ Demo 下载: `https://github.com/upyun/ios-live-sdk`
 
 ## 拉流 SDK 使用示例 UPAVPlayer
 
-使用 ```UPAVPlayer``` 需要引入头文件 ````#import <UPLiveSDK/UPAVPlayer.h>```
+使用 ```UPAVPlayer``` 需要引入头文件 ```#import <UPLiveSDK/UPAVPlayer.h>```
 
-`UPAVPlayer` 使用接口类似 `AVFoundation` 的 `AVPlayer`。
+`UPAVPlayer` 使用接口类似 `AVFoundation` 的 `AVPlayer` 。
 
 完整的使用代码请参考 `demo` 工程。
 
@@ -503,7 +549,21 @@ __1.0.3 点播支持__
  * 播放器状态 delegate 方式回调；
  * 推流器解决 iPhone 6s 音频采集引起相关的 bug；
  * 推流器横屏拍摄及屏幕旋转适配 demo。
+ 
 
+
+__1.0.4 分析统计，拆分 UPAVStreamer__
+ 	
+ * 播放器添加播放质量分析统计功能；     
+ * 播放器添加帧频，码率等信息接口及 demo 展示；     
+ * SDK 内部删除 GPUImage 依赖，美颜滤镜功能通过协议接口暴露；     
+ * 推流器拆分暴露 UPAVStreamer，方便自由组织实现采集，处理，编码，推流等直播各个环节；      
+ * 推流器 UPAVCapturer 状态回调改为代理方式，且细分推流状态和拍摄状态；         
+ * 推流器添加拍摄帧频，推流帧频，码率，丢帧等信息接口及 demo 展示；     
+ * 推流过程支持背景音乐不被打断及修复 AVAudioSession 相关bug；
+ 
+ 
+ 
 ## 反馈与建议
 
  邮箱：<livesdk@upai.com>

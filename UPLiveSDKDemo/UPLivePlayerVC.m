@@ -8,6 +8,8 @@
 
 #import "UPLivePlayerVC.h"
 #import <UPLiveSDK/UPAVPlayer.h>
+#import "AppDelegate.h"
+#import <UPLiveSDK/UPAVCapturer.h>
 
 @interface UPLivePlayerVC () <UPAVPlayerDelegate>
 {
@@ -21,18 +23,23 @@
 @property (weak, nonatomic) IBOutlet UIButton *pauseBtn;
 @property (weak, nonatomic) IBOutlet UIButton *stopBtn;
 @property (weak, nonatomic) IBOutlet UIButton *infoBtn;
+
+
 @property (weak, nonatomic) IBOutlet UILabel *timelabel;
+
 @property (weak, nonatomic) IBOutlet UISlider *playProgressSlider;
 
 @property (nonatomic, strong) UIActivityIndicatorView *activityIndicatorView;
 @property (nonatomic, strong) UILabel *bufferingProgressLabel;
+@property (weak, nonatomic) IBOutlet UITextView *dashboardView;
 
 @end
 
 @implementation UPLivePlayerVC
 
 - (void)viewDidLoad {
-    [UPAVPlayer setLogLevel:UP_Level_debug];
+    [UPLiveSDKConfig setLogLevel:UP_Level_error];
+
     self.view.backgroundColor = [UIColor blackColor];
     
     _activityIndicatorView = [[UIActivityIndicatorView alloc] init];
@@ -51,7 +58,8 @@
     [_stopBtn setTitle:@"stop" forState:UIControlStateNormal];
     [_infoBtn addTarget:self action:@selector(info:) forControlEvents:UIControlEventTouchUpInside];
     [_infoBtn setTitleColor:[UIColor blueColor] forState:UIControlStateNormal];
-    [_infoBtn setTitle:@"info" forState:UIControlStateNormal];
+    [_infoBtn setTitle:@"streamInfo" forState:UIControlStateNormal];
+    
     
     _bufferingProgressLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 60, 40)];
     _bufferingProgressLabel.backgroundColor = [UIColor clearColor];
@@ -71,13 +79,20 @@
     [self.view addSubview:_infoBtn];
     [self.view addSubview:_bufferingProgressLabel];
     
+    
     _player = [[UPAVPlayer alloc] initWithURL:self.url];
     _player.bufferingTime = self.bufferingTime;
     _player.delegate = self;
+    self.dashboardView.hidden = YES;
+    [self updateDashboard];
 }
 
 - (void)viewWillAppear:(BOOL)animated {
     
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+//        [UPAVPlayer randomData:10 WithTime:0.3];
+    });
+
     self.view.frame = [UIScreen mainScreen].bounds;
     [_player setFrame:[UIScreen mainScreen].bounds];
 
@@ -86,7 +101,6 @@
     _bufferingProgressLabel.center = CGPointMake(_player.playView.center.x + 30, _player.playView.center.y);
     [self.view addSubview:_activityIndicatorView];
     [_player play];
-
 }
 
 - (void)viewDidDisappear:(BOOL)animated {
@@ -105,16 +119,37 @@
 }
 
 - (void)info:(id)sender {
-    NSString *message = [NSString stringWithFormat:@"Stream Info:\n %@ \n\n\n\n", _player.streamInfo.descriptionInfo];
-    UIAlertController* alert = [UIAlertController alertControllerWithTitle:@"info"
-                                                                   message:message
-                                                            preferredStyle:UIAlertControllerStyleAlert];
-    UIAlertAction* defaultAction = [UIAlertAction actionWithTitle:@"OK"
-                                                            style:UIAlertActionStyleDefault
-                                                          handler:^(UIAlertAction * action) {
-                                                          }];
-    [alert addAction:defaultAction];
-    [self presentViewController:alert animated:YES completion:nil];
+    self.dashboardView.hidden =  !self.dashboardView.hidden;
+}
+
+- (void)updateDashboard{
+    
+    NSMutableString *string = [NSMutableString new];
+    [string appendString:[NSString stringWithFormat:@"url: %@ \n", _player.dashboard.url]];
+    [string appendString:[NSString stringWithFormat:@"serverName: %@ \n", _player.dashboard.serverName]];
+    [string appendString:[NSString stringWithFormat:@"serverIp: %@ \n", _player.dashboard.serverIp]];
+    [string appendString:[NSString stringWithFormat:@"cid: %d \n", _player.dashboard.cid]];
+    [string appendString:[NSString stringWithFormat:@"pid: %d \n", _player.dashboard.pid]];
+    [string appendString:[NSString stringWithFormat:@"fps: %.0f \n", _player.dashboard.fps]];
+    [string appendString:[NSString stringWithFormat:@"bps: %.0f \n", _player.dashboard.bps]];
+    [string appendString:[NSString stringWithFormat:@"vCachedFrames: %d \n", _player.dashboard.vCachedFrames]];
+    [string appendString:[NSString stringWithFormat:@"aCachedFrames: %d \n", _player.dashboard.aCachedFrames]];
+    
+    
+    for (NSString *key in _player.streamInfo.descriptionInfo.allKeys) {
+        [string appendString:[NSString stringWithFormat:@"%@: %@ \n", key, _player.streamInfo.descriptionInfo[key]]];
+    }
+
+    self.dashboardView.text = string;
+    self.dashboardView.textColor = [UIColor whiteColor];
+    
+    double delayInSeconds = 1.0;
+    
+    __weak UPLivePlayerVC *weakself = self;
+    dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, (int64_t)(delayInSeconds * NSEC_PER_SEC));
+    dispatch_after(popTime, dispatch_get_main_queue(), ^(void){
+        [weakself updateDashboard];
+    });
 }
 
 - (void)dealloc {
@@ -142,14 +177,14 @@
 - (void)UPAVPlayer:(UPAVPlayer *)player streamStatusDidChange:(UPAVStreamStatus)streamStatus {
     switch (streamStatus) {
         case UPAVStreamStatusIdle:
+            NSLog(@"连接断开－－－－－");
             break;
         case UPAVStreamStatusConnecting:{
-            NSLog(@"正在建立连接－－－－－");
-//            _player.interrupted = YES;
+            NSLog(@"建立连接－－－－－");
         }
             break;
         case UPAVStreamStatusReady:{
-            NSLog(@"连接建立成功－－－－－");
+            NSLog(@"连接成功－－－－－");
         }
             break;
         default:
@@ -161,6 +196,7 @@
     
     switch (playerStatus) {
         case UPAVPlayerStatusIdle:{
+            NSLog(@"播放停止－－－－－");
             [self.activityIndicatorView stopAnimating];
             self.bufferingProgressLabel.hidden = YES;
             self.playBtn.enabled = YES;
@@ -173,6 +209,7 @@
             break;
             
         case UPAVPlayerStatusPause:{
+            NSLog(@"播放暂停－－－－－");
             [self.activityIndicatorView stopAnimating];
             self.bufferingProgressLabel.hidden = YES;
             self.playBtn.enabled = YES;
@@ -185,6 +222,7 @@
             break;
             
         case UPAVPlayerStatusPlaying_buffering:{
+            NSLog(@"播放缓冲－－－－－");
             [self.activityIndicatorView startAnimating];
             self.bufferingProgressLabel.hidden = NO;
             self.playBtn.enabled = NO;
@@ -197,6 +235,7 @@
         }
             break;
         case UPAVPlayerStatusPlaying:{
+            NSLog(@"播放中－－－－－");
             [self.activityIndicatorView stopAnimating];
             self.bufferingProgressLabel.hidden = YES;
             self.pauseBtn.enabled = YES;
@@ -204,7 +243,8 @@
         }
             break;
         case UPAVPlayerStatusFailed:{
-            
+            NSLog(@"播放失败－－－－－");
+
         }
             break;
         default:
@@ -213,7 +253,6 @@
 }
 
 - (void)UPAVPlayer:(id)player streamInfoDidReceive:(UPAVPlayerStreamInfo *)streamInfo {
-    NSLog(@"获取视频信息-- %@ ", streamInfo.descriptionInfo);
     if (streamInfo.canPause && streamInfo.canSeek) {
         _playProgressSlider.maximumValue = streamInfo.duration;
         NSLog(@"streamInfo.duration %f", streamInfo.duration);

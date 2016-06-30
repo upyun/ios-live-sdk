@@ -8,10 +8,8 @@
 
 #import <Foundation/Foundation.h>
 #import <MediaPlayer/MediaPlayer.h>
-#import "UPEAGLView.h"
-#import "UPLiveSDKLogger.h"
+#import "UPLiveSDKConfig.h"
 
-#define Version @"1.0.3"
 
 
 typedef NS_ENUM(NSInteger, UPAVPlayerStatus) {
@@ -39,27 +37,40 @@ typedef void(^BufferingProgressBlock)(float progress);
 @property (nonatomic, strong) NSDictionary *descriptionInfo;
 @end
 
+@interface UPAVPlayerDashboard: NSObject
+@property (nonatomic, readonly) NSString *url;
+@property (nonatomic, readonly) NSString *serverIp;
+@property (nonatomic, readonly) NSString *serverName;
+@property (nonatomic, readonly) int cid;
+@property (nonatomic, readonly) int pid;
+@property (nonatomic, readonly) float fps;
+@property (nonatomic, readonly) float bps;
+@property (nonatomic, readonly) int vCachedFrames;
+@property (nonatomic, readonly) int aCachedFrames;
+@end
+
 
 @class UPAVPlayer;
 
 @protocol UPAVPlayerDelegate <NSObject>
-
+//播放器状态
 - (void)UPAVPlayer:(UPAVPlayer *)player playerStatusDidChange:(UPAVPlayerStatus)playerStatus;
 - (void)UPAVPlayer:(UPAVPlayer *)player playerError:(NSError *)error;
 - (void)UPAVPlayer:(UPAVPlayer *)player displayPositionDidChange:(float)position;
 - (void)UPAVPlayer:(UPAVPlayer *)player bufferingProgressDidChange:(float)progress;
 
+//视频流状态
 - (void)UPAVPlayer:(UPAVPlayer *)player streamStatusDidChange:(UPAVStreamStatus)streamStatus;
 - (void)UPAVPlayer:(UPAVPlayer *)player streamInfoDidReceive:(UPAVPlayerStreamInfo *)streamInfo;
 @end
 
 
+
 @interface UPAVPlayer : NSObject
 
-@property (nonatomic, strong, readonly) UPEAGLView *playView;
-
+@property (nonatomic, strong, readonly) UIView *playView;
+@property (nonatomic, strong, readonly) UPAVPlayerDashboard *dashboard;
 @property (nonatomic, assign) BOOL interrupted;
-
 @property (nonatomic, strong) UPAVPlayerStreamInfo *streamInfo;
 @property (nonatomic, strong) PlayerStadusBlock playerStadusBlock;
 @property (nonatomic, strong) BufferingProgressBlock bufferingProgressBlock;
@@ -74,19 +85,16 @@ typedef void(^BufferingProgressBlock)(float progress);
 @property (nonatomic, strong) NSArray *urlArray;
 @property (nonatomic, copy) NSString *url;
 @property (nonatomic, copy) NSString *bandwidth;
-@property (nonatomic, assign) float displayPosition;// 视频播放到的时间点
-@property (nonatomic, assign) float streamPosition;// 视频流读取到的时间点
+@property (nonatomic, assign) float displayPosition;//视频播放到的时间点
+@property (nonatomic, assign) float streamPosition;//视频流读取到的时间点
 @property (nonatomic, weak) id<UPAVPlayerDelegate> delegate;
 
 - (instancetype)initWithURL:(NSString *)url;
-- (void)setImageURL:(NSString *)url;
 - (void)setFrame:(CGRect)frame;
 - (void)connect;
 - (void)play;
 - (void)pause;
 - (void)stop;
 - (void)seekToTime:(CGFloat)position;
-- (void)configChoppyRetryMaxCount:(NSInteger)maxCount inTimeScope:(NSTimeInterval)timeScope;
 
-+ (void)setLogLevel:(UPLiveSDKLogger_level)level;
 @end

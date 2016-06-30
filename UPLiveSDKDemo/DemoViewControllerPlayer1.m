@@ -31,7 +31,6 @@
 @implementation DemoViewControllerPlayer1
 
 - (void)viewDidLoad {
-    [UPLiveSDKLogger setLogLevel:UP_Level_debug];
     self.view.backgroundColor = [UIColor whiteColor];
     
     _activityIndicatorView = [[UIActivityIndicatorView alloc] init];
@@ -73,7 +72,7 @@
     //http://vevoplaylist-live.hls.adaptive.level3.net/vevo/ch1/02/prog_index.m3u8 单m3u8
 //    NSString *filePath = [[[NSBundle mainBundle] bundlePath] stringByAppendingPathComponent:@"war3end.mp4"];
     NSString *filePath = [[[NSBundle mainBundle] bundlePath] stringByAppendingPathComponent:@"test.flv"];
-    BOOL aa =  [DemoViewControllerPlayer1 isFileExist:filePath];
+//    BOOL aa =  [DemoViewControllerPlayer1 isFileExist:filePath];
     
     filePath = @"http://v1.tangdouimg.com/tdvideo/2016/0511/7937144.mp4";
     
@@ -88,7 +87,6 @@
     [_player connect];
     _player.bufferingTime = 1;
     [_player setFrame:CGRectMake(0, 64, self.view.frame.size.width, self.view.frame.size.width)];
-    [_player setImageURL:[NSString stringWithFormat:@"https://www.upyun.com/assets/chunyu/featureIcon_01.png"]];
     
     
     [self.view insertSubview:_player.playView atIndex:0];

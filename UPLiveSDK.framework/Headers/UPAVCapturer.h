@@ -9,16 +9,21 @@
 #import <Foundation/Foundation.h>
 #import <AVFoundation/AVFoundation.h>
 #import <UIKit/UIKit.h>
+#import "UPLiveSDKConfig.h"
 
-typedef NS_ENUM(NSInteger, UPAVCapturerLogger_level) {
-    UPAVCapturerLogger_level_debug,
-    UPAVCapturerLogger_level_warn,
-    UPAVCapturerLogger_level_error
-};
 
 typedef NS_ENUM(NSInteger, UPAVCapturerStatus) {
-    UPAVCapturerStatusLiving,
     UPAVCapturerStatusStopped,
+    UPAVCapturerStatusLiving,
+    UPAVCapturerStatusError
+};
+
+typedef NS_ENUM(NSInteger, UPPushAVStreamStatus) {
+    UPPushAVStreamStatusClosed,
+    UPPushAVStreamStatusConnecting,
+    UPPushAVStreamStatusReady,
+    UPPushAVStreamStatusPushing,
+    UPPushAVStreamStatusError
 };
 
 typedef NS_ENUM(NSInteger, UPAVCapturerPresetLevel) {
@@ -27,53 +32,86 @@ typedef NS_ENUM(NSInteger, UPAVCapturerPresetLevel) {
     UPAVCapturerPreset_1280x720
 };
 
-typedef NS_ENUM(NSInteger, UPBeautifyFilterLevel) {
-    Beautify_None,
-    Beautify_Low,
-    Beautify_Normal,
-    Beautify_High
-};
-
 typedef void(^UPAVCapturerStatusBlock)(UPAVCapturerStatus status, NSError *error);
+
+@interface UPAVCapturerDashboard: NSObject
+@property (nonatomic, readonly) float fps_capturer;
+@property (nonatomic, readonly) float fps_streaming;
+@property (nonatomic, readonly) float bps;
+@property (nonatomic, readonly) int64_t vFrames_didSend;
+@property (nonatomic, readonly) int64_t aFrames_didSend;
+@property (nonatomic, readonly) int64_t streamSize_didSend;
+@property (nonatomic, readonly) int64_t streamTime_lasting;
+@property (nonatomic, readonly) int64_t cachedFrames;
+@property (nonatomic, readonly) int64_t dropedFrames;
+@end
+
+@class UPAVCapturer;
+@protocol UPAVCapturerDelegate <NSObject>
+
+//采集状态回调
+- (void)UPAVCapturer:(UPAVCapturer *)capturer capturerStatusDidChange:(UPAVCapturerStatus)capturerStatus;
+- (void)UPAVCapturer:(UPAVCapturer *)capturer capturerError:(NSError *)error;
+
+//推流状态会回调
+- (void)UPAVCapturer:(UPAVCapturer *)capturer pushStreamStatusDidChange:(UPPushAVStreamStatus)streamStatus;
+
+//采集原始音频视频数据回调
+@optional
+- (void)UPAVCapturer:(UPAVCapturer *)capturer
+       captureOutput:(AVCaptureOutput *)captureOutput
+didOutputSampleBuffer:(CMSampleBufferRef)sampleBuffer
+      fromConnection:(AVCaptureConnection *)connection;
+@end
+
+/*** 滤镜协议
+通过这个协议接口，视频帧经过滤镜处理之后再返回进行后续的步骤如：
+在preview上播放，编码后推流;
+ ***/
+@protocol UPAVCapturerVideoFilterProtocol <NSObject>
+@required
+- (CGImageRef)filterImage:(CGImageRef)image;
+@end
+
 
 @interface UPAVCapturer : NSObject
 
 @property (nonatomic, strong) NSString *outStreamPath;
-@property (nonatomic, strong, readonly) AVCaptureSession *captureSession;
 @property (nonatomic) AVCaptureDevicePosition camaraPosition;
-@property (nonatomic) BOOL camaraTorchOn;
 @property (nonatomic) AVCaptureVideoOrientation videoOrientation;
+@property (nonatomic) int32_t fps;//设置采集帧频
+@property (nonatomic) int64_t bitrate;//设置目标推流比特率
 
-@property (nonatomic, strong) UPAVCapturerStatusBlock uPAVCapturerStatusBlock;
-
-@property (nonatomic) int32_t fps;
-@property (nonatomic, assign) BOOL filter;
-@property (nonatomic, assign) UPBeautifyFilterLevel filterLevel;
-
-//默认为 YES，即 UPAVCapturer start 之后会立即推流直播; 如果想延时推流，可以先将 streamingOnOff 设置为 NO，随后需要推流的时候再置为 YES。
-@property (nonatomic, assign) BOOL streamingOnOff;
+/***
+ 默认为 YES，即 UPAVCapturer start 之后会立即推流直播; 
+ 如果想延时推流，可以先将 streamingOn 设置为 NO，随后需要推流的时候再置为 YES。
+ ***/
+@property (nonatomic, assign) BOOL streamingOn;
+@property (nonatomic, assign) BOOL camaraTorchOn;
+@property (nonatomic, assign) BOOL filterOn;
 @property (nonatomic) UPAVCapturerPresetLevel capturerPresetLevel;
+@property (nonatomic, weak) id<UPAVCapturerVideoFilterProtocol> videoFiler;
+@property (nonatomic, weak) id<UPAVCapturerDelegate> delegate;
+@property (nonatomic) UPAVCapturerStatus capturerStatus;
+@property (nonatomic) UPPushAVStreamStatus pushStreamStatus;
+@property (nonatomic, strong) UPAVCapturerStatusBlock uPAVCapturerStatusBlock;
+@property (nonatomic, strong, readonly) UPAVCapturerDashboard *dashboard;
 
 
 - (void)start;
 - (void)stop;
-- (void)changeCamera;
 - (UIView *)previewWithFrame:(CGRect)frame contentMode:(UIViewContentMode)mode;
-
 + (UPAVCapturer *)sharedInstance;
-+ (void)setLogLevel:(UPAVCapturerLogger_level)level;
 
 
-
-/* 生成推流 token
+/*** 生成推流 token
  例如推流地址：rtmp://bucket.v0.upaiyun.com/live/abc?_upt=abcdefgh1370000600
  其中：
  bucket 为 bucket name；
  live 为 appName；
  abc 为 streamName；
- 
  abcdefgh1370000600 为推流token 可以用此方法计算生成。
- */
+ ****/
 + (NSString *)tokenWithKey:(NSString *)key //空间密钥
                     bucket:(NSString *)bucket //空间名
                 expiration:(int)expiration //token 过期时间

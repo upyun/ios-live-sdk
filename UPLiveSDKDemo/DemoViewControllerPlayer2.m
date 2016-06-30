@@ -131,7 +131,8 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    [UPAVPlayer setLogLevel:UP_Level_debug];
+    [UPLiveSDKConfig setLogLevel:UP_Level_debug];
+
 
     _dataArray = @[@"rtmp://live.hkstv.hk.lxdns.com/live/hks",
                    @"http://vevoplaylist-live.hls.adaptive.level3.net/vevo/ch1/02/prog_index.m3u8",

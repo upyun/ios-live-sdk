@@ -8,15 +8,22 @@
 
 #import "UPLiveStreamerLivingVC.h"
 #import <UPLiveSDK/UPAVCapturer.h>
+#import "AppDelegate.h"
+#import "BeautifyFilter.h"
 
-@interface UPLiveStreamerLivingVC ()
+
+@interface UPLiveStreamerLivingVC () <UPAVCapturerDelegate>
 {
-    AVCaptureVideoPreviewLayer *_previewLayer;
+    NSString *_videoOrientationDescription;
+    NSString *_pushStreamStadusDescription;
+    BeautifyFilter *_fliter;
 }
+
 @property (weak, nonatomic) IBOutlet UISwitch *filterSwitch;
 @property (weak, nonatomic) IBOutlet UISwitch *streamingSwitch;
 @property (weak, nonatomic) IBOutlet UISwitch *flashSwitch;
 @property (weak, nonatomic) IBOutlet UIView *panel;
+@property (weak, nonatomic) IBOutlet UITextView *dashboard;
 @property (nonatomic, strong) UIView *videoPreview;
 @property (nonatomic, strong) UILabel *descriptionLabel;
 
@@ -56,48 +63,49 @@
     }
     
     //横屏拍摄竖屏拍摄提示 label
-    self.descriptionLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 100, 100)];
-    self.descriptionLabel.textColor = [UIColor lightGrayColor];
+    self.descriptionLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 100, 200, 44)];
+    self.descriptionLabel.backgroundColor = [UIColor blackColor];
+    self.descriptionLabel.alpha = 0.5;
+    self.descriptionLabel.textColor = [UIColor whiteColor];
     switch (_settings.videoOrientation) {
         case AVCaptureVideoOrientationPortrait:
-            self.descriptionLabel.text = @"竖屏拍摄";
+            _videoOrientationDescription = @"竖屏拍摄";
             self.descriptionLabel.transform = CGAffineTransformMakeRotation(0);
             break;
         case AVCaptureVideoOrientationPortraitUpsideDown:
-            self.descriptionLabel.text = @"竖屏拍摄";
+            _videoOrientationDescription = @"竖屏拍摄";
             self.descriptionLabel.transform = CGAffineTransformMakeRotation(M_PI);
             break;
         case AVCaptureVideoOrientationLandscapeRight:
-            self.descriptionLabel.text = @"横屏拍摄";
+            _videoOrientationDescription = @"横屏拍摄";
             self.descriptionLabel.transform = CGAffineTransformMakeRotation( M_PI_2);
             break;
         case AVCaptureVideoOrientationLandscapeLeft:
-            self.descriptionLabel.text = @"横屏拍摄";
+            _videoOrientationDescription = @"横屏拍摄";
             self.descriptionLabel.transform = CGAffineTransformMakeRotation(- M_PI_2);
             break;
         default:
             break;
     }
-
+    self.descriptionLabel.text = _videoOrientationDescription;
     [self.videoPreview  addSubview:self.descriptionLabel];
     [self.view insertSubview:self.videoPreview atIndex:0];
     
     //开启 debug 信息
-    [UPAVCapturer setLogLevel:UPAVCapturerLogger_level_debug];
+    [UPLiveSDKConfig setLogLevel:UP_Level_error];
+
     
-    //直播推流状态回调
-    __weak UPLiveStreamerLivingVC *weakself = self;
-    [UPAVCapturer sharedInstance].uPAVCapturerStatusBlock = ^(UPAVCapturerStatus status, NSError *error) {
-        if (error) {
-            NSString *s = [NSString stringWithFormat:@"%@", error];
-            [weakself errorAlert:s];
-        }
-    };
+    //设置代理，采集状态推流信息回调
+    [UPAVCapturer sharedInstance].delegate = self;
+    
+    //设置滤镜
+    _fliter = [BeautifyFilter new];
+    [UPAVCapturer sharedInstance].videoFiler = _fliter;
 }
 
 - (void)viewWillAppear:(BOOL)animated {
     self.filterSwitch.on = _settings.filter;
-    self.streamingSwitch.on = _settings.streamingOnOff;
+    self.streamingSwitch.on = _settings.streamingOn;
     self.flashSwitch.on = _settings.camaraTorchOn;
 }
 
@@ -109,12 +117,13 @@
     [[UPAVCapturer sharedInstance] stop];
     [UPAVCapturer sharedInstance].capturerPresetLevel = _settings.level;
     [UPAVCapturer sharedInstance].camaraPosition = _settings.camaraPosition;
-    [UPAVCapturer sharedInstance].streamingOnOff = _settings.streamingOnOff;
-    [UPAVCapturer sharedInstance].filter = _settings.filter;
-    [UPAVCapturer sharedInstance].filterLevel = _settings.filterLevel ;
+    [UPAVCapturer sharedInstance].streamingOn = _settings.streamingOn;
+    [UPAVCapturer sharedInstance].filterOn = _settings.filter;
     [UPAVCapturer sharedInstance].camaraTorchOn = _settings.camaraTorchOn;
     [UPAVCapturer sharedInstance].videoOrientation = _settings.videoOrientation;
     [UPAVCapturer sharedInstance].fps = _settings.fps;
+    _fliter.level = _settings.filterLevel;
+//    [UPAVCapturer sharedInstance].bitrate = 400000;
 
     //推流地址
     NSString *rtmpPushUrl = [NSString stringWithFormat:@"%@%@", _settings.rtmpServerPushPath, _settings.streamId];
@@ -123,32 +132,36 @@
     NSString *upToken = [UPAVCapturer tokenWithKey:@"password"
                                             bucket:@"testlivesdk"
                                         expiration:86400
-                                   applicationName:@"live"
-                                        streamName:@"streamhz"];
+                                   applicationName:_settings.rtmpServerPushPath.lastPathComponent
+                                        streamName:_settings.streamId];
     
     rtmpPushUrl = [NSString stringWithFormat:@"%@?_upt=%@", rtmpPushUrl, upToken];
     NSLog(@"rtmpPushUrl: %@", rtmpPushUrl);
     [UPAVCapturer sharedInstance].outStreamPath = rtmpPushUrl;
     [[UPAVCapturer sharedInstance] start];
+    [self updateDashboard];
 }
 
 
 - (IBAction)streamingSwitch:(id)sender {
-    [UPAVCapturer sharedInstance].streamingOnOff = ![UPAVCapturer sharedInstance].streamingOnOff;
+    [UPAVCapturer sharedInstance].streamingOn = ![UPAVCapturer sharedInstance].streamingOn;
 }
 
 - (IBAction)filterSwitch:(id)sender {
-    [UPAVCapturer sharedInstance].filter = ![UPAVCapturer sharedInstance].filter;
+    [UPAVCapturer sharedInstance].filterOn = ![UPAVCapturer sharedInstance].filterOn;
 }
 
 - (IBAction)flashSwitch:(id)sender {
+    
     
     [UPAVCapturer sharedInstance].camaraTorchOn = ![UPAVCapturer sharedInstance].camaraTorchOn ;
 }
 
 - (IBAction)stop:(id)sender {
-    [[UPAVCapturer sharedInstance] stop];
-    [self dismissViewControllerAnimated:YES completion:nil];
+    
+    [self dismissViewControllerAnimated:YES completion:^{
+        [[UPAVCapturer sharedInstance] stop];
+    }];
 }
 
 - (void)errorAlert:(NSString *)message {
@@ -195,5 +208,85 @@
         self.videoPreview.transform = currentTransform;
     }];
 }
+
+
+#pragma mark UPAVCapturerDelegate
+
+//capturer status
+- (void)UPAVCapturer:(UPAVCapturer *)capturer capturerStatusDidChange:(UPAVCapturerStatus)capturerStatus {
+    
+    switch (capturerStatus) {
+        case UPAVCapturerStatusStopped: {
+            NSLog(@"===UPAVCapturerStatusStopped");
+        }
+            break;
+        case UPAVCapturerStatusLiving: {
+            NSLog(@"===UPAVCapturerStatusLiving");
+
+        }
+            break;
+        case UPAVCapturerStatusError: {
+            NSLog(@"===UPAVCapturerStatusError");
+        }
+            break;
+        default:
+            break;
+    }
+}
+
+- (void)UPAVCapturer:(UPAVCapturer *)capturer capturerError:(NSError *)error {
+    if (error) {
+        NSString *s = [NSString stringWithFormat:@"%@", error];
+        [self errorAlert:s];
+    }
+}
+
+//push stream status
+- (void)UPAVCapturer:(UPAVCapturer *)capturer pushStreamStatusDidChange:(UPPushAVStreamStatus)streamStatus {
+    
+    switch (streamStatus) {
+        case UPPushAVStreamStatusClosed:
+            NSLog(@"===UPPushAVStreamStatusClosed");
+            _pushStreamStadusDescription = @"连接关闭";
+            break;
+        case UPPushAVStreamStatusConnecting:
+            NSLog(@"===UPPushAVStreamStatusConnecting");
+            _pushStreamStadusDescription = @"连接中...";
+            break;
+        case UPPushAVStreamStatusReady:
+            _pushStreamStadusDescription = @"准备直播";
+            NSLog(@"===UPPushAVStreamStatusReady");
+
+            break;
+        case UPPushAVStreamStatusPushing:
+            NSLog(@"===UPPushAVStreamStatusPushing");
+            _pushStreamStadusDescription = @"直播中...";
+            self.descriptionLabel.text = @"竖屏拍摄";
+
+            break;
+        case UPPushAVStreamStatusError: {
+            _pushStreamStadusDescription = @"连接错误";
+            NSLog(@"===UPPushAVStreamStatusError");
+        }
+            break;
+        default:
+            break;
+    }
+    self.descriptionLabel.text = [NSString stringWithFormat:@"%@%@", _videoOrientationDescription, _pushStreamStadusDescription];
+}
+
+
+- (void)updateDashboard{
+    
+    self.dashboard.text = [NSString stringWithFormat:@"%@", [UPAVCapturer sharedInstance].dashboard];
+    double delayInSeconds = 1.0;
+    dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, (int64_t)(delayInSeconds * NSEC_PER_SEC));
+    __weak UPLiveStreamerLivingVC *weakself = self;
+    dispatch_after(popTime, dispatch_get_main_queue(), ^(void){
+        [weakself updateDashboard];
+    });
+}
+
+
 
 @end

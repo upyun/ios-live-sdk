@@ -10,7 +10,7 @@
 
 
 
-#define  logActiveTags           (UP_Tag_video + UP_Tag_audio + UP_Tag_default)
+#define  logActiveTags           (UP_Tag_stream + UP_Tag_video + UP_Tag_audio + UP_Tag_default)
 
 
 typedef NS_ENUM(NSInteger, UPLiveSDKLogger_level) {

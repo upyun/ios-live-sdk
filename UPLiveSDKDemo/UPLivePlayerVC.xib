@@ -1,12 +1,13 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="9532" systemVersion="14F27" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="10117" systemVersion="15F34" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES">
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="9530"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="10085"/>
     </dependencies>
     <objects>
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="UPLivePlayerVC">
             <connections>
+                <outlet property="dashboardView" destination="xbf-zl-6IL" id="P6K-Vu-rXF"/>
                 <outlet property="infoBtn" destination="z0Z-W9-17S" id="fWv-N1-RUQ"/>
                 <outlet property="pauseBtn" destination="4hT-k9-8oM" id="mOr-Wg-2ME"/>
                 <outlet property="playBtn" destination="qjj-Rt-lfR" id="cls-rE-OUs"/>
@@ -73,7 +74,7 @@
                     </variation>
                 </button>
                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="0ck-7c-ZWG">
-                    <rect key="frame" x="148" y="496" width="55" height="55"/>
+                    <rect key="frame" x="136" y="496" width="55" height="55"/>
                     <constraints>
                         <constraint firstAttribute="height" constant="55" id="0KO-ZQ-A2x"/>
                         <constraint firstAttribute="width" constant="44" id="8JD-yH-hYn"/>
@@ -96,17 +97,17 @@
                     </variation>
                 </button>
                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="z0Z-W9-17S">
-                    <rect key="frame" x="213" y="496" width="55" height="55"/>
+                    <rect key="frame" x="202" y="496" width="95" height="55"/>
                     <constraints>
                         <constraint firstAttribute="width" constant="44" id="5e3-ie-Fpi"/>
                         <constraint firstAttribute="width" constant="55" id="DIt-AQ-IXL"/>
-                        <constraint firstAttribute="width" constant="55" id="P8Z-W7-BSo"/>
+                        <constraint firstAttribute="width" constant="95" id="P8Z-W7-BSo"/>
                         <constraint firstAttribute="height" constant="55" id="XwB-Sg-yPT"/>
                         <constraint firstAttribute="height" constant="44" id="gpe-jX-1EG"/>
                         <constraint firstAttribute="height" constant="55" id="rfZ-95-bm2"/>
                     </constraints>
                     <fontDescription key="fontDescription" type="system" pointSize="20"/>
-                    <state key="normal" title="info">
+                    <state key="normal" title="streaminfo">
                         <color key="titleColor" red="0.0" green="0.47843137250000001" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                     </state>
                     <variation key="default">
@@ -129,9 +130,22 @@
                     <color key="textColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
                     <nil key="highlightedColor"/>
                 </label>
+                <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" editable="NO" textAlignment="natural" selectable="NO" translatesAutoresizingMaskIntoConstraints="NO" id="xbf-zl-6IL">
+                    <rect key="frame" x="360" y="27" width="240" height="355"/>
+                    <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="0.1993380248091603" colorSpace="calibratedRGB"/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="355" id="IhB-u7-W99"/>
+                        <constraint firstAttribute="width" constant="240" id="vcM-g1-Ban"/>
+                    </constraints>
+                    <string key="text">Lorem ipsum dolor sit er elit lamet, consectetaur cillium adipisicing pecu, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Nam liber te conscient to factor tum poen legum odioque civiuda.</string>
+                    <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                    <fontDescription key="fontDescription" type="system" pointSize="12"/>
+                    <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
+                </textView>
             </subviews>
             <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
             <constraints>
+                <constraint firstItem="xbf-zl-6IL" firstAttribute="top" secondItem="i5M-Pr-FkT" secondAttribute="top" constant="27" id="0G2-44-tST"/>
                 <constraint firstItem="z0Z-W9-17S" firstAttribute="leading" secondItem="0ck-7c-ZWG" secondAttribute="trailing" constant="10" id="0xT-TN-njW"/>
                 <constraint firstItem="vvV-Zf-fjE" firstAttribute="top" secondItem="jbo-Vr-o7H" secondAttribute="bottom" constant="5" id="2PU-hg-1Dr"/>
                 <constraint firstAttribute="bottom" secondItem="z0Z-W9-17S" secondAttribute="bottom" constant="44" id="2jR-TS-9Ik"/>
@@ -150,20 +164,23 @@
                 <constraint firstAttribute="bottom" secondItem="z0Z-W9-17S" secondAttribute="bottom" constant="49" id="MWg-zv-WTg"/>
                 <constraint firstItem="4hT-k9-8oM" firstAttribute="top" secondItem="vvV-Zf-fjE" secondAttribute="bottom" constant="5" id="Mui-iX-JO9"/>
                 <constraint firstItem="vvV-Zf-fjE" firstAttribute="top" secondItem="i5M-Pr-FkT" secondAttribute="top" constant="505" id="NK0-1f-dBn"/>
+                <constraint firstAttribute="trailing" secondItem="xbf-zl-6IL" secondAttribute="trailing" id="Qe0-X5-f73"/>
                 <constraint firstItem="z0Z-W9-17S" firstAttribute="top" secondItem="vvV-Zf-fjE" secondAttribute="bottom" constant="5" id="Qul-Qi-Uhe"/>
                 <constraint firstItem="0ck-7c-ZWG" firstAttribute="top" secondItem="vvV-Zf-fjE" secondAttribute="bottom" constant="5" id="RNP-vb-cwl"/>
-                <constraint firstItem="0ck-7c-ZWG" firstAttribute="leading" secondItem="4hT-k9-8oM" secondAttribute="trailing" constant="16" id="Scc-M5-is0"/>
+                <constraint firstItem="0ck-7c-ZWG" firstAttribute="leading" secondItem="4hT-k9-8oM" secondAttribute="trailing" constant="4" id="Scc-M5-is0"/>
                 <constraint firstItem="4hT-k9-8oM" firstAttribute="leading" secondItem="qjj-Rt-lfR" secondAttribute="trailing" constant="12" id="Tsa-9W-zQo"/>
                 <constraint firstAttribute="bottom" secondItem="qjj-Rt-lfR" secondAttribute="bottom" constant="44" id="UqH-ZH-CQi"/>
                 <constraint firstItem="z0Z-W9-17S" firstAttribute="top" secondItem="vvV-Zf-fjE" secondAttribute="bottom" constant="5" id="UsD-nx-czP"/>
+                <constraint firstItem="xbf-zl-6IL" firstAttribute="top" secondItem="i5M-Pr-FkT" secondAttribute="top" constant="27" id="c7g-Zs-ZVF"/>
                 <constraint firstItem="z0Z-W9-17S" firstAttribute="leading" secondItem="0ck-7c-ZWG" secondAttribute="trailing" constant="19" id="cQ8-A3-F6d"/>
-                <constraint firstItem="z0Z-W9-17S" firstAttribute="leading" secondItem="0ck-7c-ZWG" secondAttribute="trailing" constant="10" id="f2c-C3-9nG"/>
+                <constraint firstItem="z0Z-W9-17S" firstAttribute="leading" secondItem="0ck-7c-ZWG" secondAttribute="trailing" constant="11" id="f2c-C3-9nG"/>
                 <constraint firstAttribute="bottom" secondItem="0ck-7c-ZWG" secondAttribute="bottom" constant="5" id="fcr-ds-NeD"/>
                 <constraint firstItem="vvV-Zf-fjE" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" constant="30" id="hME-PA-CRq"/>
                 <constraint firstItem="vvV-Zf-fjE" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" constant="14" id="hjy-kO-sdY"/>
                 <constraint firstAttribute="bottom" secondItem="vvV-Zf-fjE" secondAttribute="bottom" constant="93" id="jqn-LO-7vc"/>
                 <constraint firstItem="qjj-Rt-lfR" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" constant="10" id="mFS-aA-ZMR"/>
                 <constraint firstAttribute="bottom" secondItem="qjj-Rt-lfR" secondAttribute="bottom" constant="49" id="mx3-Eo-giO"/>
+                <constraint firstAttribute="bottom" secondItem="xbf-zl-6IL" secondAttribute="bottom" constant="218" id="pOM-bI-Zkc"/>
                 <constraint firstItem="0ck-7c-ZWG" firstAttribute="leading" secondItem="4hT-k9-8oM" secondAttribute="trailing" constant="27" id="pmG-a5-uXh"/>
                 <constraint firstAttribute="bottom" secondItem="4hT-k9-8oM" secondAttribute="bottom" constant="49" id="q6z-BO-vai"/>
                 <constraint firstItem="0ck-7c-ZWG" firstAttribute="leading" secondItem="4hT-k9-8oM" secondAttribute="trailing" constant="16" id="rkY-fA-KKY"/>
@@ -176,6 +193,8 @@
             </constraints>
             <variation key="default">
                 <mask key="constraints">
+                    <exclude reference="0G2-44-tST"/>
+                    <exclude reference="pOM-bI-Zkc"/>
                     <exclude reference="LcB-sy-ZEW"/>
                     <exclude reference="UqH-ZH-CQi"/>
                     <exclude reference="wni-Ws-2Gb"/>

@@ -19,7 +19,7 @@
 @implementation DemoViewControllerStreamer1
 
 - (void)viewDidLoad {
-    [UPAVCapturer setLogLevel:UPAVCapturerLogger_level_debug];
+    [UPLiveSDKConfig setLogLevel:UP_Level_debug];
     [super viewDidLoad];
     self.view.backgroundColor = [UIColor whiteColor];
     
@@ -107,10 +107,10 @@
 
 - (void)setPreview {
     [_previewLayer removeFromSuperlayer];
-    _previewLayer = [AVCaptureVideoPreviewLayer layerWithSession:[UPAVCapturer sharedInstance].captureSession];
-    _previewLayer.frame = CGRectMake(0, 200, self.view.frame.size.width, self.view.frame.size.width);
-    _previewLayer.videoGravity = AVLayerVideoGravityResizeAspectFill;
-    [self.view.layer addSublayer:_previewLayer];
+//    _previewLayer = [AVCaptureVideoPreviewLayer layerWithSession:[UPAVCapturer sharedInstance].captureSession];
+//    _previewLayer.frame = CGRectMake(0, 200, self.view.frame.size.width, self.view.frame.size.width);
+//    _previewLayer.videoGravity = AVLayerVideoGravityResizeAspectFill;
+//    [self.view.layer addSublayer:_previewLayer];
 }
 
 - (void)dealloc {

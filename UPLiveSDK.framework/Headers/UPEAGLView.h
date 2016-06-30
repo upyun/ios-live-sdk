@@ -7,12 +7,12 @@
 //
 
 #import <UIKit/UIKit.h>
-@class UPVideoFrame;
+#import "UPAVFrame.h"
 
-@interface UPEAGLView : UIView
+@interface UPEAGLView: UIView
+@property (nonatomic) UPVideoFrameFormat pixFormat;
 
 - (id)initWithFrame:(CGRect)frame;
-
 - (void)render:(UPVideoFrame *)frame;
 
 @end

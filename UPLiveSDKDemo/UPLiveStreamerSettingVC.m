@@ -74,7 +74,7 @@
     }
     
     self.filterSwitch.on = _settings.filter;
-    self.streamingSwitch.on = _settings.streamingOnOff;
+    self.streamingSwitch.on = _settings.streamingOn;
     self.flashSwitch.on = _settings.camaraTorchOn;
     
     if (_settings.videoOrientation == AVCaptureVideoOrientationPortrait ) {
@@ -99,7 +99,7 @@
 
 }
 - (IBAction)streamingSwitch:(UISwitch *)sender {
-    _settings.streamingOnOff = sender.on;
+    _settings.streamingOn = sender.on;
 }
 - (IBAction)flashSwitch:(UISwitch *)sender {
     _settings.camaraTorchOn = sender.on;
@@ -144,7 +144,7 @@
 }
 
 - (IBAction)filterLevelSelect:(UISegmentedControl *)sender {
-    _settings.filterLevel = sender.selectedSegmentIndex + 1;
+    _settings.filterLevel = (int)sender.selectedSegmentIndex + 1;
 }
 
 - (void)hideKeyBoard {

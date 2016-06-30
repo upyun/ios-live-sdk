@@ -37,12 +37,12 @@
     settings.rtmpServerPlayPath = @"rtmp://testlivesdk.b0.upaiyun.com/live/";
     settings.fps = 24;
     settings.filter = YES;
-    settings.streamingOnOff = YES;
+    settings.streamingOn = YES;
     settings.camaraTorchOn = NO;
     settings.camaraPosition = AVCaptureDevicePositionBack;
     settings.videoOrientation = AVCaptureVideoOrientationPortrait;
     settings.level = UPAVCapturerPreset_640x480;
-    settings.filterLevel = Beautify_Normal;
+    settings.filterLevel = 3;
 
     
     self.settings = settings;
@@ -105,7 +105,11 @@
 
 - (void)updateUI {
     textViewPushUrl.text = [NSString stringWithFormat:@"%@%@", self.settings.rtmpServerPushPath, self.settings.streamId];
-    textViewPlayUrl.text = [NSString stringWithFormat:@"%@%@", self.settings.rtmpServerPlayPath, self.settings.streamId];
+    NSURL *url = [NSURL URLWithString:self.settings.rtmpServerPlayPath relativeToURL:nil];
+
+    NSString *rtmpPlayUrl = [NSString stringWithFormat:@"rtmp://%@/%@/%@", url.host, url.path,self.settings.streamId];
+    NSString *hlsPlayUrl = [NSString stringWithFormat:@"http://%@/%@/%@.m3u8", url.host, url.path,self.settings.streamId];
+    textViewPlayUrl.text = [NSString stringWithFormat:@"%@ \n%@", rtmpPlayUrl, hlsPlayUrl];
 }
 
 - (void)settingsBtn:(UIButton *)sender {

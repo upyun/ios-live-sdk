@@ -27,12 +27,12 @@
 @property (nonatomic, strong) NSString *rtmpServerPlayPath;
 @property (nonatomic) int fps;//设置帧频率
 @property (nonatomic) BOOL filter;//美颜滤镜开关
-@property (nonatomic) BOOL streamingOnOff;//推流是否开启（Off 状态下，虽然有视频捕捉但是不会推流）
+@property (nonatomic) BOOL streamingOn;//推流是否开启（Off 状态下，虽然有视频捕捉但是不会推流）
 @property (nonatomic) BOOL camaraTorchOn;//闪光灯
 @property (nonatomic) AVCaptureDevicePosition camaraPosition;//设置前置后置摄像头
 @property (nonatomic) AVCaptureVideoOrientation videoOrientation;//设置拍摄横屏竖屏幕
 @property (nonatomic) UPAVCapturerPresetLevel level;
-@property (nonatomic, assign) UPBeautifyFilterLevel filterLevel;
+@property (nonatomic, assign) int filterLevel;
 @property (nonatomic) BOOL fullScreenPreviewOn;
 
 

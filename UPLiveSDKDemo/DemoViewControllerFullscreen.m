@@ -27,7 +27,6 @@
 
 @implementation DemoViewControllerFullscreen
 - (void)viewDidLoad {
-    [UPAVPlayer setLogLevel:UP_Level_debug];
     self.view.backgroundColor = [UIColor whiteColor];
     
     _activityIndicatorView = [[UIActivityIndicatorView alloc] init];
@@ -74,7 +73,6 @@
     _player = [[UPAVPlayer alloc] initWithURL:@"http://live.hkstv.hk.lxdns.com/live/hks/playlist.m3u8"];
     [_player setFrame:CGRectMake(0, 64, self.view.frame.size.width, self.view.frame.size.width)];
     //[_player setFrame:self.view.bounds];
-    [_player setImageURL:[NSString stringWithFormat:@"https://www.upyun.com/assets/chunyu/featureIcon_01.png"]];
     [_player setBufferingTime:1];
     _player.autoChangeBitrate = NO;
     
@@ -140,7 +138,7 @@
                                                     initWithTarget:self
                                                     action:@selector(handleSlideFrom:)];
     
-    [_player configChoppyRetryMaxCount:2 inTimeScope:2*60*1000.0];
+//    [_player configChoppyRetryMaxCount:2 inTimeScope:2*60*1000.0];
     
     UIButton *btn = [[UIButton alloc] initWithFrame:CGRectMake(0, 0, 40, 40)];
     [btn addTarget:self action:@selector(QRCode:) forControlEvents:UIControlEventTouchUpInside];
