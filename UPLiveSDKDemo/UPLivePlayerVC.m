@@ -38,7 +38,7 @@
 @implementation UPLivePlayerVC
 
 - (void)viewDidLoad {
-    [UPLiveSDKConfig setLogLevel:UP_Level_error];
+    [UPLiveSDKConfig setLogLevel:UP_Level_debug];
 
     self.view.backgroundColor = [UIColor blackColor];
     
@@ -89,10 +89,6 @@
 
 - (void)viewWillAppear:(BOOL)animated {
     
-    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-//        [UPAVPlayer randomData:10 WithTime:0.3];
-    });
-
     self.view.frame = [UIScreen mainScreen].bounds;
     [_player setFrame:[UIScreen mainScreen].bounds];
 

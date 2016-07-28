@@ -11,17 +11,7 @@
 
 @interface Settings : NSObject
 
-/*
- rtmpServerPushPath + streamId 组合为完整的推流地址如: rtmp://testlivesdk.v0.upaiyun.com/live/123
- 
- 例如上面的地址，其中：
- rtmp                            为URL Scheme
- testlivesdk.v0.upaiyun.com      为推流服务器 host
- live                            为应用名
- 123                             为流id
- 
- 以上组成一个完整的 rtmp 推流 url
- */
+
 @property (nonatomic, strong) NSString *streamId;
 @property (nonatomic, strong) NSString *rtmpServerPushPath;
 @property (nonatomic, strong) NSString *rtmpServerPlayPath;
@@ -34,7 +24,6 @@
 @property (nonatomic) UPAVCapturerPresetLevel level;
 @property (nonatomic, assign) int filterLevel;
 @property (nonatomic) BOOL fullScreenPreviewOn;
-
 
 @end
 

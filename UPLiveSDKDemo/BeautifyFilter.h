@@ -11,10 +11,17 @@
 #import <UPLiveSDK/UPAVCapturer.h>
 
 
+typedef void(^TextChange)(NSString *text);
+
 @interface BeautifyFilter : NSObject <UPAVCapturerVideoFilterProtocol>
 @property (nonatomic) int level;
-
+@property (nonatomic, strong)GPUImageUIElement *UIElement;
+@property (nonatomic, copy)TextChange change;
 
 - (CGImageRef)filterImage:(CGImageRef)image;
+
+- (CGImageRef)filterImageWithWatermark:(CGImageRef)image;
+
+- (CGImageRef)imageWithWatermark:(CGImageRef)image;
 
 @end

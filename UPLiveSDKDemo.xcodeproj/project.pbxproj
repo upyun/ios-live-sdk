@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		1E091A991D34F1CC00F815CE /* UPLivePlayerVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 1E091A981D34F1CC00F815CE /* UPLivePlayerVC.m */; };
+		1E091A9C1D34F1EC00F815CE /* VideoFilter.m in Sources */ = {isa = PBXBuildFile; fileRef = 1E091A9B1D34F1EC00F815CE /* VideoFilter.m */; };
 		1E8887851CEDC4B500F8F8B0 /* UPLiveStreamerLivingVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 1E8887841CEDC4B500F8F8B0 /* UPLiveStreamerLivingVC.m */; };
 		1E8887891CEEAA1400F8F8B0 /* UPLiveStreamerSettingVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 1E8887871CEEAA1400F8F8B0 /* UPLiveStreamerSettingVC.m */; };
 		1E88878A1CEEAA1400F8F8B0 /* UPLiveStreamerSettingVC.xib in Resources */ = {isa = PBXBuildFile; fileRef = 1E8887881CEEAA1400F8F8B0 /* UPLiveStreamerSettingVC.xib */; };
@@ -16,7 +18,6 @@
 		1E99B71D1CEDA7C80021DC35 /* UPLiveViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1E99B71A1CEDA7C80021DC35 /* UPLiveViewController.m */; };
 		1EA224201CD9CC46007BF4B4 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 1EA2241F1CD9CC46007BF4B4 /* main.m */; };
 		1EA224231CD9CC46007BF4B4 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 1EA224221CD9CC46007BF4B4 /* AppDelegate.m */; };
-		1EA224261CD9CC46007BF4B4 /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1EA224251CD9CC46007BF4B4 /* ViewController.m */; };
 		1EA224291CD9CC46007BF4B4 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 1EA224271CD9CC46007BF4B4 /* Main.storyboard */; };
 		1EA2242B1CD9CC46007BF4B4 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 1EA2242A1CD9CC46007BF4B4 /* Assets.xcassets */; };
 		1EA2242E1CD9CC46007BF4B4 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 1EA2242C1CD9CC46007BF4B4 /* LaunchScreen.storyboard */; };
@@ -30,26 +31,20 @@
 		1EA226321CD9D2BC007BF4B4 /* libiconv.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 1EA226311CD9D2BC007BF4B4 /* libiconv.tbd */; };
 		1EA226341CD9D2C7007BF4B4 /* libz.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 1EA226331CD9D2C7007BF4B4 /* libz.tbd */; };
 		1EA226361CD9D2D4007BF4B4 /* UPLiveSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1EA226351CD9D2D4007BF4B4 /* UPLiveSDK.framework */; };
-		1EA2263D1CD9D363007BF4B4 /* DemoViewControllerPlayer1.m in Sources */ = {isa = PBXBuildFile; fileRef = 1EA226381CD9D363007BF4B4 /* DemoViewControllerPlayer1.m */; };
-		1EA2263E1CD9D363007BF4B4 /* DemoViewControllerPlayer2.m in Sources */ = {isa = PBXBuildFile; fileRef = 1EA2263A1CD9D363007BF4B4 /* DemoViewControllerPlayer2.m */; };
-		1EA2263F1CD9D363007BF4B4 /* DemoViewControllerFullscreen.m in Sources */ = {isa = PBXBuildFile; fileRef = 1EA2263C1CD9D363007BF4B4 /* DemoViewControllerFullscreen.m */; };
-		1EA226481CD9D4F8007BF4B4 /* UPQRCodeViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1EA226451CD9D4F8007BF4B4 /* UPQRCodeViewController.m */; };
-		1EA226491CD9D4F8007BF4B4 /* QRScanView.m in Sources */ = {isa = PBXBuildFile; fileRef = 1EA226471CD9D4F8007BF4B4 /* QRScanView.m */; };
-		1EA226531CD9D555007BF4B4 /* DemoViewControllerStreamer1.m in Sources */ = {isa = PBXBuildFile; fileRef = 1EA2264E1CD9D555007BF4B4 /* DemoViewControllerStreamer1.m */; };
-		1EA226541CD9D555007BF4B4 /* DemoViewControllerStreamer2.m in Sources */ = {isa = PBXBuildFile; fileRef = 1EA226501CD9D555007BF4B4 /* DemoViewControllerStreamer2.m */; };
-		1EA226551CD9D555007BF4B4 /* DemoViewControllerStreamer3.m in Sources */ = {isa = PBXBuildFile; fileRef = 1EA226521CD9D555007BF4B4 /* DemoViewControllerStreamer3.m */; };
 		1ED24A361D17F3BE00A8C24D /* GPUImageBeautifyFilter.m in Sources */ = {isa = PBXBuildFile; fileRef = 1ED24A351D17F3BE00A8C24D /* GPUImageBeautifyFilter.m */; };
-		1EF6AD401CEEEFFE004A7DCA /* UPLivePlayerVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 1EF6AD3E1CEEEFFE004A7DCA /* UPLivePlayerVC.m */; };
 		1EF6AD411CEEEFFE004A7DCA /* UPLivePlayerVC.xib in Resources */ = {isa = PBXBuildFile; fileRef = 1EF6AD3F1CEEEFFE004A7DCA /* UPLivePlayerVC.xib */; };
-		1EFD24181D18DE150027DA5B /* BeautifyFilter.m in Sources */ = {isa = PBXBuildFile; fileRef = 1EFD24171D18DE150027DA5B /* BeautifyFilter.m */; };
 		1EFD24CB1D18E3BC0027DA5B /* libGPUImage.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 1EFD24CA1D18E3BC0027DA5B /* libGPUImage.a */; };
-		AE502B4E1D11575100DEBF45 /* Address.plist in Resources */ = {isa = PBXBuildFile; fileRef = AE502B4D1D11575100DEBF45 /* Address.plist */; };
 		AE721F851CE9655C000B170A /* CoreMedia.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AE721F841CE9655C000B170A /* CoreMedia.framework */; };
 		AE721F871CE96567000B170A /* CoreVideo.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AE721F861CE96567000B170A /* CoreVideo.framework */; };
+		AEA71A841D47461A0090A4D7 /* focus.png in Resources */ = {isa = PBXBuildFile; fileRef = AEA71A831D47461A0090A4D7 /* focus.png */; };
 		AEB817A11D0F956100F97E66 /* CoreTelephony.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AEB817A01D0F956100F97E66 /* CoreTelephony.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		1E091A971D34F1CC00F815CE /* UPLivePlayerVC.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UPLivePlayerVC.h; sourceTree = "<group>"; };
+		1E091A981D34F1CC00F815CE /* UPLivePlayerVC.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UPLivePlayerVC.m; sourceTree = "<group>"; };
+		1E091A9A1D34F1EC00F815CE /* VideoFilter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VideoFilter.h; sourceTree = "<group>"; };
+		1E091A9B1D34F1EC00F815CE /* VideoFilter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VideoFilter.m; sourceTree = "<group>"; };
 		1E8887831CEDC4B500F8F8B0 /* UPLiveStreamerLivingVC.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UPLiveStreamerLivingVC.h; sourceTree = "<group>"; };
 		1E8887841CEDC4B500F8F8B0 /* UPLiveStreamerLivingVC.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UPLiveStreamerLivingVC.m; sourceTree = "<group>"; };
 		1E8887861CEEAA1400F8F8B0 /* UPLiveStreamerSettingVC.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UPLiveStreamerSettingVC.h; sourceTree = "<group>"; };
@@ -66,8 +61,6 @@
 		1EA2241F1CD9CC46007BF4B4 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		1EA224211CD9CC46007BF4B4 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		1EA224221CD9CC46007BF4B4 /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
-		1EA224241CD9CC46007BF4B4 /* ViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ViewController.h; sourceTree = "<group>"; };
-		1EA224251CD9CC46007BF4B4 /* ViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ViewController.m; sourceTree = "<group>"; };
 		1EA224281CD9CC46007BF4B4 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		1EA2242A1CD9CC46007BF4B4 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		1EA2242D1CD9CC46007BF4B4 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
@@ -82,29 +75,9 @@
 		1EA226311CD9D2BC007BF4B4 /* libiconv.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libiconv.tbd; path = usr/lib/libiconv.tbd; sourceTree = SDKROOT; };
 		1EA226331CD9D2C7007BF4B4 /* libz.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libz.tbd; path = usr/lib/libz.tbd; sourceTree = SDKROOT; };
 		1EA226351CD9D2D4007BF4B4 /* UPLiveSDK.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = UPLiveSDK.framework; sourceTree = "<group>"; };
-		1EA226371CD9D363007BF4B4 /* DemoViewControllerPlayer1.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DemoViewControllerPlayer1.h; sourceTree = "<group>"; };
-		1EA226381CD9D363007BF4B4 /* DemoViewControllerPlayer1.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DemoViewControllerPlayer1.m; sourceTree = "<group>"; };
-		1EA226391CD9D363007BF4B4 /* DemoViewControllerPlayer2.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DemoViewControllerPlayer2.h; sourceTree = "<group>"; };
-		1EA2263A1CD9D363007BF4B4 /* DemoViewControllerPlayer2.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DemoViewControllerPlayer2.m; sourceTree = "<group>"; };
-		1EA2263B1CD9D363007BF4B4 /* DemoViewControllerFullscreen.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DemoViewControllerFullscreen.h; sourceTree = "<group>"; };
-		1EA2263C1CD9D363007BF4B4 /* DemoViewControllerFullscreen.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DemoViewControllerFullscreen.m; sourceTree = "<group>"; };
-		1EA226441CD9D4F8007BF4B4 /* UPQRCodeViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UPQRCodeViewController.h; sourceTree = "<group>"; };
-		1EA226451CD9D4F8007BF4B4 /* UPQRCodeViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UPQRCodeViewController.m; sourceTree = "<group>"; };
-		1EA226461CD9D4F8007BF4B4 /* QRScanView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QRScanView.h; sourceTree = "<group>"; };
-		1EA226471CD9D4F8007BF4B4 /* QRScanView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = QRScanView.m; sourceTree = "<group>"; };
-		1EA2264D1CD9D555007BF4B4 /* DemoViewControllerStreamer1.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DemoViewControllerStreamer1.h; sourceTree = "<group>"; };
-		1EA2264E1CD9D555007BF4B4 /* DemoViewControllerStreamer1.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DemoViewControllerStreamer1.m; sourceTree = "<group>"; };
-		1EA2264F1CD9D555007BF4B4 /* DemoViewControllerStreamer2.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DemoViewControllerStreamer2.h; sourceTree = "<group>"; };
-		1EA226501CD9D555007BF4B4 /* DemoViewControllerStreamer2.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DemoViewControllerStreamer2.m; sourceTree = "<group>"; };
-		1EA226511CD9D555007BF4B4 /* DemoViewControllerStreamer3.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DemoViewControllerStreamer3.h; sourceTree = "<group>"; };
-		1EA226521CD9D555007BF4B4 /* DemoViewControllerStreamer3.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DemoViewControllerStreamer3.m; sourceTree = "<group>"; };
 		1ED24A341D17F3BE00A8C24D /* GPUImageBeautifyFilter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GPUImageBeautifyFilter.h; sourceTree = "<group>"; };
 		1ED24A351D17F3BE00A8C24D /* GPUImageBeautifyFilter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GPUImageBeautifyFilter.m; sourceTree = "<group>"; };
-		1EF6AD3D1CEEEFFE004A7DCA /* UPLivePlayerVC.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UPLivePlayerVC.h; sourceTree = "<group>"; };
-		1EF6AD3E1CEEEFFE004A7DCA /* UPLivePlayerVC.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UPLivePlayerVC.m; sourceTree = "<group>"; };
 		1EF6AD3F1CEEEFFE004A7DCA /* UPLivePlayerVC.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = UPLivePlayerVC.xib; sourceTree = "<group>"; };
-		1EFD24161D18DE150027DA5B /* BeautifyFilter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BeautifyFilter.h; sourceTree = "<group>"; };
-		1EFD24171D18DE150027DA5B /* BeautifyFilter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BeautifyFilter.m; sourceTree = "<group>"; };
 		1EFD241B1D18E3BB0027DA5B /* GLProgram.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GLProgram.h; sourceTree = "<group>"; };
 		1EFD241C1D18E3BB0027DA5B /* GPUImage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GPUImage.h; sourceTree = "<group>"; };
 		1EFD241D1D18E3BB0027DA5B /* GPUImage3x3ConvolutionFilter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GPUImage3x3ConvolutionFilter.h; sourceTree = "<group>"; };
@@ -280,9 +253,9 @@
 		1EFD24C71D18E3BC0027DA5B /* GPUImageXYDerivativeFilter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GPUImageXYDerivativeFilter.h; sourceTree = "<group>"; };
 		1EFD24C81D18E3BC0027DA5B /* GPUImageZoomBlurFilter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GPUImageZoomBlurFilter.h; sourceTree = "<group>"; };
 		1EFD24CA1D18E3BC0027DA5B /* libGPUImage.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libGPUImage.a; sourceTree = "<group>"; };
-		AE502B4D1D11575100DEBF45 /* Address.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Address.plist; sourceTree = "<group>"; };
 		AE721F841CE9655C000B170A /* CoreMedia.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreMedia.framework; path = System/Library/Frameworks/CoreMedia.framework; sourceTree = SDKROOT; };
 		AE721F861CE96567000B170A /* CoreVideo.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreVideo.framework; path = System/Library/Frameworks/CoreVideo.framework; sourceTree = SDKROOT; };
+		AEA71A831D47461A0090A4D7 /* focus.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = focus.png; sourceTree = "<group>"; };
 		AEB817A01D0F956100F97E66 /* CoreTelephony.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreTelephony.framework; path = System/Library/Frameworks/CoreTelephony.framework; sourceTree = SDKROOT; };
 		AEB817A21D0F956900F97E66 /* libresolv.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libresolv.tbd; path = usr/lib/libresolv.tbd; sourceTree = SDKROOT; };
 		AEB817A41D0F957500F97E66 /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = System/Library/Frameworks/SystemConfiguration.framework; sourceTree = SDKROOT; };
@@ -350,7 +323,7 @@
 			children = (
 				1EFD24121D18DCC50027DA5B /* playerVCs */,
 				1EFD24141D18DD3A0027DA5B /* streamingVCs */,
-				1EFD24151D18DDB80027DA5B /* beautifyFilter */,
+				1EFD24151D18DDB80027DA5B /* VideoFilter */,
 				1EA224211CD9CC46007BF4B4 /* AppDelegate.h */,
 				1EA224221CD9CC46007BF4B4 /* AppDelegate.m */,
 				1E99B7191CEDA7C80021DC35 /* UPLiveViewController.h */,
@@ -360,7 +333,6 @@
 				1EA2242C1CD9CC46007BF4B4 /* LaunchScreen.storyboard */,
 				1EA2242F1CD9CC46007BF4B4 /* Info.plist */,
 				1EA2241E1CD9CC46007BF4B4 /* Supporting Files */,
-				1EFD24101D18DBC80027DA5B /* stashedDemos */,
 			);
 			path = UPLiveSDKDemo;
 			sourceTree = "<group>";
@@ -368,44 +340,19 @@
 		1EA2241E1CD9CC46007BF4B4 /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
-				AE502B4D1D11575100DEBF45 /* Address.plist */,
+				AEA71A831D47461A0090A4D7 /* focus.png */,
 				1EA2241F1CD9CC46007BF4B4 /* main.m */,
 			);
 			name = "Supporting Files";
 			sourceTree = "<group>";
 		};
-		1EFD24101D18DBC80027DA5B /* stashedDemos */ = {
-			isa = PBXGroup;
-			children = (
-				1EA224241CD9CC46007BF4B4 /* ViewController.h */,
-				1EA224251CD9CC46007BF4B4 /* ViewController.m */,
-				1EA226371CD9D363007BF4B4 /* DemoViewControllerPlayer1.h */,
-				1EA226381CD9D363007BF4B4 /* DemoViewControllerPlayer1.m */,
-				1EA226391CD9D363007BF4B4 /* DemoViewControllerPlayer2.h */,
-				1EA2263A1CD9D363007BF4B4 /* DemoViewControllerPlayer2.m */,
-				1EA2263B1CD9D363007BF4B4 /* DemoViewControllerFullscreen.h */,
-				1EA2263C1CD9D363007BF4B4 /* DemoViewControllerFullscreen.m */,
-				1EA2264D1CD9D555007BF4B4 /* DemoViewControllerStreamer1.h */,
-				1EA2264E1CD9D555007BF4B4 /* DemoViewControllerStreamer1.m */,
-				1EA2264F1CD9D555007BF4B4 /* DemoViewControllerStreamer2.h */,
-				1EA226501CD9D555007BF4B4 /* DemoViewControllerStreamer2.m */,
-				1EA226511CD9D555007BF4B4 /* DemoViewControllerStreamer3.h */,
-				1EA226521CD9D555007BF4B4 /* DemoViewControllerStreamer3.m */,
-				1EA226441CD9D4F8007BF4B4 /* UPQRCodeViewController.h */,
-				1EA226451CD9D4F8007BF4B4 /* UPQRCodeViewController.m */,
-				1EA226461CD9D4F8007BF4B4 /* QRScanView.h */,
-				1EA226471CD9D4F8007BF4B4 /* QRScanView.m */,
-			);
-			name = stashedDemos;
-			sourceTree = "<group>";
-		};
 		1EFD24121D18DCC50027DA5B /* playerVCs */ = {
 			isa = PBXGroup;
 			children = (
+				1E091A971D34F1CC00F815CE /* UPLivePlayerVC.h */,
+				1E091A981D34F1CC00F815CE /* UPLivePlayerVC.m */,
 				1E99B7151CEDA7C80021DC35 /* UPLivePlayerDemoViewController.h */,
 				1E99B7161CEDA7C80021DC35 /* UPLivePlayerDemoViewController.m */,
-				1EF6AD3D1CEEEFFE004A7DCA /* UPLivePlayerVC.h */,
-				1EF6AD3E1CEEEFFE004A7DCA /* UPLivePlayerVC.m */,
 				1EF6AD3F1CEEEFFE004A7DCA /* UPLivePlayerVC.xib */,
 			);
 			name = playerVCs;
@@ -426,15 +373,15 @@
 			name = streamingVCs;
 			sourceTree = "<group>";
 		};
-		1EFD24151D18DDB80027DA5B /* beautifyFilter */ = {
+		1EFD24151D18DDB80027DA5B /* VideoFilter */ = {
 			isa = PBXGroup;
 			children = (
 				1ED24A341D17F3BE00A8C24D /* GPUImageBeautifyFilter.h */,
 				1ED24A351D17F3BE00A8C24D /* GPUImageBeautifyFilter.m */,
-				1EFD24161D18DE150027DA5B /* BeautifyFilter.h */,
-				1EFD24171D18DE150027DA5B /* BeautifyFilter.m */,
+				1E091A9A1D34F1EC00F815CE /* VideoFilter.h */,
+				1E091A9B1D34F1EC00F815CE /* VideoFilter.m */,
 			);
-			name = beautifyFilter;
+			name = VideoFilter;
 			sourceTree = "<group>";
 		};
 		1EFD24191D18E3BB0027DA5B /* GPUImage */ = {
@@ -666,7 +613,6 @@
 				TargetAttributes = {
 					1EA2241A1CD9CC46007BF4B4 = {
 						CreatedOnToolsVersion = 7.2.1;
-						DevelopmentTeam = FX6QTNRB57;
 						SystemCapabilities = {
 							com.apple.BackgroundModes = {
 								enabled = 1;
@@ -701,10 +647,10 @@
 				1EF6AD411CEEEFFE004A7DCA /* UPLivePlayerVC.xib in Resources */,
 				1EA2242E1CD9CC46007BF4B4 /* LaunchScreen.storyboard in Resources */,
 				1E88878C1CEED87F00F8F8B0 /* UPLiveStreamerLivingVC.xib in Resources */,
+				AEA71A841D47461A0090A4D7 /* focus.png in Resources */,
 				1EA2242B1CD9CC46007BF4B4 /* Assets.xcassets in Resources */,
 				1EA224291CD9CC46007BF4B4 /* Main.storyboard in Resources */,
 				1E88878A1CEEAA1400F8F8B0 /* UPLiveStreamerSettingVC.xib in Resources */,
-				AE502B4E1D11575100DEBF45 /* Address.plist in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -717,22 +663,13 @@
 			files = (
 				1E99B71C1CEDA7C80021DC35 /* UPLiveStreamerDemoViewController.m in Sources */,
 				1E99B71D1CEDA7C80021DC35 /* UPLiveViewController.m in Sources */,
-				1EA226541CD9D555007BF4B4 /* DemoViewControllerStreamer2.m in Sources */,
-				1EA224261CD9CC46007BF4B4 /* ViewController.m in Sources */,
-				1EA2263E1CD9D363007BF4B4 /* DemoViewControllerPlayer2.m in Sources */,
-				1EA226491CD9D4F8007BF4B4 /* QRScanView.m in Sources */,
-				1EF6AD401CEEEFFE004A7DCA /* UPLivePlayerVC.m in Sources */,
-				1EA2263D1CD9D363007BF4B4 /* DemoViewControllerPlayer1.m in Sources */,
-				1EA226551CD9D555007BF4B4 /* DemoViewControllerStreamer3.m in Sources */,
-				1EFD24181D18DE150027DA5B /* BeautifyFilter.m in Sources */,
 				1ED24A361D17F3BE00A8C24D /* GPUImageBeautifyFilter.m in Sources */,
+				1E091A991D34F1CC00F815CE /* UPLivePlayerVC.m in Sources */,
 				1EA224231CD9CC46007BF4B4 /* AppDelegate.m in Sources */,
-				1EA2263F1CD9D363007BF4B4 /* DemoViewControllerFullscreen.m in Sources */,
+				1E091A9C1D34F1EC00F815CE /* VideoFilter.m in Sources */,
 				1EA224201CD9CC46007BF4B4 /* main.m in Sources */,
-				1EA226531CD9D555007BF4B4 /* DemoViewControllerStreamer1.m in Sources */,
 				1E8887851CEDC4B500F8F8B0 /* UPLiveStreamerLivingVC.m in Sources */,
 				1E99B71B1CEDA7C80021DC35 /* UPLivePlayerDemoViewController.m in Sources */,
-				1EA226481CD9D4F8007BF4B4 /* UPQRCodeViewController.m in Sources */,
 				1E8887891CEEAA1400F8F8B0 /* UPLiveStreamerSettingVC.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

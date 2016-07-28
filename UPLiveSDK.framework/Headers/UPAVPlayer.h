@@ -70,24 +70,19 @@ typedef void(^BufferingProgressBlock)(float progress);
 
 @property (nonatomic, strong, readonly) UIView *playView;
 @property (nonatomic, strong, readonly) UPAVPlayerDashboard *dashboard;
-@property (nonatomic, assign) BOOL interrupted;
-@property (nonatomic, strong) UPAVPlayerStreamInfo *streamInfo;
-@property (nonatomic, strong) PlayerStadusBlock playerStadusBlock;
-@property (nonatomic, strong) BufferingProgressBlock bufferingProgressBlock;
+@property (nonatomic, strong, readonly) UPAVPlayerStreamInfo *streamInfo;
 @property (nonatomic, assign) NSTimeInterval bufferingTime;//(1s -- 10s)
 @property (nonatomic, assign) CGFloat volume;
 @property (nonatomic, assign) CGFloat bright;
 @property (nonatomic, assign) BOOL mute;
-@property (nonatomic, assign) BOOL fullScreen;
 @property (nonatomic, assign) NSUInteger bitrateLevel;
-@property (nonatomic, assign) BOOL autoChangeBitrate;
 @property (nonatomic, assign) NSTimeInterval bufferingTimeOutLimit;
-@property (nonatomic, strong) NSArray *urlArray;
 @property (nonatomic, copy) NSString *url;
-@property (nonatomic, copy) NSString *bandwidth;
-@property (nonatomic, assign) float displayPosition;//视频播放到的时间点
-@property (nonatomic, assign) float streamPosition;//视频流读取到的时间点
+@property (nonatomic, assign, readonly) float displayPosition;//视频播放到的时间点
+@property (nonatomic, assign, readonly) float streamPosition;//视频流读取到的时间点
 @property (nonatomic, weak) id<UPAVPlayerDelegate> delegate;
+@property (nonatomic) BOOL lipSynchOn;//音画同步，默认值 YES
+
 
 - (instancetype)initWithURL:(NSString *)url;
 - (void)setFrame:(CGRect)frame;

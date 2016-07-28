@@ -32,8 +32,6 @@ typedef NS_ENUM(NSInteger, UPAVCapturerPresetLevel) {
     UPAVCapturerPreset_1280x720
 };
 
-typedef void(^UPAVCapturerStatusBlock)(UPAVCapturerStatus status, NSError *error);
-
 @interface UPAVCapturerDashboard: NSObject
 @property (nonatomic, readonly) float fps_capturer;
 @property (nonatomic, readonly) float fps_streaming;
@@ -82,26 +80,33 @@ didOutputSampleBuffer:(CMSampleBufferRef)sampleBuffer
 @property (nonatomic) int32_t fps;//设置采集帧频
 @property (nonatomic) int64_t bitrate;//设置目标推流比特率
 
-/***
+/*** 推流开关
  默认为 YES，即 UPAVCapturer start 之后会立即推流直播; 
- 如果想延时推流，可以先将 streamingOn 设置为 NO，随后需要推流的时候再置为 YES。
  ***/
 @property (nonatomic, assign) BOOL streamingOn;
 @property (nonatomic, assign) BOOL camaraTorchOn;
 @property (nonatomic, assign) BOOL filterOn;
+
 @property (nonatomic) UPAVCapturerPresetLevel capturerPresetLevel;
+
+/*** 自定义拍摄像素尺寸
+ 默认值为：与各 UPAVCapturerPresetLevel 相对应的原始尺寸。
+ ***/
+@property (nonatomic, assign) CGRect capturerPresetLevelFrameCropRect;
+
 @property (nonatomic, weak) id<UPAVCapturerVideoFilterProtocol> videoFiler;
 @property (nonatomic, weak) id<UPAVCapturerDelegate> delegate;
-@property (nonatomic) UPAVCapturerStatus capturerStatus;
-@property (nonatomic) UPPushAVStreamStatus pushStreamStatus;
-@property (nonatomic, strong) UPAVCapturerStatusBlock uPAVCapturerStatusBlock;
+@property (nonatomic, readonly) UPAVCapturerStatus capturerStatus;
+@property (nonatomic, readonly) UPPushAVStreamStatus pushStreamStatus;
 @property (nonatomic, strong, readonly) UPAVCapturerDashboard *dashboard;
+
++ (UPAVCapturer *)sharedInstance;
 
 
 - (void)start;
 - (void)stop;
 - (UIView *)previewWithFrame:(CGRect)frame contentMode:(UIViewContentMode)mode;
-+ (UPAVCapturer *)sharedInstance;
+
 
 
 /*** 生成推流 token
