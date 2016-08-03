@@ -10,6 +10,8 @@
 #import "UPLiveStreamerDemoViewController.h"
 #import "UPLiveStreamerSettingVC.h"
 #import "UPLiveStreamerLivingVC.h"
+#import <AVFoundation/AVFoundation.h>
+
 
 @implementation Settings
 
@@ -21,6 +23,12 @@
     UITextView *textViewPushUrl;
     UITextView *textViewPlayUrl;
     UITextField *textFieldStreamId;
+    
+    //摄像头和麦克风权限检查
+    BOOL microphoneAvailable;
+    BOOL cameraAvailable;
+    BOOL microphoneChecked;
+    BOOL cameraChecked;
 }
 
 @end
@@ -134,11 +142,78 @@
     [self presentViewController:settingsVC animated:YES completion:nil];
 }
 
-- (void)beginBtn:(UIButton *)sender {
+- (void)tryStartLiving {
+    if (!microphoneChecked || !cameraChecked) {
+        return ;
+    }
+    if (!cameraAvailable || !microphoneAvailable) {
+        [self errorAlert:@"请开启摄像头和麦克风权限"];
+        return;
+    }
+    
+    microphoneChecked = NO;
+    cameraChecked = NO;
+    cameraAvailable = NO;
+    microphoneAvailable = NO;
+    NSLog(@"presentViewController");
     UPLiveStreamerLivingVC *livingVC = [[UPLiveStreamerLivingVC alloc] init];
     livingVC.settings = self.settings;
     [self presentViewController:livingVC animated:YES completion:nil];
 }
+
+- (void)beginBtn:(UIButton *)sender {
+    microphoneChecked = NO;
+    cameraChecked = NO;
+    cameraAvailable = NO;
+    microphoneAvailable = NO;
+    [AVCaptureDevice requestAccessForMediaType:AVMediaTypeVideo completionHandler:^(BOOL granted) {
+        dispatch_async(dispatch_get_main_queue(), ^(){
+            if (!granted) {
+                cameraAvailable = NO;
+                NSLog(@"需要开启摄像头权限");
+            } else {
+                cameraAvailable = YES;
+                NSLog(@"摄像头权限 ok");
+            }
+            cameraChecked = YES;
+            [self tryStartLiving];
+        });
+ 
+    }];
+    
+    [AVCaptureDevice requestAccessForMediaType:AVMediaTypeAudio completionHandler:^(BOOL granted) {
+        dispatch_async(dispatch_get_main_queue(), ^(){
+            if (!granted) {
+                NSLog(@"需要开启麦克风权限");
+                microphoneAvailable = NO;
+            } else {
+                NSLog(@"麦克风权限 ok");
+                microphoneAvailable = YES;
+            }
+            microphoneChecked = YES;
+            [self tryStartLiving];
+        });
+
+    }];
+}
+
+- (void)errorAlert:(NSString *)message {
+    dispatch_async(dispatch_get_main_queue(), ^(){
+        
+        UIAlertController* alert = [UIAlertController alertControllerWithTitle:@""
+                                                                       message:message
+                                                                preferredStyle:UIAlertControllerStyleAlert];
+        
+        UIAlertAction* defaultAction = [UIAlertAction actionWithTitle:@"OK" style:UIAlertActionStyleDefault
+                                                              handler:^(UIAlertAction * action) {
+                                                                  [self dismissViewControllerAnimated:YES completion:nil];
+                                                              }];
+        
+        [alert addAction:defaultAction];
+        [self presentViewController:alert animated:YES completion:nil];
+    });
+}
+
 
 
 - (BOOL)textFieldShouldEndEditing:(UITextField *)textField {

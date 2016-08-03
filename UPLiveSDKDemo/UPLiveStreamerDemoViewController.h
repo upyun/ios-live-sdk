@@ -7,7 +7,7 @@
 //
 
 #import <UIKit/UIKit.h>
-#import <UPLiveSDK/UPAVCapturer.h>
+#import "UPAVCapturer.h"
 
 @interface Settings : NSObject
 

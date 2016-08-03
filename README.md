@@ -2,17 +2,15 @@
 
 ## 阅读对象
 
-本文档面向 `iOS` 直播应用开发者。 
+本文档面向 `iOS` 移动视频直播应用开发者。
 
 ## SDK 概述
 
-此 `SDK` 包含__推流__和__拉流__两部分，及美颜滤镜等全套直播功能；       
-
-此 `SDK` 中的播放器、采集器、推流器可单独使用。用户可以自主构建直播中某个环节，比如播放器（`UPAVPlayer`）可以与 Web 推流器 Flex 相配合。推流器（`UPAVStreamer`）也可以配合`GPUImage `库提供的采集功能。	
-
-
-基于此 `SDK` 结合又拍云的直播平台可以快速构建移动直播应用。
+此 `SDK` 实现了视频直播和播放两部分功能。开发者可以在应用内集成此 `SDK` 来快速实现视频推流（直播）和拉流（播放）功能。
   
+***支持 `ARMv7`，`ARM64`，`x86_64` 架构***
+
+***注意: `SDK` 依赖于 `FFMPEG 3.0` , 不建议用户自行再添加 `FFMPEG` 库 , 如有特殊需求, 请联系我们***  
 
 ## 推流端功能特性
 
@@ -30,21 +28,17 @@
 
 * 支持闪光灯开关
 
-* 支持目标码率设置		
+* 支持目标码率设置
 
 * 支持拍摄帧频设置
 
-* 支持美颜滤镜
+* 内置美颜滤镜
 
 * 支持横屏拍摄
 
 ## 播放端功能特性
 
-* 支持播放直播源和点播源，支持播放本地视频文件。
-
-* 支持视频格式：`HLS`, `RTMP`, `FLV`，`mp4` 等视频格式 
-	
-* 播放器支持单音频流播放，支持 speex 解码，可以配合浏览器 Flex 推流的播放 
+* 支持视频格式：`HLS`, `RTMP`, `FLV`，`mp4` 等直播或点播视频格式，支持 `HLS` 多种分辨率切换
 
 * 低延时直播体验，配合又拍云推流 `SDK` 及 `CDN` 分发, 可以达到全程直播稳定在 `2-3` 秒延时
 
@@ -64,11 +58,9 @@ Demo 下载: `https://github.com/upyun/ios-live-sdk`
 
 ## SDK使用说明
 
-
 * 运行环境和兼容性
 
 ```UPLiveSDK.framework``` 支持 `iOS 8` 及以上系统版本； 
-支持 `ARMv7`，`ARM64`，`x86_64` 架构。
 
 * 安装使用说明
 
@@ -109,16 +101,13 @@ Demo 下载: `https://github.com/upyun/ios-live-sdk`
 `libz.tbd`
 
 
-***注意: 此 `SDK` 已经包含 `FFMPEG 3.0` , 不建议用户自行再添加 `FFMPEG` 库 , 如有特殊需求, 请联系我们***    
+  
 
 ## 推流 SDK 使用示例 UPAVCapturer
 
-使用拍摄和推流功能 `UPAVCapturer` 需要引入头文件  `#import <UPLiveSDK/UPAVCapturer.h>`   
+使用推流功能 `UPAVCapturer` 需要引入头文件  `#import <UPLiveSDK/UPAVCapturer.h>`   
 
-`UPAVCapturer` 为单例模式。			
-	
-__注:__ 也可以单独使用 `SDK` 的推流器 `UPAVStreamer` , 采集模块自定义, 如视频采集可利用 `GPUImageVideoCamera` 。 
-
+`UPAVCapturer` 为单例模式。
 
 1.设置视频预览视图:  
 
@@ -128,6 +117,7 @@ __注:__ 也可以单独使用 `SDK` 的推流器 `UPAVStreamer` , 采集模块�
    contentMode:previewContentMode];
    self.videoPreview.backgroundColor = [UIColor blackColor];
    [self.view insertSubview:self.videoPreview atIndex:0];
+
 
 
 ```
@@ -161,7 +151,7 @@ __注:__ 也可以单独使用 `SDK` 的推流器 `UPAVStreamer` , 采集模块�
 
 ```
 
-    [UPAVCapturer sharedInstance].camaraPosition = _settings.camaraPosition;//设置前后摄像头
+    [[UPAVCapturer sharedInstance] changeCamera];//切换前后摄像头
 
     
 
@@ -183,66 +173,23 @@ __注:__ 也可以单独使用 `SDK` 的推流器 `UPAVStreamer` , 采集模块�
 
 6.推流状态回调
 
-如果在直播过程发生异常，可以通过 `UPAVCapturerDelegate` 捕捉错误信息，并且关闭拍摄推流。
+如果在直播过程发生异常，可以通过 `uPAVCapturerStatusBlock` 捕捉错误信息，并且关闭拍摄推流。__注意：__uPAVCapturerStatusBlock 不保证在主线程执行。
 
+```
 
-```				
+    [UPAVCapturer sharedInstance].uPAVCapturerStatusBlock = ^(UPAVCapturerStatus status, NSError *error) {
 
-//采集状态
-- (void)UPAVCapturer:(UPAVCapturer *)capturer capturerStatusDidChange:(UPAVCapturerStatus)capturerStatus {
-    switch (capturerStatus) {
-        case UPAVCapturerStatusStopped: {
-        // 拍摄停止
+        if (error) {
+
+        //错误通知
+
+        //关闭推流
+
+        //如果需要操作 UI，需要切换到主线程
+
         }
-            break;
-        case UPAVCapturerStatusLiving: {
-        // 拍摄中
-        }
-            break;
-        case UPAVCapturerStatusError: {
-         // 拍摄错误
-        }
-            break;
-        default:
-            break;
-    }
-}
 
-//错误捕捉
-- (void)UPAVCapturer:(UPAVCapturer *)capturer capturerError:(NSError *)error {
-    if (error) {
-        NSString *s = [NSString stringWithFormat:@"%@", error];
-        [self errorAlert:s];
-    }
-    //需要关闭直播
-}
-
-//推流状态
-- (void)UPAVCapturer:(UPAVCapturer *)capturer pushStreamStatusDidChange:(UPPushAVStreamStatus)streamStatus {
-    
-    switch (streamStatus) {
-        case UPPushAVStreamStatusClosed:
-            //连接关闭
-            break;
-        case UPPushAVStreamStatusConnecting:
-            //连接中
-            break;
-        case UPPushAVStreamStatusReady:
-            //连接成功
-            break;
-        case UPPushAVStreamStatusPushing:
-            //推流中
-            break;
-        case UPPushAVStreamStatusError: {
-            //推流错误
-        }
-            break;
-        default:
-            break;
-    }
-}
-
-
+    };
 
 ```
 
@@ -250,11 +197,8 @@ __注:__ 也可以单独使用 `SDK` 的推流器 `UPAVStreamer` , 采集模块�
 
 ```  
 
-	//选择系统拍摄分辨率，默认 640＊480
+	//选择拍摄分辨率，默认 640 X 480
 	[UPAVCapturer sharedInstance].capturerPresetLevel = _settings.level;
-	
-	//在系统拍摄的原始像素尺寸上进行剪切，比如可以剪切成 360＊640 的全屏比例尺寸；  
-	[UPAVCapturer sharedInstance].capturerPresetLevelFrameCropRect = CGRectMake(0, 0, 360, 640);
 	
 	//选择前后置摄像头，默认使用后置摄像头
 	[UPAVCapturer sharedInstance].camaraPosition = _settings.camaraPosition;
@@ -268,10 +212,9 @@ __注:__ 也可以单独使用 `SDK` 的推流器 `UPAVStreamer` , 采集模块�
 	//美颜滤镜是否开启，默认开启
 	[UPAVCapturer sharedInstance].filter = _settings.filter;
 	
-	//设置美颜滤镜，详见 demo 中代码示例
-    _fliter = [BeautifyFilter new];
-    [UPAVCapturer sharedInstance].videoFiler = _fliter;
-
+	//设置美颜滤镜等级
+	[UPAVCapturer sharedInstance].filterLevel = _settings.filterLevel;
+	
 	//闪光灯开关
 	[UPAVCapturer sharedInstance].camaraTorchOn = _settings.camaraTorchOn;
 	
@@ -284,9 +227,9 @@ __注:__ 也可以单独使用 `SDK` 的推流器 `UPAVStreamer` , 采集模块�
 
 ## 拉流 SDK 使用示例 UPAVPlayer
 
-使用 ```UPAVPlayer``` 需要引入头文件 ```#import <UPLiveSDK/UPAVPlayer.h>```
+使用 ```UPAVPlayer``` 需要引入头文件 ````#import <UPLiveSDK/UPAVPlayer.h>```
 
-`UPAVPlayer` 使用接口类似 `AVFoundation` 的 `AVPlayer` 。
+`UPAVPlayer` 使用接口类似 `AVFoundation` 的 `AVPlayer`。
 
 完整的使用代码请参考 `demo` 工程。
 
@@ -534,57 +477,33 @@ md5 之后： `cd07624363efbcc102e772c2e270e811`
                 
 ```
 
-## 版本历史
+## 版本历史			
 
 
-__1.0.1 基本的直播推流器和播放器；__  
+ __1.0.1 基本的直播推流器和播放器；__  
  
  * 播放器支持 rtmp, hls, flv;
- * 推流器支持 rtmp 推流。  
+ * 推流器支持 rtmp 推流。
   
   
-__1.0.2 性能优化，添加美颜滤镜__
+ __1.0.2 性能优化，添加美颜滤镜__
  	
  * 推流添加美颜滤镜； 
  * 缩小 framework 打包体积；	
  * 修复播放器清晰度 bug；		
  * 修复播放器开始播放花屏 bug；	
  * 修改播放器卡顿重新连接逻辑；	
- * 播放器秒开优化。  
+ * 播放器秒开优化。
  
  
-__1.0.3 点播支持__
+  __1.0.3 点播支持__
  	
  * 播放器点播，支持暂停和 seek 功能；
  * 播放器播放、连接逻辑分离，支持异步预连接和缓冲；
  * 播放器状态 delegate 方式回调；
  * 推流器解决 iPhone 6s 音频采集引起相关的 bug；
  * 推流器横屏拍摄及屏幕旋转适配 demo。
- 
 
-
-__1.0.4 分析统计，拆分 UPAVStreamer__
- 	
- * 播放器添加播放质量分析统计功能；     
- * 播放器添加帧频，码率等信息接口及 demo 展示；     
- * SDK 内部删除 GPUImage 依赖，美颜滤镜功能通过协议接口暴露；     
- * 推流器拆分暴露 UPAVStreamer，方便自由组织实现采集，处理，编码，推流等直播各个环节；      
- * 推流器 UPAVCapturer 状态回调改为代理方式，且细分推流状态和拍摄状态；         
- * 推流器添加拍摄帧频，推流帧频，码率，丢帧等信息接口及 demo 展示；     
- * 推流过程支持背景音乐不被打断及修复 AVAudioSession 相关bug；
- 
- 
-__2.1 包尺寸显著减小；支持后台推流；支持浏览器 Flex 推流的播放__
-
-* UPLiveSDK.framework 大小精简到 24M；		
-* 播放器支持单音频播放；				
-* 播放器支持 speex 格式解码，实现配合浏览器 Flex 推流的播放；         
-* 推流支持自由剪裁像素尺寸，如 640*360 的全屏尺寸；    
-* 推流支持后台推流（音频），应用退出后台推流不会中断；     
-* 推流添加水印功能及 demo 展示；
- 
- 
- 
 ## 反馈与建议
 
  邮箱：<livesdk@upai.com>

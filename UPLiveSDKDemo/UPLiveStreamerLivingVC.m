@@ -7,24 +7,19 @@
 //
 
 #import "UPLiveStreamerLivingVC.h"
-#import <UPLiveSDK/UPAVCapturer.h>
+#import "UPAVCapturer.h"
 #import "AppDelegate.h"
-#import "VideoFilter.h"
-
-
+#import <UPLiveSDK/UPLiveSDKConfig.h>
 
 @interface UPLiveStreamerLivingVC () <UPAVCapturerDelegate>
 {
     NSString *_videoOrientationDescription;
     NSString *_pushStreamStadusDescription;
-    VideoFilter *_fliter;
-    
-    CALayer *_focusLayer;
 }
 
 @property (weak, nonatomic) IBOutlet UISwitch *filterSwitch;
 @property (weak, nonatomic) IBOutlet UISwitch *streamingSwitch;
-@property (weak, nonatomic) IBOutlet UISwitch *flashSwitch;
+@property (weak, nonatomic) IBOutlet UISwitch *cameraSwitch;
 @property (weak, nonatomic) IBOutlet UIView *panel;
 @property (weak, nonatomic) IBOutlet UITextView *dashboard;
 @property (nonatomic, strong) UIView *videoPreview;
@@ -46,11 +41,6 @@
     CGFloat videoPreviewHeight = MAX([UIScreen mainScreen].bounds.size.height, [UIScreen mainScreen].bounds.size.width);
     self.videoPreview = [[UPAVCapturer sharedInstance] previewWithFrame:CGRectMake(0, 0, videoPreviewWidth, videoPreviewHeight) contentMode:previewContentMode];
     self.videoPreview.backgroundColor = [UIColor blackColor];
-    
-    UITapGestureRecognizer *singleFingerOne = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(cameraViewTapAction:)];
-    singleFingerOne.numberOfTouchesRequired = 1; //手指数
-    singleFingerOne.numberOfTapsRequired = 1; //tap次数
-    [self.videoPreview addGestureRecognizer:singleFingerOne];
     
     
     //将预览视图初始化旋转到 Portrait 位置，且固定在 Portrait 位置效果类似系统自带 camera app）
@@ -106,32 +96,11 @@
     
     //设置代理，采集状态推流信息回调
     [UPAVCapturer sharedInstance].delegate = self;
-    
-    //设置滤镜
-    _fliter = [VideoFilter new];
-    
-    CGSize size = [UIScreen mainScreen].bounds.size;
-    __block UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, size.width, 44)];
-    label.text = @"我是水印";
-    label.textAlignment = NSTextAlignmentRight;
-    
-//    //设置水印
-//    _fliter.watermarkView = label;
-//    
-//    //动态改变水印
-//    _fliter.watermarkWillRenderBlock = ^(UIView *watermarkView, CGSize backGroudSize){
-//        UILabel *label = (UILabel *)watermarkView;
-//        label.text = [NSString stringWithFormat:@"%@", [NSDate date]];
-//        label.frame = CGRectMake(0, 0, backGroudSize.width, 44);
-//    };
-    
-    [UPAVCapturer sharedInstance].videoFiler = _fliter;
 }
 
 - (void)viewWillAppear:(BOOL)animated {
     self.filterSwitch.on = _settings.filter;
     self.streamingSwitch.on = _settings.streamingOn;
-    self.flashSwitch.on = _settings.camaraTorchOn;
 }
 
 - (void)viewDidAppear:(BOOL)animated {
@@ -147,7 +116,6 @@
     [UPAVCapturer sharedInstance].camaraTorchOn = _settings.camaraTorchOn;
     [UPAVCapturer sharedInstance].videoOrientation = _settings.videoOrientation;
     [UPAVCapturer sharedInstance].fps = _settings.fps;
-    _fliter.beautifylevel = _settings.filterLevel;
 
     //推流地址
     NSString *rtmpPushUrl = [NSString stringWithFormat:@"%@%@", _settings.rtmpServerPushPath, _settings.streamId];
@@ -163,7 +131,13 @@
     NSLog(@"rtmpPushUrl: %@", rtmpPushUrl);
     
     [UPAVCapturer sharedInstance].outStreamPath = rtmpPushUrl;
+    
     [UPAVCapturer sharedInstance].capturerPresetLevelFrameCropRect = CGRectMake(0, 0, 360, 640);
+    if ([UPAVCapturer sharedInstance].videoOrientation == AVCaptureVideoOrientationLandscapeRight
+        || [UPAVCapturer sharedInstance].videoOrientation == AVCaptureVideoOrientationLandscapeLeft) {
+        
+        [UPAVCapturer sharedInstance].capturerPresetLevelFrameCropRect = CGRectMake(0, 0, 640, 360);
+    }
     [UPAVCapturer sharedInstance].bitrate = 400000;
     [[UPAVCapturer sharedInstance] start];
     [self updateDashboard];
@@ -178,14 +152,16 @@
     [UPAVCapturer sharedInstance].filterOn = ![UPAVCapturer sharedInstance].filterOn;
 }
 
-- (IBAction)flashSwitch:(id)sender {
+- (IBAction)cameraSwitch:(id)sender {
     
-    
-    [UPAVCapturer sharedInstance].camaraTorchOn = ![UPAVCapturer sharedInstance].camaraTorchOn ;
+    if ([UPAVCapturer sharedInstance].camaraPosition == AVCaptureDevicePositionBack) {
+        [UPAVCapturer sharedInstance].camaraPosition = AVCaptureDevicePositionFront;
+    } else {
+        [UPAVCapturer sharedInstance].camaraPosition = AVCaptureDevicePositionBack;
+    }
 }
 
 - (IBAction)stop:(id)sender {
-    
     [self dismissViewControllerAnimated:YES completion:^{
         [[UPAVCapturer sharedInstance] stop];
     }];
@@ -306,6 +282,7 @@
 - (void)updateDashboard{
     
     self.dashboard.text = [NSString stringWithFormat:@"%@", [UPAVCapturer sharedInstance].dashboard];
+    self.dashboard.textColor = [UIColor redColor];
     double delayInSeconds = 1.0;
     dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, (int64_t)(delayInSeconds * NSEC_PER_SEC));
     __weak UPLiveStreamerLivingVC *weakself = self;
@@ -314,101 +291,8 @@
     });
 }
 
-#pragma mark--点击对焦
-
--(AVCaptureDevice *)getCameraDeviceWithPosition:(AVCaptureDevicePosition )position {
-    NSArray *cameras = [AVCaptureDevice devicesWithMediaType:AVMediaTypeVideo];
-    for (AVCaptureDevice *camera in cameras) {
-        if ([camera position] == position) {
-            return camera;
-        }
-    } return nil;
-}
-
--(void)cameraViewTapAction:(UITapGestureRecognizer *)tgr
-{
-    if (tgr.state == UIGestureRecognizerStateRecognized && (_focusLayer == NO || _focusLayer.hidden)) {
-        CGPoint location = [tgr locationInView:self.videoPreview];
-        [self setfocusImage];
-        [self layerAnimationWithPoint:location];
-        AVCaptureDevice *device = [self getCameraDeviceWithPosition:_settings.camaraPosition];
-        CGPoint pointOfInterest = CGPointMake(0.5f, 0.5f);
-        NSLog(@"taplocation x = %f y = %f", location.x, location.y);
-        CGSize frameSize = _videoPreview.frame.size;
-        
-        if (_settings.camaraPosition == AVCaptureDevicePositionFront) {
-            location.x = frameSize.width - location.x;
-        }
-        
-        pointOfInterest = CGPointMake(location.y / frameSize.height, 1.f - (location.x / frameSize.width));
-        
-        if ([device isFocusPointOfInterestSupported] && [device isFocusModeSupported:AVCaptureFocusModeAutoFocus]) {
-            NSError *error;
-            if ([device lockForConfiguration:&error]) {
-                [device setFocusPointOfInterest:pointOfInterest];
-                
-                [device setFocusMode:AVCaptureFocusModeAutoFocus];
-                
-                if([device isExposurePointOfInterestSupported] && [device isExposureModeSupported:AVCaptureExposureModeContinuousAutoExposure])
-                {
-                    [device setExposurePointOfInterest:pointOfInterest];
-                    [device setExposureMode:AVCaptureExposureModeContinuousAutoExposure];
-                }
-                
-                [device unlockForConfiguration];
-                
-                NSLog(@"FOCUS OK");
-            } else {
-                NSLog(@"ERROR = %@", error);
-            }
-        }
-    }
-}
-
-- (void)setfocusImage {
-    UIImage *focusImage = [UIImage imageNamed:@"focus"];
-    UIImageView *imageView = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, focusImage.size.width, focusImage.size.height)];
-    imageView.image = focusImage;
-    CALayer *layer = imageView.layer;
-    layer.hidden = YES;
-    _focusLayer = layer;
-    [self.videoPreview.layer addSublayer:layer];
-    
-}
-
-- (void)layerAnimationWithPoint:(CGPoint)point {
-    if (_focusLayer) {
-        CALayer *focusLayer = _focusLayer;
-        focusLayer.hidden = NO;
-        [CATransaction begin];
-        [CATransaction setDisableActions:YES];
-        [focusLayer setPosition:point];
-        focusLayer.transform = CATransform3DMakeScale(2.0f,2.0f,1.0f);
-        [CATransaction commit];
-        
-        
-        CABasicAnimation *animation = [ CABasicAnimation animationWithKeyPath: @"transform" ];
-        animation.toValue = [ NSValue valueWithCATransform3D: CATransform3DMakeScale(1.0f,1.0f,1.0f)];
-        animation.delegate = self;
-        animation.duration = 0.3f;
-        animation.repeatCount = 1;
-        animation.removedOnCompletion = NO;
-        animation.fillMode = kCAFillModeForwards;
-        [focusLayer addAnimation: animation forKey:@"animation"];
-        
-        // 0.5秒钟延时
-        [self performSelector:@selector(focusLayerNormal) withObject:self afterDelay:0.5f];
-    }
-}
-- (void)animationDidStop:(CAAnimation *)anim finished:(BOOL)flag {
-    [_focusLayer removeFromSuperlayer];
-    
-}
-
-
-- (void)focusLayerNormal {
-    self.videoPreview.userInteractionEnabled = YES;
-    _focusLayer.hidden = YES;
+- (void)dealloc {
+    NSLog(@"dealloc %@", self);
 }
 
 

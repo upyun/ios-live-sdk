@@ -9,7 +9,7 @@
 #import "UPLivePlayerVC.h"
 #import <UPLiveSDK/UPAVPlayer.h>
 #import "AppDelegate.h"
-#import <UPLiveSDK/UPAVCapturer.h>
+#import "UPAVCapturer.h"
 
 @interface UPLivePlayerVC () <UPAVPlayerDelegate>
 {

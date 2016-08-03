@@ -27,57 +27,6 @@
     return YES;
 }
 
-- (NSString *)getVHostFromURL:(NSString *)url {
-    NSString *vhost = nil;
-    NSURL *testURL = [NSURL URLWithString:url];
-    NSString *testHost = testURL.host;
-    NSLog(@"host==%@", testHost);
-    NSArray *patch = testURL.pathComponents;
-    
-    NSLog(@"aaaa==%@", url);
-    url = @"llll";
-    NSLog(@"aaaa==%@", url);
-    return url;
-    if (patch.count >= 4) {
-        NSLog(@"1vhost==%@", patch[1]);
-        NSLog(@"app==%@", patch[2]);
-        NSLog(@"stream==%@", patch[3]);
-    } else if (patch.count >= 3) {
-        NSLog(@"app==%@", patch[1]);
-        NSLog(@"stream==%@", patch[2]);
-    }
-    
-    if (![self validateIP:testHost]) {
-        NSLog(@"2vhost==%@", testHost);
-        
-        return testHost;
-    }
-
-    NSURLComponents *urlComponents = [NSURLComponents componentsWithURL:testURL resolvingAgainstBaseURL:NO];
-    NSArray *queryItems = urlComponents.queryItems;
-    
-    NSLog(@"queryItems==%@", queryItems);
-    for (NSURLQueryItem *item in queryItems) {
-        NSString *key = item.name;
-        NSString *value = item.value;
-        if ([key isEqualToString:@"vhost"] || [key isEqualToString:@"domain"]) {
-            NSLog(@"34vhost==%@", value);
-            return value;
-        }
-    }
-    return vhost;
-}
-
-- (BOOL)validateIP:(NSString *)str {
-    NSArray *urlComponents = [str componentsSeparatedByString:@"."];
-    for (NSString *key in urlComponents) {
-        if (![self isPureInt:key]) {
-            return NO;
-        };
-    }
-    return YES;
-}
-
 - (BOOL)isPureInt:(NSString*)string{
     NSScanner* scan = [NSScanner scannerWithString:string];
     int val;

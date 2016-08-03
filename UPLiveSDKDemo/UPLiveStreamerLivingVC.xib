@@ -7,9 +7,9 @@
     <objects>
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="UPLiveStreamerLivingVC">
             <connections>
+                <outlet property="cameraSwitch" destination="V7S-Cx-hyb" id="ELk-M6-R9S"/>
                 <outlet property="dashboard" destination="h2B-Hl-uru" id="TY7-8d-mov"/>
                 <outlet property="filterSwitch" destination="IdK-Od-ViF" id="sVg-Uz-iSh"/>
-                <outlet property="flashSwitch" destination="V7S-Cx-hyb" id="C8U-ml-Yuj"/>
                 <outlet property="panel" destination="eAg-ig-anm" id="9hR-X3-Osc"/>
                 <outlet property="streamingSwitch" destination="32c-WZ-klp" id="L6P-5A-iiB"/>
                 <outlet property="view" destination="iN0-l3-epB" id="83D-bX-Oqf"/>
@@ -81,7 +81,7 @@
                                 <action selector="streamingSwitch:" destination="-1" eventType="valueChanged" id="Ota-p7-pnC"/>
                             </connections>
                         </switch>
-                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" verticalHuggingPriority="251" text="闪光开关：" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ZWs-4u-cap">
+                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" verticalHuggingPriority="251" text="镜头切换：" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ZWs-4u-cap">
                             <rect key="frame" x="127" y="264" width="106" height="21"/>
                             <constraints>
                                 <constraint firstAttribute="height" constant="21" id="2qy-Ox-08s"/>
@@ -104,7 +104,7 @@
                         <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" on="YES" translatesAutoresizingMaskIntoConstraints="NO" id="V7S-Cx-hyb">
                             <rect key="frame" x="243" y="258" width="51" height="31"/>
                             <connections>
-                                <action selector="flashSwitch:" destination="-1" eventType="valueChanged" id="zUg-AF-ZNG"/>
+                                <action selector="cameraSwitch:" destination="-1" eventType="valueChanged" id="oe1-wv-P19"/>
                             </connections>
                         </switch>
                         <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Fkd-JQ-24m">
