@@ -17,9 +17,9 @@
 
 ### 运行环境和兼容性
 
-	```UPLiveSDK.framework``` 支持 `iOS 8` 及以上系统版本； 
+```UPLiveSDK.framework``` 支持 `iOS 8` 及以上系统版本； 
 	
-	支持 `ARMv7`，`ARM64`，`x86_64` 架构。
+支持 `ARMv7`，`ARM64`，`x86_64` 架构。
 
 ### 安装使用说明
 
