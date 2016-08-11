@@ -25,6 +25,8 @@
 @property (nonatomic, strong) UIView *videoPreview;
 @property (nonatomic, strong) UILabel *descriptionLabel;
 
+@property (nonatomic, assign) CGFloat lastScale;
+
 @end
 
 @implementation UPLiveStreamerLivingVC
@@ -32,56 +34,34 @@
 - (void)viewDidLoad {
     self.view.backgroundColor = [UIColor whiteColor];
     
-    //获取和设置视频预览视图 videoPreview
+    //设置视频预览视图 videoPreview
     UIViewContentMode previewContentMode = UIViewContentModeScaleAspectFit;
     if (_settings.fullScreenPreviewOn) {
         previewContentMode = UIViewContentModeScaleAspectFill;
     }
-    CGFloat videoPreviewWidth = MIN([UIScreen mainScreen].bounds.size.height, [UIScreen mainScreen].bounds.size.width);
-    CGFloat videoPreviewHeight = MAX([UIScreen mainScreen].bounds.size.height, [UIScreen mainScreen].bounds.size.width);
-    self.videoPreview = [[UPAVCapturer sharedInstance] previewWithFrame:CGRectMake(0, 0, videoPreviewWidth, videoPreviewHeight) contentMode:previewContentMode];
+    
+    self.videoPreview = [[UPAVCapturer sharedInstance] previewWithFrame:[UIScreen mainScreen].bounds
+                                                            contentMode:previewContentMode];
     self.videoPreview.backgroundColor = [UIColor blackColor];
     
-    
-    //将预览视图初始化旋转到 Portrait 位置，且固定在 Portrait 位置效果类似系统自带 camera app）
-    switch ([UIDevice currentDevice].orientation) {
-        case UIDeviceOrientationPortrait:
-        self.videoPreview.transform = CGAffineTransformMakeRotation(0);
-            break;
-        case UIDeviceOrientationPortraitUpsideDown:
-            self.videoPreview.transform = CGAffineTransformMakeRotation(M_PI);
-            break;
-        case UIDeviceOrientationLandscapeLeft:
-            self.videoPreview.transform = CGAffineTransformMakeRotation(-M_PI_2);
-            break;
-        case UIDeviceOrientationLandscapeRight:
-            self.videoPreview.transform = CGAffineTransformMakeRotation(M_PI_2);
-            break;
-        default:
-            break;
-    }
-    
-    //横屏拍摄竖屏拍摄提示 label
+    //横竖屏拍摄提示 label
     self.descriptionLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 100, 200, 44)];
     self.descriptionLabel.backgroundColor = [UIColor blackColor];
     self.descriptionLabel.alpha = 0.5;
     self.descriptionLabel.textColor = [UIColor whiteColor];
+    
     switch (_settings.videoOrientation) {
         case AVCaptureVideoOrientationPortrait:
             _videoOrientationDescription = @"竖屏拍摄";
-            self.descriptionLabel.transform = CGAffineTransformMakeRotation(0);
             break;
         case AVCaptureVideoOrientationPortraitUpsideDown:
             _videoOrientationDescription = @"竖屏拍摄";
-            self.descriptionLabel.transform = CGAffineTransformMakeRotation(M_PI);
             break;
         case AVCaptureVideoOrientationLandscapeRight:
             _videoOrientationDescription = @"横屏拍摄";
-            self.descriptionLabel.transform = CGAffineTransformMakeRotation( M_PI_2);
             break;
         case AVCaptureVideoOrientationLandscapeLeft:
             _videoOrientationDescription = @"横屏拍摄";
-            self.descriptionLabel.transform = CGAffineTransformMakeRotation(- M_PI_2);
             break;
         default:
             break;
@@ -93,9 +73,13 @@
     //开启 debug 信息
     [UPLiveSDKConfig setLogLevel:UP_Level_error];
 
-    
     //设置代理，采集状态推流信息回调
     [UPAVCapturer sharedInstance].delegate = self;
+    
+    //拍摄 zoom 手势
+    UIPinchGestureRecognizer *pinchGestureRecognizer = [[UIPinchGestureRecognizer alloc] initWithTarget:self
+                                                                                                 action:@selector(handlePinchGesture:)];
+    [self.videoPreview addGestureRecognizer:pinchGestureRecognizer];
 }
 
 - (void)viewWillAppear:(BOOL)animated {
@@ -129,7 +113,6 @@
     
     rtmpPushUrl = [NSString stringWithFormat:@"%@?_upt=%@", rtmpPushUrl, upToken];
     NSLog(@"rtmpPushUrl: %@", rtmpPushUrl);
-    
     [UPAVCapturer sharedInstance].outStreamPath = rtmpPushUrl;
     
     [UPAVCapturer sharedInstance].capturerPresetLevelFrameCropRect = CGRectMake(0, 0, 360, 640);
@@ -167,6 +150,20 @@
     }];
 }
 
+
+- (void)handlePinchGesture:(UIPinchGestureRecognizer *)sender {
+    
+    CGFloat scale = sender.scale;
+    if (_lastScale == 0) {
+        _lastScale = 1;
+    }
+    CGFloat newScale = _lastScale+scale-1;
+    if (newScale >= 1 && newScale <= 3) {
+        _lastScale = newScale;
+        [UPAVCapturer sharedInstance].viewZoomScale = newScale;
+    }
+}
+
 - (void)errorAlert:(NSString *)message {
     dispatch_async(dispatch_get_main_queue(), ^(){
         
@@ -184,7 +181,8 @@
     });
 }
 
-//将预览视图固定到 Portrait， 位置效果类似系统自带 camera app）https://developer.apple.com/library/ios/qa/qa1890/_index.html
+//将预览视图固定。
+//拍摄开始后镜头方向便固定了，所以预览视图也需要固定。(效果类似系统自带 camera app）https://developer.apple.com/library/ios/qa/qa1890/_index.html
 - (void)viewWillLayoutSubviews {
     [super viewWillLayoutSubviews];
     self.videoPreview.center = CGPointMake(CGRectGetMidX(self.view.bounds), CGRectGetMidY(self.view.bounds));
@@ -215,7 +213,7 @@
 
 #pragma mark UPAVCapturerDelegate
 
-//capturer status
+//采集状态
 - (void)UPAVCapturer:(UPAVCapturer *)capturer capturerStatusDidChange:(UPAVCapturerStatus)capturerStatus {
     
     switch (capturerStatus) {
@@ -244,7 +242,7 @@
     }
 }
 
-//push stream status
+//推流状态
 - (void)UPAVCapturer:(UPAVCapturer *)capturer pushStreamStatusDidChange:(UPPushAVStreamStatus)streamStatus {
     
     switch (streamStatus) {
@@ -280,7 +278,6 @@
 
 
 - (void)updateDashboard{
-    
     self.dashboard.text = [NSString stringWithFormat:@"%@", [UPAVCapturer sharedInstance].dashboard];
     self.dashboard.textColor = [UIColor redColor];
     double delayInSeconds = 1.0;

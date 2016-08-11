@@ -34,8 +34,6 @@
     
     NSError *_capturerError;
     int64_t _bitrate;
-    NSDate *_fpsCaptureRecorderTimer;
-    int64_t _fpsCaptureRecorderFramesSum;
     
     //backgroud push
     BOOL _applicationActive;
@@ -53,13 +51,13 @@
     
     //camera focus
     CALayer *_focusLayer;
-
+    
+    UIInterfaceOrientation _previewOrientation;
 }
 
 @property (nonatomic, assign) int pushStreamReconnectCount;
 @property (nonatomic, copy) NSString *sessionPreset;
 @property (nonatomic, strong) UPAVStreamer *rtmpStreamer;
-@property (nonatomic, assign) CGFloat fpsCapture;
 @property (nonatomic, strong) GPUImageVideoCamera *videoCamera;
 @property (nonatomic, strong) LFGPUImageBeautyFilter *beautifyFilter;
 @property (nonatomic, strong) GPUImageCropFilter *cropfilter;
@@ -80,7 +78,7 @@
 @implementation UPAVCapturerDashboard
 
 - (float)fps_capturer {
-    return self.infoSource_Capturer.fpsCapture;
+    return self.infoSource_Capturer.rtmpStreamer.fps_capturer;
 }
 
 - (float)fps_streaming {
@@ -149,13 +147,22 @@
         self.capturerPresetLevel = UPAVCapturerPreset_640x480;
         _capturerPresetLevelFrameCropRect = CGRectZero;
         _fps = 24;
+        _viewZoomScale = 1;
         _applicationActive = YES;
         _streamingOn = YES;
         _filterOn = NO;
+        
         _dashboard = [UPAVCapturerDashboard new];
         _dashboard.infoSource_Capturer = self;
         _audioUnitRecorder = [[UPAudioUnitKit alloc] initWith:UPAudioUnitCategory_recorder];
         _audioUnitRecorder.delegate = self;
+        
+        
+        AVAudioSession *session = [AVAudioSession sharedInstance];
+        NSError *error = nil;
+        [session setCategory:AVAudioSessionCategoryPlayAndRecord withOptions:AVAudioSessionCategoryOptionMixWithOthers|AVAudioSessionCategoryOptionDefaultToSpeaker error:&error];
+        
+        
         [self addNotifications];
     }
     return self;
@@ -206,20 +213,18 @@
     _videoCamera.frameRate = _fps;
     
     // 设置拍摄预览画面
-    _gpuImageView = [[GPUImageView alloc] initWithFrame:[UIScreen mainScreen].bounds];
     if (!_preview) {
         _preview = [[UIView alloc] initWithFrame:[UIScreen mainScreen].bounds];
         _preview.backgroundColor = [UIColor blackColor];
     }
-    _gpuImageView.frame = CGRectMake(0, 0, _preview.frame.size.width, _preview.frame.size.height);
-    [self previewRemoveGpuImageView];
+    
+    _gpuImageView = [[GPUImageView alloc] initWithFrame:_preview.bounds];
     switch (_previewContentMode) {
         case UIViewContentModeScaleToFill:
             [_gpuImageView setFillMode:kGPUImageFillModeStretch];
             break;
         case UIViewContentModeScaleAspectFit:
             [_gpuImageView setFillMode:kGPUImageFillModePreserveAspectRatio];
-
             break;
         case UIViewContentModeScaleAspectFill:
             [_gpuImageView setFillMode:kGPUImageFillModePreserveAspectRatioAndFill];
@@ -228,6 +233,7 @@
             [_gpuImageView setFillMode:kGPUImageFillModePreserveAspectRatio];
             break;
     }
+    [self previewRemoveGpuImageView];
     [_preview insertSubview:_gpuImageView atIndex:0];
     [self preViewAddTapGesture];
     
@@ -301,26 +307,58 @@
     
     //横屏旋转和前置拍摄镜面效果
     BOOL needRotation = NO;
-    BOOL needFlip = NO;
-    if (_videoOrientation == AVCaptureVideoOrientationLandscapeRight
-        || _videoOrientation == AVCaptureVideoOrientationLandscapeLeft) {
+    
+    float  pviewOrientation_ = 0;
+    float  videoOrientation_ = 0;
+    switch (_previewOrientation) {
+        case UIInterfaceOrientationUnknown: pviewOrientation_ =  0;
+            break;
+        case UIInterfaceOrientationPortrait: pviewOrientation_ =  0;
+            break;
+        case UIInterfaceOrientationPortraitUpsideDown: pviewOrientation_ =  M_PI;
+            break;
+        case UIInterfaceOrientationLandscapeLeft: pviewOrientation_ =  M_PI_2;
+            break;
+        case UIInterfaceOrientationLandscapeRight: pviewOrientation_ = - M_PI_2;
+            break;
+        default: pviewOrientation_ =  0;
+            break;
+    }
+    
+    switch (_videoOrientation) {
+        case AVCaptureVideoOrientationPortrait: videoOrientation_ =  0;
+            break;
+        case UIInterfaceOrientationPortraitUpsideDown: videoOrientation_ =  M_PI;
+            break;
+        case UIInterfaceOrientationLandscapeLeft: videoOrientation_ =  M_PI_2;
+            break;
+        case UIInterfaceOrientationLandscapeRight: videoOrientation_ = - M_PI_2;
+            break;
+        default: videoOrientation_ =  0;
+            break;
+    }
+    
+    if (pviewOrientation_ != videoOrientation_) {
         needRotation = YES;
     }
+    
+    if (needRotation) {
+        float deltaR = pviewOrientation_ - videoOrientation_;
+        _gpuImageView.transform = CGAffineTransformMakeRotation(deltaR);
+        //长宽需要对调
+        if (fabs(deltaR) >= M_PI_4 && fabs(deltaR) <= (M_PI_4 + M_PI_2)) {
+            CGRect oldRect = _gpuImageView.frame;
+            _gpuImageView.frame = CGRectMake(0, 0, oldRect.size.height, oldRect.size.width);
+        }
+    }
+    
+    BOOL needFlip = NO;
     if (_camaraPosition == AVCaptureDevicePositionFront) {
         needFlip = YES;
     }
-    if (!needRotation && !needFlip) {
-    }
-    if (needRotation && needFlip) {
-        [_gpuImageView setInputRotation:kGPUImageRotateRightFlipHorizontal atIndex:0];
-    }
-    if (!needRotation && needFlip) {
+    if (needFlip) {
         [_gpuImageView setInputRotation:kGPUImageFlipHorizonal atIndex:0];
     }
-    if (needRotation && !needFlip) {
-        [_gpuImageView setInputRotation:kGPUImageRotateRight atIndex:0];
-    }
-
 }
 
 - (void)setFilterOn:(BOOL)filterOn {
@@ -408,6 +446,7 @@
 
 - (void)setOutStreamPath:(NSString *)outStreamPath {
     _rtmpStreamer = [[UPAVStreamer alloc] initWithUrl:outStreamPath];
+    _rtmpStreamer.audioOnly = self.audioOnly;
     _rtmpStreamer.bitrate = _bitrate;
     _rtmpStreamer.delegate = self;
     _rtmpStreamer.streamingOn = _streamingOn;
@@ -524,36 +563,18 @@
     _fps = fps;
 }
 
-- (void)didCaptureVideoFrame:(int)num {
-    if (!_fpsCaptureRecorderTimer) {
-        _fpsCaptureRecorderTimer = [NSDate date];
-    }
-    _fpsCaptureRecorderFramesSum = _fpsCaptureRecorderFramesSum + num;
-    NSTimeInterval interval = [[NSDate date] timeIntervalSinceDate:_fpsCaptureRecorderTimer];
-    if (interval > 1 ) {
-        _fpsCapture = _fpsCaptureRecorderFramesSum / (float)interval;
-        _fpsCaptureRecorderTimer = [NSDate date];
-        _fpsCaptureRecorderFramesSum = 0;
-    }
-}
-- (CGFloat)fpsCapture {
-    [self didCaptureVideoFrame:0];
-    return _fpsCapture;
-}
 
+- (CGFloat)fpsCapture {
+    return _rtmpStreamer.fps_capturer;
+}
 
 - (UIView *)previewWithFrame:(CGRect)frame contentMode:(UIViewContentMode)mode {
     _previewContentMode = mode;
-    if (!_preview) {
-        _preview = [[UIView alloc] initWithFrame:frame];
-    } else {
-        for (UIView *view in _preview.subviews) {
-            if (view != self.gpuImageView) {
-                [view removeFromSuperview];
-            }
-        }
-    }
+    _preview = [[UIView alloc] initWithFrame:frame];
     _preview.frame = frame;
+    
+    //记录preview的UI方向，如果UI方向和拍摄方向不一致时候，拍摄画面需要旋转
+    _previewOrientation = [[UIApplication sharedApplication] statusBarOrientation];
     return _preview;
 }
 
@@ -567,6 +588,7 @@
 
 - (void)start {
     [self.videoCamera stopCameraCapture];
+    self.rtmpStreamer.audioOnly = self.audioOnly;
     [self gpuImageCameraSetup];
     [self.videoCamera startCameraCapture];
     [_audioUnitRecorder start];
@@ -613,6 +635,18 @@
 
 - (int64_t)bitrate {
     return _bitrate;
+}
+
+
+- (void)setViewZoomScale:(CGFloat)viewZoomScale {
+    if (self.videoCamera && self.videoCamera.inputCamera) {
+        AVCaptureDevice *device = (AVCaptureDevice *)self.videoCamera.inputCamera;
+        if ([device lockForConfiguration:nil]) {
+            device.videoZoomFactor = viewZoomScale;
+            [device unlockForConfiguration];
+            _viewZoomScale = viewZoomScale;
+        }
+    }
 }
 
 #pragma mark UPAVStreamerDelegate
@@ -704,12 +738,18 @@
 
 #pragma mark output audio/video buffer
 - (void)didCapturePixelBuffer:(CVPixelBufferRef)pixelBuffer {
-    [self didCaptureVideoFrame:1];
     [_rtmpStreamer pushPixelBuffer:pixelBuffer];
     _backGroundPixBuffer = pixelBuffer;
 }
 
 - (void)didCaptureAudioBuffer:(AudioBuffer)audioBuffer withInfo:(AudioStreamBasicDescription)asbd{
+    typedef struct AudioBuffer  AudioBuffer;
+    if (self.audioMute) {
+        if (audioBuffer.mData) {
+            memset(audioBuffer.mData, 0, audioBuffer.mDataByteSize);
+        }
+    }
+    
     [_rtmpStreamer pushAudioBuffer:audioBuffer info:asbd];
 }
 

@@ -67,10 +67,16 @@ typedef NS_ENUM(NSInteger, UPAVCapturerPresetLevel) {
 @property (nonatomic) BOOL streamingOn;//默认为 YES，即 UPAVCapturer start 之后会立即推流直播;
 @property (nonatomic) BOOL camaraTorchOn;
 @property (nonatomic) BOOL filterOn;
+/**The torch control camera zoom scale default 1.0, between 1.0 ~ 3.0*/
+@property (nonatomic, assign) CGFloat viewZoomScale;
+
 @property (nonatomic, weak) id<UPAVCapturerDelegate> delegate;
 @property (nonatomic, readonly) UPAVCapturerStatus capturerStatus;
 @property (nonatomic, readonly) UPPushAVStreamStatus pushStreamStatus;
 @property (nonatomic, strong, readonly) UPAVCapturerDashboard *dashboard;
+@property (nonatomic) BOOL audioOnly;// 单音频推流，默认值 NO
+@property (nonatomic) BOOL audioMute;// 静音推流，默认值 NO
+
 
 + (UPAVCapturer *)sharedInstance;
 - (void)start;

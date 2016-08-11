@@ -38,7 +38,7 @@
 @implementation UPLivePlayerVC
 
 - (void)viewDidLoad {
-    [UPLiveSDKConfig setLogLevel:UP_Level_debug];
+    [UPLiveSDKConfig setLogLevel:UP_Level_error];
 
     self.view.backgroundColor = [UIColor blackColor];
     
@@ -83,8 +83,18 @@
     _player = [[UPAVPlayer alloc] initWithURL:self.url];
     _player.bufferingTime = self.bufferingTime;
     _player.delegate = self;
+    _player.lipSynchOn = NO;
     self.dashboardView.hidden = YES;
     [self updateDashboard];
+    
+    
+    // 简单的一屏幕多画 实现, 初始化
+//    UPAVPlayer *secondPlayer = [[UPAVPlayer alloc] initWithURL:self.url];
+//    secondPlayer.playView.contentMode = UIViewContentModeScaleToFill;
+//    [secondPlayer setFrame:CGRectMake(100, 100, 300, 100)];
+//    [secondPlayer play];
+//    
+//    [self.view insertSubview:secondPlayer.playView atIndex:0];
 }
 
 - (void)viewWillAppear:(BOOL)animated {

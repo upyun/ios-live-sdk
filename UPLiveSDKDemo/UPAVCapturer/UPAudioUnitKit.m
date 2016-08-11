@@ -146,7 +146,7 @@ static OSStatus audioPlaybackCallback(void *inRefCon,
                                   sizeof(flag_player));
     checkOSStatus(status);
     
-    _audioFormat.mSampleRate			= 44100.00;
+    _audioFormat.mSampleRate		= 44100.00;
     _audioFormat.mFormatID			= kAudioFormatLinearPCM;
     _audioFormat.mFormatFlags		= kAudioFormatFlagIsSignedInteger | kAudioFormatFlagIsPacked;
     _audioFormat.mFramesPerPacket	= 1;

@@ -34,8 +34,9 @@
      http://live.hkstv.hk.lxdns.com/live/hks/playlist.m3u8
      http://devimages.apple.com.edgekey.net/streaming/examples/bipbop_4x3/gear1/prog_index.m3u8
      rtmp://testlivesdk.b0.upaiyun.com/live/test196
+     http://test654123.b0.upaiyun.com/265_demo.mp4 h265 hevc 格式
      */
-
+    
     textFieldPlayUrl.text = @"rtmp://live.hkstv.hk.lxdns.com/live/hks";
     textFieldPlayUrl.borderStyle = UITextBorderStyleRoundedRect;
     textFieldPlayUrl.font = [UIFont systemFontOfSize:12.0f];

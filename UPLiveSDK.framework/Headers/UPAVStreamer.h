@@ -34,8 +34,10 @@ typedef NS_ENUM(NSInteger, UPAVStreamerStatus) {
 @property (nonatomic, readonly) UPAVStreamerStatus streamerStatus;
 @property (nonatomic, weak) id<UPAVStreamerDelegate> delegate;
 @property (nonatomic) int64_t bitrate;
+@property (nonatomic) BOOL audioOnly;// 单音频推流，默认值 NO
 
 //dashboard
+@property (nonatomic, readonly) CGFloat fps_capturer;
 @property (nonatomic, readonly) CGFloat fps_streaming;
 @property (nonatomic, readonly) CGFloat bps;
 @property (nonatomic, readonly) int64_t vFrames_didSend;

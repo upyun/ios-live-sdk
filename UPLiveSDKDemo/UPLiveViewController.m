@@ -42,17 +42,15 @@
 - (void)playerBtn:(UIButton *)sender {
     UPLivePlayerDemoViewController *vc = [UPLivePlayerDemoViewController new];
     vc.title = @"播放器";
+    vc.view.backgroundColor = [UIColor whiteColor];
     [self.navigationController pushViewController:vc animated:YES];
 }
 
 - (void)streamerBtn:(UIButton *)sender {
     UPLiveStreamerDemoViewController *vc = [UPLiveStreamerDemoViewController new];
     vc.title = @"推流器";
+    vc.view.backgroundColor = [UIColor whiteColor];
     [self.navigationController pushViewController:vc animated:YES];
 }
-
-
-
-
 
 @end

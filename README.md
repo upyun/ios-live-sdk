@@ -89,6 +89,12 @@
 
 * 支持横屏拍摄
 
+* 支持单音频推流
+
+* 支持静音推流
+
+
+
 ## 播放端功能特性 （播放器）
 
 * 支持播放直播源和点播源，支持播放本地视频文件。
@@ -156,82 +162,6 @@ __注:__ ``UPLiveSDK.framework``中的推流器 `UPAVStreamer`也可以单独使
 ```
 
 
-4.码率设置接口
-
-可以根据网络情况适当调整码率：
-
-```
-    [UPAVCapturer sharedInstance].bitrate = 400000;//默认值 600000 bps
-
-```
-
-5.推流状态回调
-
-如果在直播过程发生异常，可以通过 `UPAVCapturerDelegate` 捕捉错误信息，并且关闭拍摄推流。
-
-
-```				
-
-//采集状态
-- (void)UPAVCapturer:(UPAVCapturer *)capturer capturerStatusDidChange:(UPAVCapturerStatus)capturerStatus {
-    switch (capturerStatus) {
-       	....
-    }
-}
-
-//错误捕捉
-- (void)UPAVCapturer:(UPAVCapturer *)capturer capturerError:(NSError *)error {
-     //需要关闭直播
-}
-
-//推流状态
-- (void)UPAVCapturer:(UPAVCapturer *)capturer pushStreamStatusDidChange:(UPPushAVStreamStatus)streamStatus {
-    
-    switch (streamStatus) {
-        ....
-    }
-}
-
-
-
-```
-
-6.其他参数设置
-
-```  
-
-	//选择系统拍摄分辨率，默认 640＊480
-	[UPAVCapturer sharedInstance].capturerPresetLevel = _settings.level;
-	
-	//在系统拍摄的原始像素尺寸上进行剪切，比如可以剪切成 360＊640 的全屏比例尺寸；  
-	[UPAVCapturer sharedInstance].capturerPresetLevelFrameCropRect = CGRectMake(0, 0, 360, 640);
-	
-	//选择前后置摄像头，默认使用后置摄像头
-	[UPAVCapturer sharedInstance].camaraPosition = _settings.camaraPosition;
-	
-	//选择横竖屏拍摄方式，默认竖屏拍摄
-	[UPAVCapturer sharedInstance].videoOrientation = _settings.videoOrientation;
-	
-	//推流是否自动开始，如果设置为 NO 只拍摄不推流。
-	[UPAVCapturer sharedInstance].streamingOnOff = _settings.streamingOnOff;
-	
-	//美颜滤镜是否开启，默认开启
-	[UPAVCapturer sharedInstance].filter = _settings.filter;
-	
-	//设置美颜滤镜，详见 demo 中代码示例
-    _fliter = [BeautifyFilter new];
-    [UPAVCapturer sharedInstance].videoFiler = _fliter;
-
-	//闪光灯开关
-	[UPAVCapturer sharedInstance].camaraTorchOn = _settings.camaraTorchOn;
-	
-	//设置拍摄帧频，默认值 24 fps
-	[UPAVCapturer sharedInstance].fps = _settings.fps;
-
-```
-
-
-
 ## 拉流 SDK 使用示例 UPAVPlayer
 
 使用 ```UPAVPlayer``` 需要引入头文件 ```#import <UPLiveSDK/UPAVPlayer.h>```
@@ -256,75 +186,7 @@ __注:__ ``UPLiveSDK.framework``中的推流器 `UPAVStreamer`也可以单独使
 
 ```
 
-2.视频流基本信息 
-
-```
-- (void)UPAVPlayer:(id)player streamInfoDidReceive:(UPAVPlayerStreamInfo *)streamInfo {
-    NSLog(@"视频信息-- %@ ", streamInfo.descriptionInfo);
-}
-
-```
-
-3.播放状态回调 
-
-```
-- (void)UPAVPlayer:(id)player playerStatusDidChange:(UPAVPlayerStatus)playerStatus {
-    
-    switch (playerStatus) {
-        ....
-    }
-}
-
-
-```
-
-4.缓冲进度回调
-
-```
-
-- (void)UPAVPlayer:(id)player bufferingProgressDidChange:(float)progress {
-    ....
-}
-
-
-```	
-
-			
-5.播放进度回调    			
- 				    
-```
-
-- (void)UPAVPlayer:(id)player displayPositionDidChange:(float)position {
-    ....
-}
-
-
-```	
-
-6.播放错误捕捉 		 
-
-```
-
-- (void)UPAVPlayer:(id)player playerError:(NSError *)error {
-    NSLog(@"播放错误 %@", error);
-}
-
-```
-
-7.常规设置
-
-```
-@property (nonatomic) CGFloat volume;//音量设置
-@property (nonatomic) CGFloat bright;//画面亮度 
-@property (nonatomic) BOOL mute;静音设置 
-....
-
-``` 
-
-
-
-
-8.连接、播放、暂停、停止、seek  
+2.连接、播放、暂停、停止、seek  
 
 ```
 - (void)connect;//连接文件或视频流。
@@ -335,90 +197,66 @@ __注:__ ``UPLiveSDK.framework``中的推流器 `UPAVStreamer`也可以单独使
 
 ```
 
-## UPYUN 直播平台自主配置流程
-
-**1.注册新建又拍云账号**  
-
-[注册地址](https://console.upyun.com/#/register/)  
-
-**2.进行账户认证**  
-
-[账户认证](https://console.upyun.com/#/account/profile/)  
-
-**3.创建服务**  
-
-[创建服务](https://console.upyun.com/#/services/)  
-
-填写服务名称，简称 `bucket`  
-
-资源获取方式选择自主源站  
-
-加速域名和回源地址如有则填写，如无可以任意编辑结构合法内容，如域名为 `a.com`，回源 `IP` 为 `1.1.1.1`  
-
-创建好服务后如需进行直播功能测试和加速，会有对应的服务人员与您联系，您将需求按如下格式整理好发送给服务人员，我们会尽快为您提供测试服务
-
-格式如下  
-
-账户名：`xxxxx`  
-
-服务名称：`bucket` 名
-
-`app` 名：如 `show/*`  `show` 代表应用名称，`*` 代表目录后可以为 `stream id`
-
-拉流需要支持的格式：`rtmp` 或 `http-flv` 或 `hls` (三个至少选其中一个)  
-
-对外服务的推流域名：`xxx.com` （如无可不填写）  
-
-对外服务的拉流域名：`xxx.com` （如无可不填写）  
-
-**4.推拉流地址格式以及 token 加密规则**  
-
-推流地址：`rtmp://bucket.v0.upaiyun.com/show/abc`  
-
-拉流地址：`rtmp` 协议  `rtmp://bucket.b0.upaiyun.com/show/abc` ,
-`http+flv`  `http://bucket.b0.upaiyun.com/show/abc.flv` , `hls`       `http://bucket.b0.upaiyun.com/show/abc.m3u8` 
-
-**Token 防盗链加密规则** 
-
-`Token` 防盗链可设置签名过期时间来控制文件的访问时限  
-
-**url格式**：  
-
-推流地址：`rtmp://bucket.v0.upaiyun.com/show/abc?_upt=abcdefgh137000060`  
-
-拉流地址：`http://bucket.b0.upaiyun.com/show/abc.flv?_upt=abcdefgh137000060`   
-
-**签名方式说明**  
-
-**签名**：`_upt = MD5( token密钥 +"&"+ etime +"&"+ URI) {中间 8 位} + etime` 
-
-加密后格式如下 `url` + `?_upt=abcdefgh1370000600` 
-
-**参数说明**：  
-
-`token` 密钥：用户所填的密钥(一个 `bucket` 对应一个密钥)  
-
-`etime` ：过期时间，必须是 UNIX TIME 格式，如： `1378092990`  
-
-`URI` ：请求地址（不包含?及后面的 Query String），如： `/live/abc`  
-  
 
 
-**正确例子**: 
 
-密钥 : `password`
+## Q&A
 
-etime : `1462513671`
+__1.推流、拉流是什么意思？__
 
-URI : `/live/streamhz`
+推流是指采集端将音视频流推送到直播服务器的过程；	
+拉流是指从直播服务器获取音视频数据的过程。
 
-密钥 + etime + URI 拼接结果 :  `password&1462513671&/live/streamhz`
+__2.UPLiveSDK.framework 中的 UPAVCapturer、UPAVStreamer、UPAVPlayer 作用及之间的关系？__
 
-md5 之后： `1471d1c02be8b63f453cc87794213edd`
+UPAVPlayer 是播放器，可以播放点播或直播流；		
+UPAVStreamer 是推流器，可以将音视频流推到直播服务器上;            
+UPAVCapturer 是采集器负责采集录制音视频数据。	
+除了 UPAVCapturer 会用到 UPAVStreamer 进行推流外，这三者可以独立使用。     	
 
-取中间 8 位加 `etime` ：`b63f453c1462513671` 
+__3.可否同时播放两条流？__ 
 
-最后 url ： `url？_upt=b63f453c1462513671` 
+支持在同一个界面上放置多个 UPAVPlayer 播放器同时播放多个流。同时也可选择任一一条流静音播放。
+
+__4.如何实现秒开，如何优化秒开？__
+
+使用 UPAVPlayer 与又拍云的视频服务基本可以实现开播小于 0.5 秒；         
+利用 UPAVPlayer 进行先连接后播放操作，结合适当的 UI 效果也可以改善视频秒开体验。        
+
+__5.如何进行低延时优化？__
+
+又拍云的视频服务基本可以做到直播的全过程延时小于 3 秒。           
+同时可以调整 UPAVPlayer 播放器的缓冲大小，来减小播放器本地带来的延时。         
+
+__6.耗电量多少？可否长时间直播？__
+
+耗电量多少与不同机型及网络环境相关。对于 iphone 5s 及以上机型可以长时间推流，也不会感觉到手机发烫。
+直播一小时一般电量消耗在 10％ － 20％ 范围之间。
+
+__7.横屏拍摄和屏幕旋转问题怎么解决？__     
+
+对于“横屏拍摄和屏幕旋转”问题的一个关键点：需要区分清楚 UI(设备)的横竖屏与镜头横竖拍摄的区别。并且拍摄开始之后“镜头横竖” 是已经固定了无法更改。具体可参考 demo 的解决方式。    
+
+__8.直播的视频尺寸是否可以自定义？__   
+
+最终的推流视频尺寸取决于两点：        	
+	
+1) 镜头采集到的图像尺寸。不同设备支持多种不同的拍摄尺寸，一般的 480x360、640x480、1280x720是各种设备及前后镜头支持最广泛的。这个参数可以通过 UPAVCapturer 的 capturerPresetLevel 属性进行修改。            
+
+2) 剪裁图像尺寸。在采集尺寸的基础上可以通过 UPAVCapturer 的 capturerPresetLevelFrameCropRect 属性进行图像剪裁。
+例如：选择 640x480 像素的镜头进行拍摄后可以再剪裁为 640x360 全屏比例图片进行直播。 
+
+
+__9.可不可以仅直播声音不传图像？__     
+
+可以。UPAVCapturer 支持单音频推流，UPAVPlayer支持单音频流的播放。 
+
+__10.如何快速体验和测试直播？__
+
+下载 demo 工程运行后，便可以直接进行直播测试。        
+
+如果需要自主注册直播云服务可以参考：[UPYUN 直播平台自主配置流程](http://docs.upyun.com/live/) 
+
 
 
 ## 版本历史
@@ -476,6 +314,17 @@ __2.2 采集部分以源码展示__
 * UPAVCapturer 以源码展示，方便更灵活的配置功能;
 * 性能提高;
 * fix bug;
+
+__2.3 推拉流 debugger 模块；单音频推流__
+
+* 增加播放端对 hevc (h.265) 格式的支持;
+* 增加了推流拉流 debugger 模块;
+* 增加单音频推流功能;
+* 增加直播静音功能;
+* 增加拍摄 zoom 功能;
+* 修复横屏拍摄和屏幕旋转 bug;
+
+
 
  
 ## 反馈与建议
