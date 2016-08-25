@@ -9,7 +9,8 @@
 
 
 基于此 `SDK` 结合 __upyun__ 直播平台可以快速构建直播应用。
-  
+
+[UPYUN 直播平台自主配置流程](http://docs.upyun.com/live/) 
   
 ## SDK使用说明
 
