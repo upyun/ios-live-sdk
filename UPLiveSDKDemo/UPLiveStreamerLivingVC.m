@@ -100,7 +100,11 @@
     [UPAVCapturer sharedInstance].camaraTorchOn = _settings.camaraTorchOn;
     [UPAVCapturer sharedInstance].videoOrientation = _settings.videoOrientation;
     [UPAVCapturer sharedInstance].fps = _settings.fps;
-
+    
+    
+//    [[UPAVCapturer sharedInstance] setFilterName:UPCustomFilter1977];
+    
+    
     //推流地址
     NSString *rtmpPushUrl = [NSString stringWithFormat:@"%@%@", _settings.rtmpServerPushPath, _settings.streamId];
     
@@ -132,11 +136,22 @@
 }
 
 - (IBAction)filterSwitch:(id)sender {
+    /// 音量增益的代码
+//    NSLog(@"[UPAVCapturer sharedInstance].audioUnitRecorder.increaserRate %d", [UPAVCapturer sharedInstance].audioUnitRecorder.increaserRate);
+    // 美颜开关
     [UPAVCapturer sharedInstance].filterOn = ![UPAVCapturer sharedInstance].filterOn;
+//    if ([UPAVCapturer sharedInstance].audioUnitRecorder.increaserRate == 10) {
+//        [UPAVCapturer sharedInstance].audioUnitRecorder.increaserRate = 1;
+//    } else {
+//        [UPAVCapturer sharedInstance].audioUnitRecorder.increaserRate = 10;
+//    }
 }
 
 - (IBAction)cameraSwitch:(id)sender {
+    /// 降噪功能是否开启
+//    [UPAVCapturer sharedInstance].deNoise = ![UPAVCapturer sharedInstance].deNoise ;
     
+    /// 镜头切换的代码
     if ([UPAVCapturer sharedInstance].camaraPosition == AVCaptureDevicePositionBack) {
         [UPAVCapturer sharedInstance].camaraPosition = AVCaptureDevicePositionFront;
     } else {

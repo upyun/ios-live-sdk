@@ -280,7 +280,7 @@
     self.bufferingProgressLabel.hidden = YES;
     NSString *msg = @"请重新尝试播放.";
     if (error) {
-        msg = error.description;
+        NSLog(@"%@", error.description);
     }
     UIAlertController* alert = [UIAlertController alertControllerWithTitle:@"播放失败!"
                                                                    message:msg

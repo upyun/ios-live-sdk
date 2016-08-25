@@ -1,16 +1,14 @@
 # 又拍云 iOS 推拉流 SDK 使用说明
 
-## 阅读对象
-
-本文档面向 `iOS` 直播应用开发者。 
 
 ## SDK 概述
 
 此 `SDK` 包含__推流__和__拉流__两部分，及美颜滤镜等全套直播功能；       
 
-此 `SDK` 中的播放器、采集器、推流器可单独使用。用户可以自主构建直播中某个环节，比如播放器（`UPAVPlayer`）可以与 Web 推流器 Flex 相配合。推流器（`UPAVStreamer`）可以配合系统自带的AVCapture 或者`GPUImage `库提供的采集功能。 	
+此 `SDK` 中的播放器、采集器、推流器可单独使用。用户可以自主构建直播中某个环节，比如播放器（`UPAVPlayer`）可以与 Web 推流器 Flex 相配合。推流器（`UPAVStreamer`）可以配合系统自带的AVCapture 或者`GPUImage `库提供的采集功能。 
 
-基于此 `SDK` 结合又拍云的直播平台可以快速构建移动直播应用。
+
+基于此 `SDK` 结合 __upyun__ 直播平台可以快速构建直播应用。
   
   
 ## SDK使用说明
@@ -24,22 +22,23 @@
 ### 安装使用说明
 
 #### 安装方法：
- 
- 
- **1.直接将 ``UPLiveSDK.framework`` 拖拽到目标工程目录;**  //UPLiveSDK.framework 包含播放器和推流器        
- 
- **2.然后将 ```UPAVCapturer``` 文件夹拖拽到工程目录;** //UPAVCapturer 包含采集和视频处理等功能   
- 
 
+直接将 `UPLiveService`文件夹拖拽到目标工程目录。
+
+```
+//文件结构：
+
+UPLiveService 文件夹
+├── GPUImage              //视频处理依赖第三方库 GPUImage  
+├── UPAVCapturer          //UPAVCapturer 音视频采集模块
+└── UPLiveSDK.framework   //framework 包含播放器`UPAVPlayer`和推流器`UPAVStreamer`
+
+```
 
 #### 工程设置：     
 
 ```Enable bitcode```： NO     
-
-```Framework Search Paths``` :  添加 `$(PROJECT_DIR)`, 并设置为 `recursive` 
-
-    
-   
+ 
 
 #### 工程依赖：
 
@@ -323,8 +322,12 @@ __2.3 单音频推流__
 * 增加拍摄 zoom 功能;
 * 修复横屏拍摄和屏幕旋转 bug;
 
+__2.4 __
 
-
+* 采集器结构调整;
+* 采集器添加更丰富的视频滤镜;
+* 修复单音频点播的seek bug;
+* 音频采集的处理，增益降噪等接口;
  
 ## 反馈与建议
 

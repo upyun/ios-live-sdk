@@ -35,9 +35,14 @@
      http://devimages.apple.com.edgekey.net/streaming/examples/bipbop_4x3/gear1/prog_index.m3u8
      rtmp://testlivesdk.b0.upaiyun.com/live/test196
      http://test654123.b0.upaiyun.com/265_demo.mp4 h265 hevc 格式
+     http://test86400.b0.upaiyun.com/shanqiu.mp3
      */
     
     textFieldPlayUrl.text = @"rtmp://live.hkstv.hk.lxdns.com/live/hks";
+    
+    //http://test86400.b0.upaiyun.com/flv/2016_08_15_16_28_20_853_%2B0800.flv
+    //http://upyun-live-recorder.b0.upaiyun.com/live.ecook.cn/live/2/recorder20160812202528.mp4
+    //http://upyun-live-recorder.b0.upaiyun.com/live.ecook.cn/live/2/recorder20160812202528.mp4
     textFieldPlayUrl.borderStyle = UITextBorderStyleRoundedRect;
     textFieldPlayUrl.font = [UIFont systemFontOfSize:12.0f];
     textFieldPlayUrl.clearButtonMode = UITextFieldViewModeWhileEditing;
