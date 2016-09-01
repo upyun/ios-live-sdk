@@ -10,6 +10,16 @@
 
 @interface AudioProcessor : NSObject
 
-- (NSData *)noiseSuppressionFor32KPCM:(NSData *)pcmInput;
+
+/*
+ PCM sample 格式需要是 s16
+ 噪音分贝设置负值。 默认是 -8
+ PCM samplerate。 默认 32000
+*/
+
+
+
+- (id)initWithNoiseSuppress:(int)level samplerate:(int)rate;
+- (NSData *)noiseSuppression:(NSData *)pcmInput;
 
 @end

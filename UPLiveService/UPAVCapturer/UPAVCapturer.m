@@ -311,7 +311,6 @@
     _audioUnitRecorder.deNoise = deNoise;
 }
 
-
 - (UIView *)previewWithFrame:(CGRect)frame contentMode:(UIViewContentMode)mode {
     return [_upVideoCapture previewWithFrame:frame contentMode:mode];
 }

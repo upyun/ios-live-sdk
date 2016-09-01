@@ -91,6 +91,8 @@ typedef NS_ENUM(NSInteger, UPPushAVStreamStatus) {
 
 
 
+
+
 + (UPAVCapturer *)sharedInstance;
 - (void)start;
 - (void)stop;

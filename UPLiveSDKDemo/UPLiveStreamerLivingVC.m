@@ -137,9 +137,10 @@
 
 - (IBAction)filterSwitch:(id)sender {
     /// 音量增益的代码
-//    NSLog(@"[UPAVCapturer sharedInstance].audioUnitRecorder.increaserRate %d", [UPAVCapturer sharedInstance].audioUnitRecorder.increaserRate);
+    NSLog(@"[UPAVCapturer sharedInstance].audioUnitRecorder.increaserRate %d", [UPAVCapturer sharedInstance].increaserRate);
+    [UPAVCapturer sharedInstance].increaserRate = [UPAVCapturer sharedInstance].increaserRate + 10;
     // 美颜开关
-    [UPAVCapturer sharedInstance].filterOn = ![UPAVCapturer sharedInstance].filterOn;
+//    [UPAVCapturer sharedInstance].filterOn = ![UPAVCapturer sharedInstance].filterOn;
 //    if ([UPAVCapturer sharedInstance].audioUnitRecorder.increaserRate == 10) {
 //        [UPAVCapturer sharedInstance].audioUnitRecorder.increaserRate = 1;
 //    } else {
@@ -149,14 +150,14 @@
 
 - (IBAction)cameraSwitch:(id)sender {
     /// 降噪功能是否开启
-//    [UPAVCapturer sharedInstance].deNoise = ![UPAVCapturer sharedInstance].deNoise ;
+    [UPAVCapturer sharedInstance].deNoise = ![UPAVCapturer sharedInstance].deNoise ;
     
-    /// 镜头切换的代码
-    if ([UPAVCapturer sharedInstance].camaraPosition == AVCaptureDevicePositionBack) {
-        [UPAVCapturer sharedInstance].camaraPosition = AVCaptureDevicePositionFront;
-    } else {
-        [UPAVCapturer sharedInstance].camaraPosition = AVCaptureDevicePositionBack;
-    }
+//    /// 镜头切换的代码
+//    if ([UPAVCapturer sharedInstance].camaraPosition == AVCaptureDevicePositionBack) {
+//        [UPAVCapturer sharedInstance].camaraPosition = AVCaptureDevicePositionFront;
+//    } else {
+//        [UPAVCapturer sharedInstance].camaraPosition = AVCaptureDevicePositionBack;
+//    }
 }
 
 - (IBAction)stop:(id)sender {

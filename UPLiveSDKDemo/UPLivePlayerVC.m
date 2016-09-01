@@ -38,7 +38,7 @@
 @implementation UPLivePlayerVC
 
 - (void)viewDidLoad {
-    [UPLiveSDKConfig setLogLevel:UP_Level_error];
+    [UPLiveSDKConfig setLogLevel:UP_Level_debug];
 
     self.view.backgroundColor = [UIColor blackColor];
     

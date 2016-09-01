@@ -17,7 +17,7 @@
 #define KDefaultChannelsNum 1
 
 /*音量线性调整
-  http://dsp.stackexchange.com/questions/2990/how-to-change-volume-of-a-pcm-16-bit-signed-audio
+ http://dsp.stackexchange.com/questions/2990/how-to-change-volume-of-a-pcm-16-bit-signed-audio
  http://www.sengpielaudio.com/calculator-levelchange.htm
  gain = 10^(dB/20)
  volumRate =  2^(db/10)
@@ -30,16 +30,16 @@ static float UPAudioCapture_db(float volum) {
     if (volum < 0) {
         volum = 0;
     }
-//    NSLog(@"volum : %f", volum);
+    //    NSLog(@"volum : %f", volum);
     return  10 * log2(volum);
 }
 static float UPAudioCapture_gain(float db) {
-//    NSLog(@"db : %f", db);
+    //    NSLog(@"db : %f", db);
     float fx = (db) / 20.;
-//    NSLog(@"fx : %f", fx);
-//    NSLog(@"DB : %f", fx * 20);
+    //    NSLog(@"fx : %f", fx);
+    //    NSLog(@"DB : %f", fx * 20);
     float g = powf(10,fx);
-//    NSLog(@"gain : %f", g);
+    //    NSLog(@"gain : %f", g);
     return g;
 }
 
@@ -47,6 +47,7 @@ static float UPAudioCapture_gain(float db) {
 @interface UPAudioCapture()
 {
     AudioProcessor *_pcmProcessor;
+    
 }
 @property (nonatomic) AudioComponentInstance audioUnit;
 @property (nonatomic) AudioBuffer tempBuffer;
@@ -130,12 +131,10 @@ static OSStatus audioPlaybackCallback(void *inRefCon,
 - (id)initWith:(UPAudioUnitCategory)category {
     self = [super init];
     if (self) {
-        _pcmProcessor = [[AudioProcessor alloc] init];
-
+        _pcmProcessor = [[AudioProcessor alloc] initWithNoiseSuppress:-8 samplerate:44100];
         AVAudioSession *session = [AVAudioSession sharedInstance];
         NSError *error = nil;
         [session setCategory:AVAudioSessionCategoryPlayAndRecord withOptions:AVAudioSessionCategoryOptionMixWithOthers|AVAudioSessionCategoryOptionDefaultToSpeaker error:&error];
-        
         self.category = category;
         self.increaserRate = 100;
         [self setup];
@@ -186,7 +185,7 @@ static OSStatus audioPlaybackCallback(void *inRefCon,
                                   sizeof(flag_player));
     checkOSStatus(status);
     
-    _audioFormat.mSampleRate		= 32000.00;
+    _audioFormat.mSampleRate		= 44100.00;
     _audioFormat.mFormatID			= kAudioFormatLinearPCM;
     _audioFormat.mFormatFlags		= kAudioFormatFlagIsSignedInteger | kAudioFormatFlagIsPacked;
     _audioFormat.mFramesPerPacket	= 1;
@@ -232,7 +231,7 @@ static OSStatus audioPlaybackCallback(void *inRefCon,
                                   sizeof(callbackStruct));
     
     
-
+    
     
     
     
@@ -275,7 +274,10 @@ static OSStatus audioPlaybackCallback(void *inRefCon,
     buffer.mDataByteSize = sourceBuffer.mDataByteSize;
     buffer.mData = malloc(sourceBuffer.mDataByteSize);
     if (self.deNoise) {
-        NSData *deNoiseData = [_pcmProcessor noiseSuppressionFor32KPCM:sourcePcmData];
+        
+        NSData *deNoiseData = nil;
+        deNoiseData = [_pcmProcessor noiseSuppression:sourcePcmData];
+        
         if (!deNoiseData) {
             if (buffer.mData) {
                 free(buffer.mData);

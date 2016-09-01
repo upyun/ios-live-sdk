@@ -36,6 +36,7 @@
      rtmp://testlivesdk.b0.upaiyun.com/live/test196
      http://test654123.b0.upaiyun.com/265_demo.mp4 h265 hevc 格式
      http://test86400.b0.upaiyun.com/shanqiu.mp3
+     rtmp://leyulive.pull.iemylife.com/leyu/test3
      */
     
     textFieldPlayUrl.text = @"rtmp://live.hkstv.hk.lxdns.com/live/hks";
