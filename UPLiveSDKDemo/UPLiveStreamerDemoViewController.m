@@ -18,7 +18,7 @@
 @end
 
 
-@interface UPLiveStreamerDemoViewController ()<UITextFieldDelegate>
+@interface UPLiveStreamerDemoViewController ()<UITextFieldDelegate, UITableViewDelegate, UITableViewDataSource>
 {
     UITextView *textViewPushUrl;
     UITextView *textViewPlayUrl;
@@ -29,6 +29,10 @@
     BOOL cameraAvailable;
     BOOL microphoneChecked;
     BOOL cameraChecked;
+    
+    UITableView *_tableView;
+    NSMutableArray *_streamerHistoryUrls;
+
 }
 
 @end
@@ -37,6 +41,19 @@
 
 
 - (void)viewDidLoad {
+    
+    NSArray *historyUrls = [[NSUserDefaults standardUserDefaults] objectForKey:@"_streamerHistoryUrls"];
+    if (historyUrls) {
+        _streamerHistoryUrls = [[NSMutableArray alloc] initWithArray:historyUrls];
+    } else {
+        _streamerHistoryUrls = [NSMutableArray new];
+        [_streamerHistoryUrls addObject:@"rtmp://testlivesdk.v0.upaiyun.com/live/test1"];
+        [[NSUserDefaults standardUserDefaults] setObject:_streamerHistoryUrls forKey:@"_streamerHistoryUrls"];
+        [[NSUserDefaults standardUserDefaults] synchronize];
+    }
+    
+    
+    
     self.view.backgroundColor = [UIColor whiteColor];
     
     //default settings
@@ -44,7 +61,7 @@
     settings.rtmpServerPushPath = @"rtmp://testlivesdk.v0.upaiyun.com/live/";
     settings.rtmpServerPlayPath = @"rtmp://testlivesdk.b0.upaiyun.com/live/";
     settings.fps = 24;
-    settings.filter = YES;
+    settings.beautifyOn = YES;
     settings.streamingOn = YES;
     settings.camaraTorchOn = NO;
     settings.camaraPosition = AVCaptureDevicePositionBack;
@@ -62,6 +79,7 @@
     textFieldStreamId.delegate = self;
     textFieldStreamId.text = @"test1";
     textFieldStreamId.borderStyle = UITextBorderStyleRoundedRect;
+    textFieldStreamId.returnKeyType = UIReturnKeyDone;
     self.settings.streamId = textFieldStreamId.text;
 
     UILabel *labelPushUrl = [[UILabel alloc] initWithFrame:CGRectMake(20, 200, 100, 44)];
@@ -104,36 +122,35 @@
     [self updateUI];
     
     self.view.backgroundColor = [UIColor whiteColor];
-    UITapGestureRecognizer * tapGesture = [[UITapGestureRecognizer alloc]
-                                           initWithTarget:self
-                                           action:@selector(hideKeyBoard)];
+//    UITapGestureRecognizer * tapGesture = [[UITapGestureRecognizer alloc]
+//                                           initWithTarget:self
+//                                           action:@selector(hideKeyBoard)];
+//    
+//    [self.view addGestureRecognizer:tapGesture];
     
-    [self.view addGestureRecognizer:tapGesture];
+    [_tableView removeFromSuperview];
+    CGFloat s_w = [UIScreen mainScreen].bounds.size.width;
+    _tableView = [[UITableView alloc] initWithFrame:CGRectMake(0, 470, s_w, 200)];
+    _tableView.delegate = self;
+    _tableView.dataSource = self;
+    [self.view addSubview:_tableView];
 }
 
+- (void)viewDidAppear:(BOOL)animated {
+    [self updateUI];
+}
 - (void)updateUI {
-    //计算 upToken
-    NSString *upToken = [UPAVCapturer tokenWithKey:@"password"
-                                            bucket:@"testlivesdk"
-                                        expiration:86400
-                                   applicationName:_settings.rtmpServerPushPath.lastPathComponent
-                                        streamName:_settings.streamId];
-    
-    
-    textViewPushUrl.text = [NSString stringWithFormat:@"%@%@?_upt=%@", self.settings.rtmpServerPushPath, self.settings.streamId, upToken];
+    textViewPushUrl.text = [NSString stringWithFormat:@"%@%@", self.settings.rtmpServerPushPath, self.settings.streamId];
     NSURL *url = [NSURL URLWithString:self.settings.rtmpServerPlayPath relativeToURL:nil];
 
-    NSString *rtmpPlayUrl = [NSString stringWithFormat:@"rtmp://%@/%@/%@?_upt=%@", url.host, _settings.rtmpServerPushPath.lastPathComponent,self.settings.streamId, upToken];
-    
-    
-    upToken = [UPAVCapturer tokenWithKey:@"password"
-                                  bucket:@"testlivesdk"
-                              expiration:86400
-                         applicationName:_settings.rtmpServerPushPath.lastPathComponent
-                              streamName:[NSString stringWithFormat:@"%@.m3u8", self.settings.streamId]];
+    NSString *rtmpPlayUrl = [NSString stringWithFormat:@"rtmp://%@/%@/%@", url.host, _settings.rtmpServerPushPath.lastPathComponent,self.settings.streamId];
 
-    NSString *hlsPlayUrl = [NSString stringWithFormat:@"http://%@/%@/%@.m3u8?_upt=%@", url.host, _settings.rtmpServerPushPath.lastPathComponent,self.settings.streamId, upToken];
+    NSString *hlsPlayUrl = [NSString stringWithFormat:@"http://%@/%@/%@.m3u8", url.host, _settings.rtmpServerPushPath.lastPathComponent,self.settings.streamId];
     textViewPlayUrl.text = [NSString stringWithFormat:@"%@ \n%@", rtmpPlayUrl, hlsPlayUrl];
+    
+    textFieldStreamId.text = _settings.streamId;
+
+    [_tableView reloadData];
 }
 
 - (void)settingsBtn:(UIButton *)sender {
@@ -155,7 +172,6 @@
     cameraChecked = NO;
     cameraAvailable = NO;
     microphoneAvailable = NO;
-    NSLog(@"presentViewController");
     UPLiveStreamerLivingVC *livingVC = [[UPLiveStreamerLivingVC alloc] init];
     livingVC.settings = self.settings;
     [self presentViewController:livingVC animated:YES completion:nil];
@@ -195,6 +211,13 @@
         });
 
     }];
+    
+    NSString *url = [NSString stringWithFormat:@"%@%@", _settings.rtmpServerPushPath, _settings.streamId];
+    [_streamerHistoryUrls removeObject:url];
+    [_streamerHistoryUrls insertObject:url atIndex:0];
+    [[NSUserDefaults standardUserDefaults] setObject:_streamerHistoryUrls forKey:@"_streamerHistoryUrls"];
+    [[NSUserDefaults standardUserDefaults] synchronize];
+
 }
 
 - (void)errorAlert:(NSString *)message {
@@ -237,5 +260,41 @@
 }
 
 
+- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
+    
+    return _streamerHistoryUrls.count;
+    
+}
+- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
+    static NSString *CellIdentifier = @"cell";
+    
+    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
+    if (cell == nil) {
+        cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier] ;
+    }
+    
+    cell.textLabel.text = _streamerHistoryUrls[indexPath.row];
+    cell.textLabel.font = [UIFont boldSystemFontOfSize:12];
+    cell.textLabel.textColor = [UIColor lightGrayColor];
+    return cell;
+}
+
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
+    NSString *url = [_streamerHistoryUrls objectAtIndex:indexPath.row];
+    NSURL *rtmpUrl = [NSURL URLWithString:url];
+    
+    if ([rtmpUrl.scheme isEqualToString:@"rtmp"] &&
+        rtmpUrl.pathComponents.count == 3) {
+        _settings.rtmpServerPushPath = [url stringByReplacingOccurrencesOfString:[NSString stringWithFormat:@"%@",rtmpUrl.lastPathComponent] withString:@""];
+        self.settings.streamId = rtmpUrl.lastPathComponent;
+
+        [self updateUI];
+        
+    }
+}
+
+- (nullable NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section {
+    return @"推流历史：";
+}
 
 @end

@@ -31,6 +31,14 @@
 	<array>
 		<string>audio</string>
 	</array>
+    
+    <key>NSCameraUsageDescription</key>
+    <string>摄像头权限</string>
+    <key>NSMicrophoneUsageDescription</key>
+    <string>麦克风权限</string>
+    <key>NSPhotoLibraryUsageDescription</key>
+    <string>相册访问权限</string>
+    
 	<key>UILaunchStoryboardName</key>
 	<string>LaunchScreen</string>
 	<key>UIMainStoryboardFile</key>

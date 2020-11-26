@@ -46,9 +46,7 @@
     UITapGestureRecognizer * tapGesture = [[UITapGestureRecognizer alloc]
                                            initWithTarget:self
                                            action:@selector(hideKeyBoard)];
-    
     [self.view addGestureRecognizer:tapGesture];
-
 }
 
 - (void)viewWillAppear:(BOOL)animated {
@@ -60,6 +58,10 @@
     self.fpsLabel.text = [NSString stringWithFormat:@"%d", _settings.fps];
 
     self.resolutionSelectBtn.selectedSegmentIndex = _settings.level;
+
+    if (_settings.level == 3) {
+        self.resolutionSelectBtn.selectedSegmentIndex = 2; //仅测试 720p
+    }
     
     if (_settings.filterLevel == 0) {
         self.filterLevelSelect.selectedSegmentIndex = 0;
@@ -73,7 +75,7 @@
         self.cameraSelectBtn.selectedSegmentIndex = 1;
     }
     
-    self.filterSwitch.on = _settings.filter;
+    self.filterSwitch.on = _settings.beautifyOn;
     self.streamingSwitch.on = _settings.streamingOn;
     self.flashSwitch.on = _settings.camaraTorchOn;
     
@@ -95,7 +97,7 @@
 
 
 - (IBAction)filterSwitch:(UISwitch *)sender {
-    _settings.filter = sender.on;
+    _settings.beautifyOn = sender.on;
 
 }
 - (IBAction)streamingSwitch:(UISwitch *)sender {
@@ -121,6 +123,11 @@
 }
 - (IBAction)resolutionSelectBtn:(UISegmentedControl *)sender {
     _settings.level = sender.selectedSegmentIndex;
+    
+    //演示 1280 ＊ 720
+    if (sender.selectedSegmentIndex == 2) {
+        _settings.level = 3;
+    }
 }
 
 - (IBAction)cameraSelectBtn:(UISegmentedControl *)sender {

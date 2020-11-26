@@ -10,12 +10,16 @@
 #import <AVFoundation/AVFoundation.h>
 #import <UIKit/UIKit.h>
 #import "GPUImage.h"
+#import "GPUImageBeautifyFilter.h"
+
+
+typedef void(^WatermarkBlock)();
 
 
 typedef NS_ENUM(NSInteger, UPCustomFilter) {
     /// 用途:素描. 效果:素描结果
     UPCustomFilterSketch,
-    /// 用途:优雅. 效果:优雅
+    /// 用途:优雅. 效果:优雅  这个滤镜和 美颜, 水印冲突
     UPCustomFilterSoftElegance,
     /// 用途:. 效果:
     UPCustomFilterMissEtikate,
@@ -58,6 +62,7 @@ typedef NS_ENUM(NSInteger, UPCustomFilter) {
 typedef NS_ENUM(NSInteger, UPAVCapturerPresetLevel) {
     UPAVCapturerPreset_480x360,
     UPAVCapturerPreset_640x480,
+    UPAVCapturerPreset_960x540,
     UPAVCapturerPreset_1280x720
 };
 
@@ -67,28 +72,32 @@ typedef NS_ENUM(NSInteger, UPAVCapturerPresetLevel) {
 
 
 @interface UPVideoCapture : NSObject
+@property (nonatomic, strong) GPUImageVideoCamera *videoCamera;
 @property (nonatomic, weak) id<UPVideoCaptureProtocol> delegate;
 
 @property (nonatomic, strong) NSString *outStreamPath;
 @property (nonatomic) AVCaptureDevicePosition camaraPosition;
 @property (nonatomic) AVCaptureVideoOrientation videoOrientation;
 @property (nonatomic) UPAVCapturerPresetLevel capturerPresetLevel;
-@property (nonatomic) CGRect capturerPresetLevelFrameCropRect;
+@property (nonatomic) CGSize capturerPresetLevelFrameCropSize;
 @property (nonatomic) int32_t fps;//设置采集帧频
 @property (nonatomic) BOOL streamingOn;//默认为 YES，即 UPAVCapturer start 之后会立即推流直播;
 @property (nonatomic) BOOL camaraTorchOn;
-@property (nonatomic) BOOL filterOn;
+@property (nonatomic) BOOL beautifyOn;//美颜滤镜开
+@property (nonatomic, strong) GPUImageBeautifyFilter *beautifyFilter;//美颜参数调整
+
 /**The torch control camera zoom scale default 1.0, between 1.0 ~ 3.0*/
 @property (nonatomic, assign) CGFloat viewZoomScale;
-
+@property (nonatomic, strong) UIView *watermarkView;
 
 - (void)start;
 - (void)stop;
 - (void)restart;
 
+- (void)setWatermarkView:(UIView *)watermarkView Block:(WatermarkBlock) block;
 
 - (UIView *)previewWithFrame:(CGRect)frame contentMode:(UIViewContentMode)mode;
-- (void)resetCapturerPresetLevelFrameSizeWithCropRect:(CGRect)cropRect;
+- (void)resetCapturerPresetLevelFrameSizeWithCropRect:(CGSize)cropRect;
 
 - (void)setCamaraTorchOn:(BOOL)camaraTorchOn;
 
@@ -101,6 +110,5 @@ typedef NS_ENUM(NSInteger, UPAVCapturerPresetLevel) {
 - (void)setFilters:(NSArray *)filters;
 /// 多个滤镜 用户可以使用已定义好的滤镜 filterNames: 已定义滤镜的数组
 - (void)setFilterNames:(NSArray *)filterNames;
-
 
 @end

@@ -17,12 +17,10 @@
 
 
 @interface UPVideoCapture() {
-    
     //videoCapture
     AVCaptureSession *_captureSession;
     AVCaptureDevicePosition _camaraPosition;
 
-    
     NSError *_capturerError;
     
     //video preview
@@ -30,26 +28,39 @@
     UIViewContentMode _previewContentMode;
     
     //video size, capture size
-    CGRect _capturerPresetLevelFrameCropRect;
-    CGRect _presetVideoFrameRect;
+    CGSize _capturerPresetLevelFrameCropSize;
+    CGSize _presetVideoFrameRect;
     
     //camera focus
     CALayer *_focusLayer;
     
     UIInterfaceOrientation _previewOrientation;
     
+    
+    CGRect faceFrame;
+    CGPoint leftEyeCenter, rightEyeCenter, mouthCenter;
 }
 
 @property (nonatomic, copy) NSString *sessionPreset;
-@property (nonatomic, strong) GPUImageVideoCamera *videoCamera;
-//@property (nonatomic, strong) LFGPUImageBeautyFilter *beautifyFilter;
-@property (nonatomic, strong) GPUImageBeautifyFilter *beautifyFilter;
 
+//@property (nonatomic, strong) LFGPUImageBeautyFilter *beautifyFilter;
 @property (nonatomic, strong) GPUImageCropFilter *cropfilter;
+@property (nonatomic, strong) GPUImageTransformFilter *scaleFilter;
 @property (nonatomic, strong) GPUImageView *gpuImageView;
 @property (nonatomic, strong) GPUImageUIElement *uielement;
+@property (nonatomic, strong) GPUImageAlphaBlendFilter *blendFilter;
+@property (nonatomic, strong) GPUImageFilter *blankFilter0;//空白滤镜
+@property (nonatomic, strong) GPUImageFilter *blankFilter1;//空白滤镜
+@property (nonatomic, strong) GPUImageFilter *blankFilter2;//空白滤镜
+
+
+
+
+/// 没有处理的滤镜进行中转, 防止加水印的获取不到图像数据
+@property (nonatomic, strong) GPUImageFilter *nFilter;
 
 @property (nonatomic, strong) NSMutableArray *filtersArray;
+@property (nonatomic, copy) WatermarkBlock watermarkBlock;
 
 @end
 
@@ -64,156 +75,187 @@
         _camaraPosition = AVCaptureDevicePositionBack;
         _videoOrientation = AVCaptureVideoOrientationPortrait;
         self.capturerPresetLevel = UPAVCapturerPreset_640x480;
-        _capturerPresetLevelFrameCropRect = CGRectZero;
+        _capturerPresetLevelFrameCropSize = CGSizeZero;
         _fps = 24;
         _viewZoomScale = 1;
-        _filterOn = NO;
-        
+        _beautifyOn = NO;
+        [self addNotifications];
     }
     return self;
 }
 
-
 - (void)gpuImageCameraSetup {
-    
-    // 初始化 GPUImageVideoCamera
-    _videoCamera = [[GPUImageVideoCamera alloc] initWithSessionPreset:_sessionPreset cameraPosition:_camaraPosition];
-    
-    // 设置横竖屏拍摄
-    UIInterfaceOrientation videoCameraOrientation = UIInterfaceOrientationUnknown;
-    switch (_videoOrientation) {
-        case AVCaptureVideoOrientationPortrait:
-            videoCameraOrientation = UIInterfaceOrientationPortrait;
-            break;
-        case AVCaptureVideoOrientationPortraitUpsideDown:
-            videoCameraOrientation = UIInterfaceOrientationPortraitUpsideDown;
-            break;
-        case AVCaptureVideoOrientationLandscapeRight:
-            videoCameraOrientation = UIInterfaceOrientationLandscapeRight;
-            break;
-        case AVCaptureVideoOrientationLandscapeLeft:
-            videoCameraOrientation = UIInterfaceOrientationLandscapeLeft;
-            break;
+    [self cleanFilters];
+    if (!_videoCamera) {
+        // 初始化 GPUImageVideoCamera
+        _videoCamera = [[GPUImageVideoCamera alloc] initWithSessionPreset:_sessionPreset cameraPosition:_camaraPosition];
+        // 设置横竖屏拍摄
+        UIInterfaceOrientation videoCameraOrientation = UIInterfaceOrientationUnknown;
+        switch (_videoOrientation) {
+            case AVCaptureVideoOrientationPortrait:
+                videoCameraOrientation = UIInterfaceOrientationPortrait;
+                break;
+            case AVCaptureVideoOrientationPortraitUpsideDown:
+                videoCameraOrientation = UIInterfaceOrientationPortraitUpsideDown;
+                break;
+            case AVCaptureVideoOrientationLandscapeRight:
+                videoCameraOrientation = UIInterfaceOrientationLandscapeRight;
+                break;
+            case AVCaptureVideoOrientationLandscapeLeft:
+                videoCameraOrientation = UIInterfaceOrientationLandscapeLeft;
+                break;
+        }
+        _videoCamera.outputImageOrientation = videoCameraOrientation;
+        
+        // 设置拍摄帧频
+        _videoCamera.frameRate = _fps;
+        
+        // 设置拍摄预览画面
+        if (!_preview) {
+            _preview = [[UIView alloc] initWithFrame:[UIScreen mainScreen].bounds];
+            _preview.backgroundColor = [UIColor blackColor];
+        }
+        
+        _gpuImageView = [[GPUImageView alloc] initWithFrame:_preview.bounds];
+        switch (_previewContentMode) {
+            case UIViewContentModeScaleToFill:
+                [_gpuImageView setFillMode:kGPUImageFillModeStretch];
+                break;
+            case UIViewContentModeScaleAspectFit:
+                [_gpuImageView setFillMode:kGPUImageFillModePreserveAspectRatio];
+                break;
+            case UIViewContentModeScaleAspectFill:
+                [_gpuImageView setFillMode:kGPUImageFillModePreserveAspectRatioAndFill];
+                break;
+            default:
+                [_gpuImageView setFillMode:kGPUImageFillModePreserveAspectRatio];
+                break;
+        }
+        [self previewRemoveGpuImageView];
+        
+        _gpuImageView.autoresizingMask = UIViewAutoresizingFlexibleWidth
+        | UIViewAutoresizingFlexibleTopMargin
+        | UIViewAutoresizingFlexibleRightMargin
+        | UIViewAutoresizingFlexibleLeftMargin
+        | UIViewAutoresizingFlexibleHeight
+        | UIViewAutoresizingFlexibleBottomMargin;
+        [_preview insertSubview:_gpuImageView atIndex:0];
     }
-    _videoCamera.outputImageOrientation = videoCameraOrientation;
     
-    // 设置拍摄帧频
-    _videoCamera.frameRate = _fps;
+    //滤镜链
+    //视频尺寸剪裁
+    CGFloat cropW = _capturerPresetLevelFrameCropSize.width / _presetVideoFrameRect.width;
+    CGFloat cropH = _capturerPresetLevelFrameCropSize.height / _presetVideoFrameRect.height;
     
-    // 设置拍摄预览画面
-    if (!_preview) {
-        _preview = [[UIView alloc] initWithFrame:[UIScreen mainScreen].bounds];
-        _preview.backgroundColor = [UIColor blackColor];
+    GPUImageOutput<GPUImageInput> *lastFilter;
+
+    _blankFilter2 = [[GPUImageFilter alloc] init];
+    [_videoCamera addTarget:_blankFilter2];
+
+    _cropfilter = [[GPUImageCropFilter alloc] initWithCropRegion:CGRectMake(0.0, 0.0, cropW, cropH)];
+
+    [_blankFilter2 addTarget:_cropfilter];
+    lastFilter = _cropfilter;
+    
+    for (GPUImageOutput<GPUImageInput> *cusFilter in _filtersArray) {
+        [lastFilter addTarget:cusFilter];
+        _blankFilter1 = [[GPUImageFilter alloc] init];
+        [cusFilter addTarget:_blankFilter1];
+        lastFilter = _blankFilter1;
     }
-    
-    _gpuImageView = [[GPUImageView alloc] initWithFrame:_preview.bounds];
-    switch (_previewContentMode) {
-        case UIViewContentModeScaleToFill:
-            [_gpuImageView setFillMode:kGPUImageFillModeStretch];
-            break;
-        case UIViewContentModeScaleAspectFit:
-            [_gpuImageView setFillMode:kGPUImageFillModePreserveAspectRatio];
-            break;
-        case UIViewContentModeScaleAspectFill:
-            [_gpuImageView setFillMode:kGPUImageFillModePreserveAspectRatioAndFill];
-            break;
-        default:
-            [_gpuImageView setFillMode:kGPUImageFillModePreserveAspectRatio];
-            break;
-    }
-    [self previewRemoveGpuImageView];
-    [_preview insertSubview:_gpuImageView atIndex:0];
-    
+
     // 设置美颜滤镜
+    if (_beautifyOn) {
+        _beautifyFilter = [[GPUImageBeautifyFilter alloc] init];
+        [lastFilter addTarget:_beautifyFilter];
+        lastFilter = _beautifyFilter;
+    } else {
+    }
+    
+    // 水印
+    _nFilter = [[GPUImageFilter alloc] init];
+    
+    if (!_watermarkView) {
+        [lastFilter addTarget:_nFilter];
+        [_nFilter addTarget:_gpuImageView];
+        
+    } else {
+        _uielement = [[GPUImageUIElement alloc] initWithView:_watermarkView];
+        _blendFilter = [[GPUImageAlphaBlendFilter alloc] init];
+        _blendFilter.mix = 1.0;
+        _blankFilter0 = [[GPUImageFilter alloc] init];
+        [lastFilter addTarget:_blankFilter0];
+        [_blankFilter0 addTarget:_blendFilter];
+        [_uielement addTarget:_blendFilter];
+        [_blendFilter addTarget:_nFilter];
+        [lastFilter addTarget:_gpuImageView];
+        
+        __weak GPUImageUIElement *weakUielement = _uielement;
+        [lastFilter setFrameProcessingCompletionBlock:^(GPUImageOutput *outPut, CMTime time) {
+            if (_watermarkBlock) {
+                dispatch_async(dispatch_get_main_queue(), ^(){
+                    _watermarkBlock();
+                });
+            }
+            [weakUielement update];
+        }];
+    }
+    [self outputPixelBuffer];
+    //横屏旋转和前置拍摄镜面效果
+    [self needFlip];
+
+}
+
+/// 去除滤镜链
+- (void)cleanFilters {
     [_beautifyFilter removeAllTargets];
     [_cropfilter removeAllTargets];
     [_videoCamera removeAllTargets];
     [_uielement removeAllTargets];
+    [_nFilter removeAllTargets];
+    [_blendFilter removeAllTargets];
+    [_blankFilter0 removeAllTargets];
     
-//    _beautifyFilter = [[LFGPUImageBeautyFilter alloc] init];
-//    _beautifyFilter.beautyLevel = 0.5;
-    
-    _beautifyFilter = [[GPUImageBeautifyFilter alloc] init];
-
-    //视频尺寸剪裁
-    CGFloat cropX = _capturerPresetLevelFrameCropRect.origin.x / _presetVideoFrameRect.size.width;
-    CGFloat cropY = _capturerPresetLevelFrameCropRect.origin.y / _presetVideoFrameRect.size.height;
-    CGFloat cropW = _capturerPresetLevelFrameCropRect.size.width / _presetVideoFrameRect.size.width;
-    CGFloat cropH = _capturerPresetLevelFrameCropRect.size.height / _presetVideoFrameRect.size.height;
-    _cropfilter = [[GPUImageCropFilter alloc] initWithCropRegion:CGRectMake(cropX, cropY, cropW, cropH)];
-    
-    // 水印
-    CGSize size = [UIScreen mainScreen].bounds.size;
-    __block UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, size.width, 44)];
-    label.text = @"我是水印";
-    label.textAlignment = NSTextAlignmentRight;
-    
-    UIView *subView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, size.width, size.height)];
-    subView.backgroundColor = [UIColor clearColor];
-    [subView addSubview:label];
-    
-    _uielement = [[GPUImageUIElement alloc] initWithView:subView];
-    GPUImageAlphaBlendFilter *blendFilter = [[GPUImageAlphaBlendFilter alloc] init];
-    blendFilter.mix = 1.0;
-    //滤镜链
-    GPUImageOutput *finalOutput = _videoCamera;
-    [_videoCamera addTarget:_cropfilter];
-    [_cropfilter addTarget:_beautifyFilter];
-    
-    BOOL addWaterMark = NO;
-    
-    GPUImageFilter *nFilter = [[GPUImageFilter alloc]init];
-    
-    if (addWaterMark) {
-        
-        GPUImageOutput<GPUImageInput> *lastFilter = _beautifyFilter;
-        
-        for (GPUImageOutput<GPUImageInput> *cusFilter in _filtersArray) {
-            [lastFilter addTarget:cusFilter];
-            lastFilter = cusFilter;
-        }
-
-        [lastFilter addTarget:blendFilter];
-        [_uielement addTarget:blendFilter];
-        [blendFilter addTarget:_gpuImageView];
-        __weak GPUImageUIElement *weakUielement = _uielement;
-        [_beautifyFilter setFrameProcessingCompletionBlock:^(GPUImageOutput *outPut, CMTime time) {
-            label.text = [NSString stringWithFormat:@"%@", [NSDate date]];
-            [weakUielement update];
-        }];
-        finalOutput = blendFilter;
-        
-    } else {
-        
-        GPUImageOutput<GPUImageInput> *lastFilter = _beautifyFilter;
-        
-        for (GPUImageOutput<GPUImageInput> *cusFilter in _filtersArray) {
-            [lastFilter addTarget:cusFilter];
-            lastFilter = cusFilter;
-        }
-        
-        [lastFilter addTarget:nFilter];
-        [nFilter addTarget:_gpuImageView];
-        finalOutput = nFilter;
+    for (GPUImageOutput<GPUImageInput> *cusFilter in _filtersArray) {
+        [cusFilter removeAllTargets];
     }
-    
-    if (!self.filterOn) {
-        _beautifyFilter.level = 0.4;
-//        _beautifyFilter.beautyLevel = 0;
-    }
-    
+}
+
+/// 设置图像获取
+- (void)outputPixelBuffer {
     __weak typeof(self) weakself = self;
     //设置视频结果回调
-    [finalOutput setFrameProcessingCompletionBlock:^(GPUImageOutput *outPut, CMTime time) {
+    [_nFilter setFrameProcessingCompletionBlock:^(GPUImageOutput *outPut, CMTime time) {
         GPUImageFramebuffer *imageFramebuffer = outPut.framebufferForOutput;
         CVPixelBufferRef pixelBuffer = [imageFramebuffer pixelBuffer];
+        
+        size_t width_o = CVPixelBufferGetWidth(pixelBuffer);
+        size_t height_o = CVPixelBufferGetHeight(pixelBuffer);
+        OSType format_o = CVPixelBufferGetPixelFormatType(pixelBuffer);
+
+        NSDictionary *pixelBufferAttributes = [NSDictionary dictionaryWithObjectsAndKeys: [NSDictionary dictionary],kCVPixelBufferIOSurfacePropertiesKey,nil];
+
+        CVPixelBufferRef pixelBuffer_c;
+        CVPixelBufferCreate(NULL, width_o, height_o, format_o, (__bridge CFDictionaryRef)(pixelBufferAttributes), &pixelBuffer_c);
+       
+        CVPixelBufferLockBaseAddress(pixelBuffer, kCVPixelBufferLock_ReadOnly);
+        CVPixelBufferLockBaseAddress(pixelBuffer_c, 0);
+        void *baseAddress_o = CVPixelBufferGetBaseAddressOfPlane(pixelBuffer, 0);
+        size_t dataSize_o = CVPixelBufferGetDataSize(pixelBuffer);
+        void *target = CVPixelBufferGetBaseAddress(pixelBuffer_c);
+        memcpy(target, baseAddress_o, dataSize_o);
+        //int bytesPerRow = (int)CVPixelBufferGetBytesPerRowOfPlane(pixelBuffer, 0);
+        CVPixelBufferUnlockBaseAddress(pixelBuffer_c, 0);
+        CVPixelBufferUnlockBaseAddress(pixelBuffer, kCVPixelBufferLock_ReadOnly);
+        
         if (weakself.delegate) {
-            [weakself.delegate didCapturePixelBuffer:pixelBuffer];
+            [weakself.delegate didCapturePixelBuffer:pixelBuffer_c];
         }
     }];
-    
-    
-    //横屏旋转和前置拍摄镜面效果
+}
+
+/// 横屏旋转和前置拍摄镜面效果
+- (void)needFlip {
     BOOL needRotation = NO;
     
     float  pviewOrientation_ = 0;
@@ -251,13 +293,16 @@
     }
     
     if (needRotation) {
-        float deltaR = pviewOrientation_ - videoOrientation_;
-        _gpuImageView.transform = CGAffineTransformMakeRotation(deltaR);
-        //长宽需要对调
-        if (fabs(deltaR) >= M_PI_4 && fabs(deltaR) <= (M_PI_4 + M_PI_2)) {
-            CGRect oldRect = _gpuImageView.frame;
-            _gpuImageView.frame = CGRectMake(0, 0, oldRect.size.height, oldRect.size.width);
-        }
+        
+//更换了横屏拍摄模式，这段代码废弃。现在的横屏拍摄模式需要 vc 的横屏配合实现。
+        
+//        float deltaR = pviewOrientation_ - videoOrientation_;
+//        _gpuImageView.transform = CGAffineTransformMakeRotation(deltaR);
+//        //长宽需要对调
+//        if (fabs(deltaR) >= M_PI_4 && fabs(deltaR) <= (M_PI_4 + M_PI_2)) {
+//            CGRect oldRect = _gpuImageView.frame;
+//            _gpuImageView.frame = CGRectMake(0, 0, oldRect.size.height, oldRect.size.width);
+//        }
     }
     
     BOOL needFlip = NO;
@@ -269,6 +314,7 @@
     }
 }
 
+
 - (void)setCamaraPosition:(AVCaptureDevicePosition)camaraPosition {
     if (AVCaptureDevicePositionUnspecified == camaraPosition) {
         return;
@@ -278,7 +324,12 @@
     }
     _camaraPosition = camaraPosition;
     
+    if (!_videoCamera) {
+        return;
+    }
+    
     [self.videoCamera stopCameraCapture];
+    _videoCamera = nil;
     [self gpuImageCameraSetup];
     [self.videoCamera startCameraCapture];
 }
@@ -288,7 +339,7 @@
 }
 
 
-- (void)resetCapturerPresetLevelFrameSizeWithCropRect:(CGRect)cropRect {
+- (void)resetCapturerPresetLevelFrameSizeWithCropRect:(CGSize)cropRect {
     
     BOOL portrait = YES;
     if (_videoOrientation == AVCaptureVideoOrientationLandscapeRight
@@ -309,6 +360,11 @@
             presetHeight = 480;
             break;
         }
+        case UPAVCapturerPreset_960x540:{
+            presetWidth = 960;
+            presetHeight = 540;
+            break;
+        }
         case UPAVCapturerPreset_1280x720:{
             presetWidth = 1280;
             presetHeight = 720;
@@ -322,33 +378,33 @@
         presetWidth = w;
         presetHeight = h;
     }
-    _presetVideoFrameRect = CGRectMake(0, 0, presetWidth, presetHeight);
-    if (cropRect.origin.x + cropRect.size.width > presetWidth
-        || cropRect.origin.y + cropRect.size.height > presetHeight) {
+    _presetVideoFrameRect = CGSizeMake(presetWidth, presetHeight);
+    if (cropRect.width > presetWidth
+        || cropRect.height > presetHeight) {
         //超出范围，设置不成功；
-        _capturerPresetLevelFrameCropRect = _presetVideoFrameRect;
+        _capturerPresetLevelFrameCropSize = _presetVideoFrameRect;
     } else {
-        _capturerPresetLevelFrameCropRect = cropRect;
+        _capturerPresetLevelFrameCropSize = cropRect;
     }
     
-    if (_capturerPresetLevelFrameCropRect.size.width * _capturerPresetLevelFrameCropRect.size.height == 0) {
+    if (_capturerPresetLevelFrameCropSize.width * _capturerPresetLevelFrameCropSize.height == 0) {
         //大小为0，设置不成功；
-        _capturerPresetLevelFrameCropRect = _presetVideoFrameRect;
+        _capturerPresetLevelFrameCropSize = _presetVideoFrameRect;
     }
 }
 
-- (void)setCapturerPresetLevelFrameCropRect:(CGRect)capturerPresetLevelFrameCropRect {
-    [self resetCapturerPresetLevelFrameSizeWithCropRect:capturerPresetLevelFrameCropRect];
+- (void)setCapturerPresetLevelFrameCropRect:(CGSize)capturerPresetLevelFrameCropSize {
+    [self resetCapturerPresetLevelFrameSizeWithCropRect:capturerPresetLevelFrameCropSize];
 }
 
 - (void)setVideoOrientation:(AVCaptureVideoOrientation)videoOrientation {
     _videoOrientation = videoOrientation;
-    [self resetCapturerPresetLevelFrameSizeWithCropRect:_capturerPresetLevelFrameCropRect];
+    [self resetCapturerPresetLevelFrameSizeWithCropRect:_capturerPresetLevelFrameCropSize];
 }
 
 - (void)setCapturerPresetLevel:(UPAVCapturerPresetLevel)capturerPresetLevel {
     _capturerPresetLevel = capturerPresetLevel;
-    [self resetCapturerPresetLevelFrameSizeWithCropRect:_capturerPresetLevelFrameCropRect];
+    [self resetCapturerPresetLevelFrameSizeWithCropRect:_capturerPresetLevelFrameCropSize];
     
     switch (_capturerPresetLevel) {
         case UPAVCapturerPreset_480x360:{
@@ -357,6 +413,10 @@
         }
         case UPAVCapturerPreset_640x480:{
             _sessionPreset = AVCaptureSessionPreset640x480;
+            break;
+        }
+        case UPAVCapturerPreset_960x540:{
+            _sessionPreset = AVCaptureSessionPresetiFrame960x540;
             break;
         }
         case UPAVCapturerPreset_1280x720:{
@@ -377,20 +437,25 @@
     }
 }
 
-- (void)setFilterOn:(BOOL)filterOn {
-    _filterOn = filterOn;
-    CGFloat aa = _beautifyFilter.level+0.1;
-    _beautifyFilter.level = aa;
+- (void)setBeautifyOn:(BOOL)beautifyOn {
+    _beautifyOn = beautifyOn;
+    [self doSwitchFilters];
+}
+
+- (void)setWatermarkView:(UIView *)watermarkView Block:(WatermarkBlock)block {
+    _watermarkView = watermarkView;
+    _watermarkBlock = block;
 }
 
 - (UIView *)previewWithFrame:(CGRect)frame contentMode:(UIViewContentMode)mode {
     _previewContentMode = mode;
     _preview = [[UIView alloc] initWithFrame:frame];
     _preview.frame = frame;
-    
+    _previewOrientation = UIInterfaceOrientationPortrait;
+#ifndef UPYUN_APP_EXTENSIONS
     //记录preview的UI方向，如果UI方向和拍摄方向不一致时候，拍摄画面需要旋转
     _previewOrientation = [[UIApplication sharedApplication] statusBarOrientation];
-    
+#endif
     [self preViewAddTapGesture];
     return _preview;
 }
@@ -405,19 +470,26 @@
 
 - (void)start {
     [self.videoCamera stopCameraCapture];
+    _videoCamera = nil;
     [self gpuImageCameraSetup];
     [self.videoCamera startCameraCapture];
+#ifndef UPYUN_APP_EXTENSIONS
     [[UIApplication sharedApplication] setIdleTimerDisabled:YES];
+#endif
 }
 
 - (void)stop {
+    [self cleanFilters];
     [self.videoCamera stopCameraCapture];
     [self previewRemoveGpuImageView];
+#ifndef UPYUN_APP_EXTENSIONS
     [[UIApplication sharedApplication] setIdleTimerDisabled:NO];
+#endif
 }
 
 - (void)restart {
     [self.videoCamera stopCameraCapture];
+    _videoCamera = nil;
     [self gpuImageCameraSetup];
     [self.videoCamera startCameraCapture];
 }
@@ -425,7 +497,6 @@
 - (void)dealloc {
     
 }
-
 
 - (void)setCamaraTorchOn:(BOOL)camaraTorchOn {
     _camaraTorchOn = camaraTorchOn;
@@ -437,7 +508,6 @@
         [device unlockForConfiguration];
     }
 }
-
 
 - (void)setViewZoomScale:(CGFloat)viewZoomScale {
     if (self.videoCamera && self.videoCamera.inputCamera) {
@@ -452,28 +522,46 @@
 
 #pragma mark-- filter 滤镜
 
+- (void)doSwitchFilters {
+    if (_videoCamera) {
+        [self gpuImageCameraSetup];
+    }
+}
+
+- (void)cleanFilterArray {
+    for (GPUImageOutput<GPUImageInput> *item in _filtersArray) {
+        [item removeAllTargets];
+    }
+    [_filtersArray removeAllObjects];
+}
 
 - (void)setFilter:(GPUImageOutput<GPUImageInput> *)filter {
-    [_filtersArray removeAllObjects];
-    [_filtersArray addObject:filter];
+    [self cleanFilterArray];
+    if (filter) {
+        [_filtersArray addObject:filter];
+    }
+    [self doSwitchFilters];
 }
 
 - (void)setFilterName:(UPCustomFilter)filterName {
-    [_filtersArray removeAllObjects];
+    [self cleanFilterArray];
     [self addFilterName:filterName];
+    [self doSwitchFilters];
 }
 
 - (void)setFilters:(NSArray *)filters {
-    [_filtersArray removeAllObjects];
+    [self cleanFilterArray];
     _filtersArray = [filters mutableCopy];
+    [self doSwitchFilters];
 }
 
 - (void)setFilterNames:(NSArray *)filterNames {
-    [_filtersArray removeAllObjects];
+    [self cleanFilterArray];
     for (NSString *filterName in filterNames) {
         UPCustomFilter name = filterName.integerValue;
         [self addFilterName:name];
     }
+    [self doSwitchFilters];
 }
 
 
@@ -481,6 +569,7 @@
     
     
     GPUImageOutput<GPUImageInput> *filter = nil;
+    
     
     switch (filterName) {
         case UPCustomFilter1977:{
@@ -560,7 +649,9 @@
             break;
         }
         case UPCustomFilterSoftElegance:{
-            filter = [[GPUImageSoftEleganceFilter alloc] init];
+            /// 这个滤镜和 美颜, 水印冲突
+//            filter = [[GPUImageSoftEleganceFilter alloc] init];
+            filter = [[GPUImageFilter alloc] init];
             break;
         }
     }
@@ -641,7 +732,7 @@
         [CATransaction commit];
         
         CABasicAnimation *animation = [ CABasicAnimation animationWithKeyPath: @"transform" ];
-        animation.toValue = [ NSValue valueWithCATransform3D: CATransform3DMakeScale(1.0f,1.0f,1.0f)];
+        animation.toValue = [NSValue valueWithCATransform3D: CATransform3DMakeScale(1.0f,1.0f,1.0f)];
         animation.delegate = self;
         animation.duration = 0.3f;
         animation.repeatCount = 1;
@@ -678,4 +769,29 @@
         }
     } return nil;
 }
+
+- (void)addNotifications {
+#ifndef UPYUN_APP_EXTENSIONS
+    NSNotificationCenter *notificationCenter = [NSNotificationCenter defaultCenter];
+    [notificationCenter addObserver:self
+                           selector:@selector(applicationWillResignActive:)
+                               name:UIApplicationWillResignActiveNotification
+                             object:[UIApplication sharedApplication]];
+    
+    [notificationCenter addObserver:self
+                           selector:@selector(applicationDidBecomeActive:)
+                               name:UIApplicationDidBecomeActiveNotification
+                             object:[UIApplication sharedApplication]];
+#endif
+}
+
+
+- (void)applicationWillResignActive:(NSNotification *)notification {
+    [self.videoCamera pauseCameraCapture];
+}
+
+- (void)applicationDidBecomeActive:(NSNotification *)notification {
+    [self.videoCamera resumeCameraCapture];
+}
+
 @end
